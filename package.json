@@ -14,7 +14,7 @@
   },
   "keywords": [
     "syntex",
-    "syntex-tuya",
+    "syntex-platform",
     "homebridge-plugin",
     "homebridge",
     "plugin",
@@ -24,13 +24,13 @@
     "smarthome",
     "siri"
   ],
-  "homepage": "https://github.com/SynTexDZN/homebridge-syntex-tuya#readme",
+  "homepage": "https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform#readme",
   "repository": {
     "type": "git",
-    "url": "git://github.com/SynTexDZN/homebridge-syntex-tuya.git"
+    "url": "git://github.com/SynTexDZN/homebridge-syntex-dynamic-platform.git"
   },
   "bugs": {
-    "url": "https://github.com/SynTexDZN/homebridge-syntex-tuya/issues"
+    "url": "https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform/issues"
   },
   "license": "ISC",
   "scripts": {
