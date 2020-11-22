@@ -1,59 +1,117 @@
-var Service, Characteristic;
+let PlatformAccessory;
+let Accessory;
+let Service;
+let Characteristic;
+let UUIDGen;
 
-module.exports = class SynTexBaseAccessory
+module.exports = class BaseAccessory
 {
-    constructor(accessoryConfig, Manager)
-    {
-        this.service = [];
-        this.mac = accessoryConfig['mac'];
-        this.name = accessoryConfig['name'];
-        this.services = accessoryConfig['services'];
-
-        this.version = accessoryConfig['version'] || '1.0.0';
-        this.model = accessoryConfig['model'] || 'HTTP Accessory';
-        this.manufacturer = accessoryConfig['manufacturer'] || 'SynTex';
-
-        Service = Manager.Service;
-        Characteristic = Manager.Characteristic;
-
-        this.service.push(this.getInformationService());
-    }
-
-    getInformationService()
+	constructor(homebridgeAccessory, deviceConfig, manager)
 	{
-		var informationService = new Service.AccessoryInformation();
+		this.service = [];
+		this.subtypes = {};
+		this.id = deviceConfig.id;
+		this.platform = manager.platform;
 
-        informationService
-            .setCharacteristic(Characteristic.SerialNumber, this.getID())
-            .setCharacteristic(Characteristic.Manufacturer, this.getManufacturer())
-            .setCharacteristic(Characteristic.Model, this.getModel())
-            .setCharacteristic(Characteristic.FirmwareRevision, this.getVersion());
+		this.logger = manager.logger;
 
-		return informationService;
-    }
+		PlatformAccessory = manager.platform.api.platformAccessory;
 
-    getID()
-    {
-        return this.mac;
-    }
+		({ Accessory, Service, Characteristic, uuid: UUIDGen } = manager.platform.api.hap);
 
-    getManufacturer()
-    {
-        return this.manufacturer;
-    }
+		this.homebridgeAccessory = homebridgeAccessory;
+		this.deviceConfig = deviceConfig;
 
-    getModel()
-    {
-        return this.model;
-    }
+		this.addAccessory();
 
-    getVersion()
-    {
-        return this.version;
-    }
-    
-    getServices()
-    {
-        return this.service;
-    }
+		for(var i = 0; i < this.deviceConfig.services.length; i++)
+		{
+			var accessoryService = Service.AccessoryInformation;
+
+			if(deviceConfig.services[i] == 'rgb')
+			{
+				accessoryService = Service.Lightbulb;
+			}
+			else if(deviceConfig.services[i] == 'switch')
+			{
+				accessoryService = Service.Switch;
+			}
+			else if(deviceConfig.services[i] == 'outlet')
+			{
+				accessoryService = Service.Outlet;
+			}
+			else if(deviceConfig.services[i] == 'fan')
+			{
+				accessoryService = Service.Fanv2;
+			}
+
+			this.addService(accessoryService, deviceConfig.services[i]);
+		}
+	}
+
+	addService(type, t)
+	{
+		if(!this.subtypes[t])
+		{
+			this.subtypes[t] = 0;
+		}
+
+		console.log(JSON.stringify(this.subtypes));
+
+		var service = this.homebridgeAccessory.getServiceById(type, this.subtypes[t]);
+
+		if(service)
+		{
+			service.setCharacteristic(Characteristic.Name, this.deviceConfig.name);
+		}
+		else
+		{
+			this.logger.debug('Erstelle neuen Service! ' + this.deviceConfig.id + ' ' +  this.deviceConfig.name);
+
+			this.service.push(this.homebridgeAccessory.addService(type, this.deviceConfig.name, this.subtypes[t]));
+		}
+
+		this.subtypes[t]++;
+	}
+
+	setService(type, subtype)
+	{
+		var service = this.homebridgeAccessory.getServiceById(type, subtype);
+
+		if(service)
+		{
+			this.logger.debug('Existierenden Service gefunden! ' + this.deviceConfig.id + ' ' +  this.deviceConfig.name);
+
+			service.setCharacteristic(Characteristic.Name, this.deviceConfig.name);
+		}
+		else
+		{
+			this.logger.debug('Erstelle neuen Service! ' + this.deviceConfig.id + ' ' +  this.deviceConfig.name);
+
+			this.service.push(this.homebridgeAccessory.addService(type, this.deviceConfig.name, subtype));
+		}
+	}
+
+	removeService(type, subtype = 0)
+	{
+
+	}
+
+	addAccessory()
+	{
+		if(this.homebridgeAccessory)
+		{
+			this.logger.debug('Existierendes Zubehör gefunden! ' + this.deviceConfig.id + ' ' +  this.deviceConfig.name);
+
+			this.homebridgeAccessory.displayName = this.deviceConfig.name;
+		}
+		else
+		{
+			this.logger.debug('Erstelle neues Zubehör! ' + this.deviceConfig.id + ' ' +  this.deviceConfig.name);
+
+			this.homebridgeAccessory = new PlatformAccessory(this.deviceConfig.name, UUIDGen.generate(this.deviceConfig.id), Service.Switch);
+
+			this.platform.registerPlatformAccessory(this.homebridgeAccessory);
+		}
+	}
 }
