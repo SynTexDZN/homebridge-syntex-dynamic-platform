@@ -14,7 +14,7 @@ module.exports = class SwitchAccessory extends BaseAccessory
 
 		super(homebridgeAccessory, deviceConfig, manager);
 
-		this.homebridgeAccessory.getService(Service.Outlet).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
+		this.homebridgeAccessory.getService(Service.Lightbulb).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
 	}
 
 	getState(callback)
@@ -24,7 +24,7 @@ module.exports = class SwitchAccessory extends BaseAccessory
 
 	setState(level, callback)
 	{
-		console.log(1, 'SAY HI', level);
+        console.log(2, 'SAY HI', level);
 
 		callback();
 	}

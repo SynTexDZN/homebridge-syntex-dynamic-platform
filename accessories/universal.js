@@ -1,3 +1,6 @@
+const OutletAccessory = require('./outlet');
+const BulbAccessory = require('./bulb');
+
 let PlatformAccessory;
 let Accessory;
 let Service;
@@ -30,7 +33,7 @@ module.exports = class BaseAccessory
 
 			if(deviceConfig.services[i] == 'rgb')
 			{
-				accessoryService = Service.Lightbulb;
+				accessoryService = BulbAccessory;
 			}
 			else if(deviceConfig.services[i] == 'switch')
 			{
