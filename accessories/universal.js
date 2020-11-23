@@ -37,30 +37,11 @@ module.exports = class UniversalAccessory
 
 		for(var i = 0; i < this.services.length; i++)
 		{
-			var accessoryService = Service.AccessoryInformation;
-
-			if(deviceConfig.services[i] == 'rgb')
-			{
-				accessoryService = Service.Lightbulb;
-			}
-			else if(deviceConfig.services[i] == 'switch')
-			{
-				accessoryService = Service.Switch;
-			}
-			else if(deviceConfig.services[i] == 'outlet')
-			{
-				accessoryService = Service.Outlet;
-			}
-			else if(deviceConfig.services[i] == 'fan')
-			{
-				accessoryService = Service.Fanv2;
-			}
-
-			this.addService(accessoryService, deviceConfig.services[i]);
+			this.addService(deviceConfig.services[i]);
 		}
 	}
 
-	addService(serviceType, config)
+	addService(config)
 	{
 		var type = config;
 
@@ -74,12 +55,12 @@ module.exports = class UniversalAccessory
 			this.subtypes[type] = 0;
 		}
 
-		this.setService(serviceType, config, this.subtypes[type]);
+		this.setService(config, this.subtypes[type]);
 
 		this.subtypes[type]++;
 	}
 
-	setService(serviceType, config, subtype)
+	setService(config, subtype)
 	{
 		var name = this.name;
 		var type = config;
