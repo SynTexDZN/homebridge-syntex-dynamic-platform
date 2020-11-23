@@ -17,7 +17,7 @@ module.exports = class SynTexDynamicPlatform
         if(!config)
         {
             this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!');
-            
+
             return;
         }
 
@@ -65,6 +65,7 @@ module.exports = class SynTexDynamicPlatform
         const homebridgeAccessory = this.accessories.get(uuid);
 
         let deviceAccessory = new UniversalAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger });
+        
         this.accessories.set(uuid, deviceAccessory.homebridgeAccessory);
     }
 
