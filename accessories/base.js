@@ -1,20 +1,23 @@
 module.exports = class BaseService
 {
-	constructor(homebridgeAccessory, deviceConfig, serviceType, type, subtype, manager)
+	constructor(homebridgeAccessory, deviceConfig, serviceConfig, serviceType, manager)
 	{
-        var service = homebridgeAccessory.getServiceById(serviceType, subtype);
+		this.id = deviceConfig.id;
+		this.name = serviceConfig.name;
+
+        var service = homebridgeAccessory.getServiceById(serviceType, serviceConfig.subtype);
 
         if(service)
 		{
-			manager.logger.debug('Existierenden Service gefunden! ' + deviceConfig.name + ' ' + type + ' ' + subtype + ' ( ' +  deviceConfig.id + ' )');
+			manager.logger.debug('Existierenden Service gefunden! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
 
-			service.setCharacteristic(manager.platform.api.hap.Characteristic.Name, deviceConfig.name);
+			service.setCharacteristic(manager.platform.api.hap.Characteristic.Name, serviceConfig.name);
 		}
 		else
 		{
-			manager.logger.debug('Erstelle neuen Service! ' + deviceConfig.name + ' ' + type + ' ' + subtype + ' ( ' +  deviceConfig.id + ' )');
+			manager.logger.debug('Erstelle neuen Service! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
 
-            homebridgeAccessory.addService(serviceType, deviceConfig.name, subtype)
+            homebridgeAccessory.addService(serviceType, serviceConfig.name, serviceConfig.subtype)
             //homebridgeAccessory.service.push();
         }
     }

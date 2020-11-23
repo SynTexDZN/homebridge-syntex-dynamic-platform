@@ -81,17 +81,16 @@ module.exports = class UniversalAccessory
 
 	setService(serviceType, config, subtype)
 	{
-		//var name = this.name;
+		var name = this.name;
 		var type = config;
 
 		if(config instanceof Object)
 		{
-			/*
 			if(config.name != null)
 			{
 				name = config.name;
 			}
-			*/
+			
 			if(config.type != null)
 			{
 				type = config.type;
@@ -100,15 +99,15 @@ module.exports = class UniversalAccessory
 
 		if(type == 'switch')
 		{
-			var service = new SwitchService(this.homebridgeAccessory, this.deviceConfig, subtype, this.manager);
+			var service = new SwitchService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 		else if(type == 'outlet')
 		{
-			var service = new OutletService(this.homebridgeAccessory, this.deviceConfig, subtype, this.manager);
+			var service = new OutletService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 		else if(type == 'rgb')
 		{
-			var service = new LightBulbService(this.homebridgeAccessory, this.deviceConfig, subtype, this.manager);
+			var service = new LightBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 
 		this.service.push(service);
