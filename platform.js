@@ -14,10 +14,11 @@ module.exports = class SynTexDynamicPlatform
 
         this.logger = new logger(pluginName, config.log_directory, api.user.storagePath());
 
-        if(!config || !config.options)
+        if(!config)
         {
-            this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!')
-            //return;
+            this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!');
+            
+            return;
         }
 
         this.accessories = new Map();
@@ -40,7 +41,7 @@ module.exports = class SynTexDynamicPlatform
                     }
                 }
 
-                var devices = [{id : 'acc1', name : 'Accessory 1', services : ['outlet', 'outlet', 'outlet', 'outlet', 'outlet']},
+                var devices = [{id : 'acc1', name : 'Accessory 1', services : [{ type : 'outlet', name : 'Outlet 1' }, { type : 'outlet', name : 'Outlet 2' }, { type : 'outlet', name : 'Outlet 3' }, { type : 'outlet', name : 'Outlet 4' }, { type : 'outlet', name : 'Outlet 5' }]},
                     {id : 'acc2', name : 'Accessory 2', services : ['rgb', 'switch']}];
 
                 for(const device of devices)
