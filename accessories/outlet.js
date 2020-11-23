@@ -1,30 +1,32 @@
-const BaseAccessory = require('./base')
+const BaseService = require('./base');
 
-let Accessory;
 let Service;
 let Characteristic;
 
-module.exports = class SwitchAccessory extends BaseAccessory
+module.exports = class OutletService extends BaseService
 {
-	constructor(homebridgeAccessory, deviceConfig, manager)
+	constructor(homebridgeAccessory, deviceConfig, subtype, manager)
 	{
-		Accessory = manager.platform.api.hap.Accessory;
 		Service = manager.platform.api.hap.Service;
-		Characteristic = manager.platform.api.hap.Characteristic;
+        Characteristic = manager.platform.api.hap.Characteristic;
+        
+        super(homebridgeAccessory, deviceConfig, Service.Outlet, 'outlet', subtype, manager);
 
-		super(homebridgeAccessory, deviceConfig, manager);
+        this.letters = '7' + subtype;
 
-		this.homebridgeAccessory.getService(Service.Outlet).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
+		homebridgeAccessory.getServiceById(Service.Outlet, subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
 	}
 
 	getState(callback)
 	{
+		console.log('getState() OUTLET');
+
 		callback(false);
 	}
 
 	setState(level, callback)
 	{
-		console.log(1, 'SAY HI', level);
+		console.log('setState(' + level + ') OUTLET');
 
 		callback();
 	}

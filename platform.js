@@ -1,5 +1,4 @@
-const BaseAccessory = require('./accessories/base');
-const OutletAccessory = require('./accessories/outlet');
+const UniversalAccessory = require('./accessories/universal');
 
 const pluginID = 'homebridge-syntex-dynamic-platform';
 const pluginName = 'SynTexDynamicPlatform';
@@ -13,12 +12,12 @@ module.exports = class SynTexDynamicPlatform
         this.log = log;
         this.config = config;
 
-        this.logger = new logger(pluginName, '/var/SynTex/log', api.user.storagePath());
+        this.logger = new logger(pluginName, config.log_directory, api.user.storagePath());
 
         if(!config || !config.options)
         {
             this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!')
-            return;
+            //return;
         }
 
         this.accessories = new Map();
@@ -31,15 +30,13 @@ module.exports = class SynTexDynamicPlatform
 
                 this.logger.debug('Initialisiere ' + pluginName + ' ...');
 
-                var devices = ['1234', '12345'];
+                var devices = ['acc1', 'acc2'];
 
                 for(const id of devices)
                 {
-                    console.log('ID', id);
-                    
                     if(this.accessories.get(this.api.hap.uuid.generate(id)) != null)
                     {
-                        this.removeAccessory(this.accessories.get(this.api.hap.uuid.generate(id)));
+                        //this.removeAccessory(this.accessories.get(this.api.hap.uuid.generate(id)));
                     }
                 }
 
@@ -66,7 +63,7 @@ module.exports = class SynTexDynamicPlatform
         const uuid = this.api.hap.uuid.generate(device.id);
         const homebridgeAccessory = this.accessories.get(uuid);
 
-        let deviceAccessory = new BaseAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger });
+        let deviceAccessory = new UniversalAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger });
         this.accessories.set(uuid, deviceAccessory.homebridgeAccessory);
     }
 
