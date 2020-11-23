@@ -8,9 +8,9 @@ module.exports = class SwitchService extends BaseService
 	{
         Characteristic = manager.platform.api.hap.Characteristic;
         
-        super(homebridgeAccessory, deviceConfig, serviceConfig, Service.Switch, manager);
+        super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.Switch, manager);
 
-		this.getService().getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
+		homebridgeAccessory.getServiceById(this.serviceType, serviceConfig.subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
 	}
 
 	getState(callback)
