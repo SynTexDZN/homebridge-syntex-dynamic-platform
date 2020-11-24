@@ -16,14 +16,14 @@ module.exports = class SwitchService extends BaseService
 
 	getState(callback)
 	{
-        console.log('getState() SWITCH');
+        console.log('getState() SWITCH', this.homebridgeAccessory.context);
 
 		callback(false);
 	}
 
 	setState(level, callback)
 	{
-		console.log('setState(' + level + ') SWITCH');
+		console.log('setState(' + level + ') SWITCH', this.homebridgeAccessory.context);
 
 		callback();
 	}

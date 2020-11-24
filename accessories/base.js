@@ -21,7 +21,6 @@ module.exports = class BaseService
 			manager.logger.debug('Erstelle neuen Service! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
 
             homebridgeAccessory.addService(serviceType, serviceConfig.name, serviceConfig.subtype)
-            //homebridgeAccessory.service.push();
         }
 	}
 }
