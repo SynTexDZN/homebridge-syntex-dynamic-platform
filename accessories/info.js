@@ -2,7 +2,7 @@ let Service, Characteristic;
 
 module.exports = class AccessoryInformationService
 {
-    constructor(homebridgeAccessory, deviceConfig, manager)
+    constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
     {
         Service = manager.platform.api.hap.Service;
         Characteristic = manager.platform.api.hap.Characteristic;
@@ -20,9 +20,9 @@ module.exports = class AccessoryInformationService
             service = homebridgeAccessory.addService(Service.AccessoryInformation, deviceConfig.name)
         }
 
-        service.setCharacteristic(Characteristic.SerialNumber, deviceConfig.id)
-            .setCharacteristic(Characteristic.Manufacturer, deviceConfig.manufacturer)
-            .setCharacteristic(Characteristic.Model, deviceConfig.model)
-            .setCharacteristic(Characteristic.FirmwareRevision, deviceConfig.version);
+        service.setCharacteristic(Characteristic.Manufacturer, serviceConfig.manufacturer)
+            .setCharacteristic(Characteristic.SerialNumber, deviceConfig.id)
+            .setCharacteristic(Characteristic.Model, serviceConfig.model)
+            .setCharacteristic(Characteristic.FirmwareRevision, serviceConfig.version);
     }
 }

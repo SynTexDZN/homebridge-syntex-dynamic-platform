@@ -21,9 +21,11 @@ module.exports = class UniversalAccessory
         this.name = deviceConfig['name'];
         this.services = deviceConfig['services'];
 
-		this.version = deviceConfig['version'] || '1.0.0';
-        this.model = deviceConfig['model'] || 'Virtual Accessory';
 		this.manufacturer = deviceConfig['manufacturer'] || 'SynTex';
+        this.model = deviceConfig['model'] || 'Virtual Accessory';
+		this.version = deviceConfig['version'] || '1.0.0';
+
+		console.log(this.version, this.model, this.manufacturer);
 		
 		this.manager = manager;
 
@@ -99,7 +101,7 @@ module.exports = class UniversalAccessory
 
 	setAccessoryInformation()
 	{
-		var service = new AccessoryInformationService(this.homebridgeAccessory, this.deviceConfig, this.manager);
+		var service = new AccessoryInformationService(this.homebridgeAccessory, this.deviceConfig, { manufacturer : this.manufacturer, model : this.model, version : this.version }, this.manager);
 
 		this.service.push(service);
 	}
