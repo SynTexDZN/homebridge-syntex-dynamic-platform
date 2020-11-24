@@ -6,9 +6,7 @@ module.exports = class BaseService
 		this.name = serviceConfig['name'];
 
 		this.letters = typeToLetter(serviceConfig.type) + serviceConfig.subtype;
-		this.serviceType = serviceType;
-
-		homebridgeAccessory.context = {}; // To Store Variables in Homebridge
+		this.homebridgeAccessory = homebridgeAccessory;
 
         var service = homebridgeAccessory.getServiceById(serviceType, serviceConfig.subtype);
 
@@ -25,11 +23,6 @@ module.exports = class BaseService
             homebridgeAccessory.addService(serviceType, serviceConfig.name, serviceConfig.subtype)
             //homebridgeAccessory.service.push();
         }
-	}
-	
-	getService()
-	{
-		return homebridgeAccessory.getServiceById(this.serviceType, this.letters[1]);
 	}
 }
 
