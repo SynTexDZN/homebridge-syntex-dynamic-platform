@@ -29,6 +29,8 @@ module.exports = class SynTexDynamicPlatform
 
             this.api.on('didFinishLaunching', () => {
 
+                // Demo Stuff
+
                 this.logger.debug('Initialisiere ' + pluginName + ' ...');
 
                 var devices = ['acc1', 'acc2'];
@@ -52,34 +54,38 @@ module.exports = class SynTexDynamicPlatform
         }
     }
 
-    refreshDeviceStates()
-    {
-    
-    }
-
-    addAccessory(device)
-    {
-        this.logger.log('info', 'bridge', 'Bridge', 'Hinzufügen: ' + device.name + ' ( ' + device.id + ' )');
-
-        const uuid = this.api.hap.uuid.generate(device.id);
-        const homebridgeAccessory = this.accessories.get(uuid);
-
-        let deviceAccessory = new UniversalAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger });
-        
-        this.accessories.set(uuid, deviceAccessory.homebridgeAccessory);
-    }
-
     registerPlatformAccessory(platformAccessory)
     {
         this.logger.debug('Registriere Platform Accessory [' + platformAccessory.displayName + ']');
         this.api.registerPlatformAccessories(pluginID, pluginName, [platformAccessory]);
     }
     
+    addAccessory(accessory)
+    {
+        this.logger.log('info', 'bridge', 'Bridge', 'Hinzufügen: ' + accessory.name + ' ( ' + accessory.id + ' )');
+
+        const uuid = this.api.hap.uuid.generate(accessory.id);
+        const homebridgeAccessory = this.accessories.get(uuid);
+
+        let deviceAccessory = new UniversalAccessory(homebridgeAccessory, accessory, { platform : this, logger : this.logger });
+        
+        this.accessories.set(uuid, deviceAccessory.homebridgeAccessory);
+    }
+
     configureAccessory(accessory)
     {
         this.logger.debug('Konfiguriere Accessory aus dem Cache Speicher [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
         this.accessories.set(accessory.UUID, accessory);
+    }
+
+    removeAccessory(accessory)
+    {
+        this.logger.debug('Entferne Accessory [' + accessory.name + '] ( ' + accessory.UUID + ' )');
+
+        this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
+
+        this.accessories.delete(accessory.uuid);
     }
     /*
     updateAccessoryReachability(accessory, state)
@@ -88,11 +94,4 @@ module.exports = class SynTexDynamicPlatform
         accessory.updateReachability(state);
     }
     */
-    removeAccessory(accessory)
-    {
-        this.logger.debug('Entferne Accessory [' + accessory.name + '] ( ' + accessory.UUID + ' )');
-        this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
-
-        this.accessories.delete(accessory.uuid);
-    }
 }
