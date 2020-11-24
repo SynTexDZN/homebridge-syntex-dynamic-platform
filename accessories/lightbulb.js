@@ -16,14 +16,12 @@ module.exports = class LightBulbService extends BaseService
 
 	getState(callback)
 	{
-		console.log('getState() LIGHTBULB', this.homebridgeAccessory.context);
-
-		callback(false);
+		callback(null, super.getState() || false);
 	}
 
 	setState(level, callback)
 	{
-        console.log('setState(' + level + ') LIGHTBULB', this.homebridgeAccessory.context);
+        super.setState(level);		
 
 		callback();
 	}

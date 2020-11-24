@@ -16,16 +16,12 @@ module.exports = class OutletService extends BaseService
 
 	getState(callback)
 	{
-		console.log('getState() OUTLET', this.homebridgeAccessory.context);
-
-		callback(this.homebridgeAccessory.context['state'] || false);
+		callback(null, super.getState() || false);
 	}
 
 	setState(level, callback)
 	{
-		console.log('setState(' + level + ') OUTLET', this.homebridgeAccessory.context);
-
-		this.homebridgeAccessory.context['state'] = level;
+		super.setState(level);		
 
 		callback();
 	}
