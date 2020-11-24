@@ -25,8 +25,6 @@ module.exports = class UniversalAccessory
         this.model = deviceConfig['model'] || 'Virtual Accessory';
 		this.version = deviceConfig['version'] || '1.0.0';
 
-		console.log(this.version, this.model, this.manufacturer);
-		
 		this.manager = manager;
 
 		PlatformAccessory = manager.platform.api.platformAccessory;
@@ -65,6 +63,31 @@ module.exports = class UniversalAccessory
 		this.subtypes[type]++;
 	}
 
+	addAccessory()
+	{
+		if(this.homebridgeAccessory)
+		{
+			this.logger.debug('Existierendes Accessory gefunden! ' + this.name + ' ( ' +  this.id + ' )');
+
+			this.homebridgeAccessory.displayName = this.name;
+		}
+		else
+		{
+			this.logger.debug('Erstelle neues Accessory! ' + this.name + ' ( ' +  this.id + ' )');
+
+			this.homebridgeAccessory = new PlatformAccessory(this.name, UUIDGen.generate(this.id), Service.Switch);
+
+			this.platform.registerPlatformAccessory(this.homebridgeAccessory);
+		}
+	}
+
+	setAccessoryInformation()
+	{
+		var service = new AccessoryInformationService(this.homebridgeAccessory, this.deviceConfig, { manufacturer : this.manufacturer, model : this.model, version : this.version }, this.manager);
+
+		this.service.push(service);
+	}
+
 	setService(config, subtype)
 	{
 		var name = this.name;
@@ -99,33 +122,8 @@ module.exports = class UniversalAccessory
 		this.service.push(service);
 	}
 
-	setAccessoryInformation()
-	{
-		var service = new AccessoryInformationService(this.homebridgeAccessory, this.deviceConfig, { manufacturer : this.manufacturer, model : this.model, version : this.version }, this.manager);
-
-		this.service.push(service);
-	}
-
 	removeService(type, subtype = 0)
 	{
 
-	}
-
-	addAccessory()
-	{
-		if(this.homebridgeAccessory)
-		{
-			this.logger.debug('Existierendes Accessory gefunden! ' + this.name + ' ( ' +  this.id + ' )');
-
-			this.homebridgeAccessory.displayName = this.name;
-		}
-		else
-		{
-			this.logger.debug('Erstelle neues Accessory! ' + this.name + ' ( ' +  this.id + ' )');
-
-			this.homebridgeAccessory = new PlatformAccessory(this.name, UUIDGen.generate(this.id), Service.Switch);
-
-			this.platform.registerPlatformAccessory(this.homebridgeAccessory);
-		}
 	}
 }
