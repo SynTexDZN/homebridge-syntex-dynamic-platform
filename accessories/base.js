@@ -2,10 +2,10 @@ module.exports = class BaseService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, serviceType, manager)
 	{
-		this.id = deviceConfig.id;
-		this.name = serviceConfig.name;
-		this.letters = typeToLetter(serviceConfig.type) + serviceConfig.subtype;
+		this.id = deviceConfig['id'];
+		this.name = serviceConfig['name'];
 
+		this.letters = typeToLetter(serviceConfig.type) + serviceConfig.subtype;
 		this.serviceType = serviceType;
 
 		homebridgeAccessory.context = {}; // To Store Variables in Homebridge

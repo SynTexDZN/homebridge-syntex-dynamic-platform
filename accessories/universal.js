@@ -1,3 +1,4 @@
+const AccessoryInformationService = require('./info');
 const OutletService = require('./outlet');
 const SwitchService = require('./switch');
 const LightBulbService = require('./lightbulb');
@@ -34,6 +35,8 @@ module.exports = class UniversalAccessory
 		this.deviceConfig = deviceConfig;
 
 		this.addAccessory();
+
+		this.setAccessoryInformation();
 
 		for(var i = 0; i < this.services.length; i++)
 		{
@@ -90,6 +93,13 @@ module.exports = class UniversalAccessory
 		{
 			var service = new LightBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
+
+		this.service.push(service);
+	}
+
+	setAccessoryInformation()
+	{
+		var service = new AccessoryInformationService(this.homebridgeAccessory, this.deviceConfig, this.manager);
 
 		this.service.push(service);
 	}
