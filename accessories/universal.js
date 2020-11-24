@@ -1,11 +1,12 @@
 const AccessoryInformationService = require('./info');
 const OutletService = require('./outlet');
 const SwitchService = require('./switch');
-const LightBulbService = require('./lightbulb');
+const LightBulbService = require('./lightBulb');
+const DimmedBulbService = require('./dimmedBulb');
+const ColoredBulbService = require('./coloredBulb');
 
 let PlatformAccessory;
 let Service;
-let Characteristic;
 let UUIDGen;
 
 module.exports = class UniversalAccessory
@@ -29,7 +30,7 @@ module.exports = class UniversalAccessory
 
 		PlatformAccessory = manager.platform.api.platformAccessory;
 
-		({ Service, Characteristic, uuid: UUIDGen } = manager.platform.api.hap);
+		({ Service, uuid: UUIDGen } = manager.platform.api.hap);
 
 		this.homebridgeAccessory = homebridgeAccessory;
 		this.deviceConfig = deviceConfig;
@@ -114,9 +115,17 @@ module.exports = class UniversalAccessory
 		{
 			var service = new OutletService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
-		else if(type == 'rgb')
+		else if(type == 'led')
 		{
 			var service = new LightBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+		}
+		else if(type == 'dimmer')
+		{
+			var service = new DimmedBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+		}
+		else if(type == 'rgb')
+		{
+			var service = new ColoredBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 
 		this.service.push(service);
