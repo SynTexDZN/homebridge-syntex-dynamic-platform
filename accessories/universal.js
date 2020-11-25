@@ -39,16 +39,18 @@ module.exports = class UniversalAccessory
 
 		this.setAccessoryInformation();
 
+		console.log(typeof this.services, Array.isArray(this.services), this.services);
+
 		if(Array.isArray(this.services))
 		{
 			for(var i = 0; i < this.services.length; i++)
 			{
-				this.addService(deviceConfig.services[i]);
+				this.addService(this.services[i]);
 			}
 		}
 		else
 		{
-			this.addService(deviceConfig.service);
+			this.addService(this.services);
 		}
 	}
 
