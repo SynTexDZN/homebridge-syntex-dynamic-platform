@@ -44,7 +44,9 @@ module.exports = class SynTexDynamicPlatform
                 }
 
                 var devices = [{id : 'acc1', name : 'Accessory 1', services : [{ type : 'outlet', name : 'Outlet 1' }, { type : 'outlet', name : 'Outlet 2' }, { type : 'outlet', name : 'Outlet 3' }, { type : 'outlet', name : 'Outlet 4' }, { type : 'outlet', name : 'Outlet 5' }]},
-                    {id : 'acc2', name : 'Accessory 2', services : ['rgb', 'switch']}];
+                    {id : 'acc2', name : 'Accessory 2', services : [/*'led', 'dimmer', */'rgb', 'switch']},
+                    {id : 'acc3', name : 'Accessory 3', services : ['dimmer']},
+                    {id : 'acc4', name : 'Accessory 4', services : 'led'}];
 
                 for(const device of devices)
                 {

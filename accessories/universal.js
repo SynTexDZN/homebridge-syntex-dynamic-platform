@@ -39,9 +39,16 @@ module.exports = class UniversalAccessory
 
 		this.setAccessoryInformation();
 
-		for(var i = 0; i < this.services.length; i++)
+		if(Array.isArray(this.services))
 		{
-			this.addService(deviceConfig.services[i]);
+			for(var i = 0; i < this.services.length; i++)
+			{
+				this.addService(deviceConfig.services[i]);
+			}
+		}
+		else
+		{
+			this.addService(deviceConfig.service);
 		}
 	}
 
@@ -107,28 +114,33 @@ module.exports = class UniversalAccessory
 			}
 		}
 
+		var service = null;
+
 		if(type == 'switch')
 		{
-			var service = new SwitchService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new SwitchService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 		else if(type == 'outlet')
 		{
-			var service = new OutletService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new OutletService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 		else if(type == 'led')
 		{
-			var service = new LightBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new LightBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 		else if(type == 'dimmer')
 		{
-			var service = new DimmedBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new DimmedBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 		else if(type == 'rgb')
 		{
-			var service = new ColoredBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new ColoredBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 
-		this.service.push(service);
+		if(service != null)
+		{
+			this.service.push(service);
+		}
 	}
 
 	removeService(type, subtype = 0)
