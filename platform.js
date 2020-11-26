@@ -33,7 +33,7 @@ module.exports = class SynTexDynamicPlatform
 
                 this.logger.debug('Initialisiere ' + pluginName + ' ...');
 
-                var devices = ['acc1', 'acc2'];
+                var devices = ['acc1', 'acc2', 'acc3', 'acc4'];
 
                 for(const id of devices)
                 {
@@ -83,7 +83,7 @@ module.exports = class SynTexDynamicPlatform
 
     removeAccessory(accessory)
     {
-        this.logger.debug('Entferne Accessory [' + accessory.name + '] ( ' + accessory.UUID + ' )');
+        this.logger.debug('Entferne Accessory [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
         this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
 
