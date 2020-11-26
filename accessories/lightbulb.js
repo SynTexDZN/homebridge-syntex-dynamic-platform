@@ -8,9 +8,14 @@ module.exports = class LightBulbService extends BaseService
 	{
 		Characteristic = manager.platform.api.hap.Characteristic;
 		Service = manager.platform.api.hap.Service;
-        
-        super(homebridgeAccessory, deviceConfig, serviceConfig, Service.Lightbulb, manager);
 
+		if(!serviceConfig.subtype.includes('-'))
+		{
+			serviceConfig.subtype = 'led-' + serviceConfig.subtype;
+		}
+
+		super(homebridgeAccessory, deviceConfig, serviceConfig, Service.Lightbulb, manager);
+		
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
 	}
 

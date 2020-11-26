@@ -7,7 +7,14 @@ module.exports = class BaseService
 		this.id = deviceConfig['id'];
 		this.name = serviceConfig['name'];
 
-		this.letters = typeToLetter(serviceConfig.type) + serviceConfig.subtype;
+		var subtype = serviceConfig.subtype;
+
+		if(subtype.includes('-'))
+		{
+			subtype = subtype.split('-')[1];
+		}
+
+		this.letters = typeToLetter(serviceConfig.type) + subtype;
 		this.homebridgeAccessory = homebridgeAccessory;
 
 		logger = manager.logger;
