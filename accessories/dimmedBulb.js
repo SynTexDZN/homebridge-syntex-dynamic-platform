@@ -9,7 +9,9 @@ module.exports = class ColoredBulbService extends LightBulbService
 		Characteristic = manager.platform.api.hap.Characteristic;
 		Service = manager.platform.api.hap.Service;
         
-        super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
+		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
+		
+		console.log(this.letters);
 
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
 	}

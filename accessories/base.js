@@ -32,6 +32,8 @@ module.exports = class BaseService
 	{
 		var value = null;
 
+		console.log(key, this.homebridgeAccessory.context);
+
 		if(this.homebridgeAccessory != null
 			&& this.homebridgeAccessory.context != null
 			&& this.homebridgeAccessory.context.data != null
@@ -75,8 +77,8 @@ module.exports = class BaseService
 	}
 }
 
-var types = ['contact', 'motion', 'temperature', 'humidity', 'rain', 'light', 'occupancy', 'smoke', 'airquality', 'rgb', 'switch', 'relais', 'statelessswitch', 'outlet'];
-var letters = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7'];
+var types = ['contact', 'motion', 'temperature', 'humidity', 'rain', 'light', 'occupancy', 'smoke', 'airquality', 'rgb', 'switch', 'relais', 'statelessswitch', 'outlet', 'led', 'dimmer'];
+var letters = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 function letterToType(letter)
 {
