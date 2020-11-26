@@ -8,6 +8,11 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 	{
 		Characteristic = manager.platform.api.hap.Characteristic;
 		Service = manager.platform.api.hap.Service;
+
+		if(!serviceConfig.subtype.includes('-'))
+		{
+			serviceConfig.subtype = 'rgb-' + serviceConfig.subtype;
+		}
         
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
