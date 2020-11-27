@@ -12,6 +12,13 @@ module.exports = class OutletService extends BaseService
         super(homebridgeAccessory, deviceConfig, serviceConfig, Service.Outlet, manager);
 
 		homebridgeAccessory.getServiceById(Service.Outlet, serviceConfig.subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
+	
+		this.changeHandler = (state) =>
+        {
+            homebridgeAccessory.getServiceById(Service.Outlet, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
+
+            super.setValue('state', state);
+        };
 	}
 
 	getState(callback)

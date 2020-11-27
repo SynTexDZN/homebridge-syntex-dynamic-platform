@@ -17,6 +17,13 @@ module.exports = class LightBulbService extends BaseService
 		super(homebridgeAccessory, deviceConfig, serviceConfig, Service.Lightbulb, manager);
 		
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
+	
+		this.changeHandler = (state) =>
+        {
+            homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
+
+            super.setValue('state', state);
+        };
 	}
 
 	getState(callback)

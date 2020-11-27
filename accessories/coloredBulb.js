@@ -18,6 +18,19 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
+	
+		this.changeHandler = (state) =>
+        {
+			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state.power);
+			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).updateValue(state.hue);
+			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).updateValue(state.saturation);
+			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).updateValue(state.brightness);
+
+			super.setValue('state', state.power);
+			super.setValue('hue', state.hue);
+			super.setValue('saturation', state.saturation);
+			super.setValue('brightness', state.brightness);
+        };
 	}
 
 	getHue(callback)

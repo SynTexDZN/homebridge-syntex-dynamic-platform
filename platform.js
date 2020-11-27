@@ -33,7 +33,7 @@ module.exports = class SynTexDynamicPlatform
 
                 this.logger.debug('Initialisiere ' + pluginName + ' ...');
 
-                var devices = ['acc1', 'acc2', 'acc3', 'acc4'];
+                var devices = ['acc1', 'acc2', 'acc3', 'acc4', 'acc5'];
 
                 for(const id of devices)
                 {
@@ -53,6 +53,37 @@ module.exports = class SynTexDynamicPlatform
                 {
                     this.addAccessory(device);
                 }
+
+                for(const accessory of this.accessories)
+                {
+                    for(const x in accessory[1].service)
+                    {
+                        if(accessory[1].service[x].letters)
+                        {
+                            console.log(accessory[1].id, accessory[1].service[x].letters);
+
+                            console.log(this.readAccessoryService(accessory[1].id, accessory[1].service[x].letters));
+                        }
+                    }
+                }
+
+                setTimeout(() => {
+
+                    this.updateAccessoryService('acc5', 'A0', false);
+                    
+                }, 10000);
+
+                setTimeout(() => {
+
+                    this.updateAccessoryService('acc5', 'A0', true);
+                    
+                }, 20000);
+
+                setTimeout(() => {
+
+                    this.updateAccessoryService('acc3', '90', { power : true, brightness : 75 });
+                    
+                }, 30000);
             });
         }
     }
@@ -72,7 +103,7 @@ module.exports = class SynTexDynamicPlatform
 
         let deviceAccessory = new UniversalAccessory(homebridgeAccessory, accessory, { platform : this, logger : this.logger });
         
-        this.accessories.set(uuid, deviceAccessory.homebridgeAccessory);
+        this.accessories.set(uuid, deviceAccessory);
     }
 
     configureAccessory(accessory)
@@ -97,4 +128,36 @@ module.exports = class SynTexDynamicPlatform
         accessory.updateReachability(state);
     }
     */
+
+    updateAccessoryService(id, letters, value)
+    {
+        const uuid = this.api.hap.uuid.generate(id);
+        const homebridgeAccessory = this.accessories.get(uuid);
+
+        for(var i = 0; i < homebridgeAccessory.service.length; i++)
+        {
+            if(homebridgeAccessory.service[i].letters == letters)
+            {
+                homebridgeAccessory.service[i].changeHandler(value);
+            }
+        }
+    }
+
+    readAccessoryService(id, letters)
+    {
+        const uuid = this.api.hap.uuid.generate(id);
+        const homebridgeAccessory = this.accessories.get(uuid);
+
+        var state = null;
+
+        for(var i = 0; i < homebridgeAccessory.service.length; i++)
+        {
+            if(homebridgeAccessory.service[i].letters == letters)
+            {
+                state = homebridgeAccessory.service[i].getValues();
+            }
+        }
+
+        return state;
+    }
 }

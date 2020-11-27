@@ -49,7 +49,7 @@ module.exports = class BaseService
 		{
 			value = this.homebridgeAccessory.context.data[this.letters][key];
 
-			logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + value + '] ( ' + this.id + ' )');
+			logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
 		}
 		else
 		{
@@ -75,12 +75,35 @@ module.exports = class BaseService
 
 			this.homebridgeAccessory.context.data[this.letters][key] = value;
 
-			logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + value + '] ( ' + this.id + ' )');
+			logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+
+			return true;
 		}
 		else
 		{
 			logger.log('error', this.id, this.letters, '[' + this.name + '] konnte nicht im Cache gespeichert werden! ( ' + this.id + ' )');
+
+			return false;
 		}
+	}
+
+	getValues()
+	{
+		var values = null;
+
+		if(this.homebridgeAccessory != null
+			&& this.homebridgeAccessory.context != null
+			&& this.homebridgeAccessory.context.data != null
+			&& this.homebridgeAccessory.context.data[this.letters] != null)
+		{
+			values = this.homebridgeAccessory.context.data[this.letters];
+		}
+		else
+		{
+			logger.log('warn', this.id, this.letters, '[' + this.name + '] wurde nicht im Cache gefunden! ( ' + this.id + ' )');
+		}
+
+		return values;
 	}
 }
 
