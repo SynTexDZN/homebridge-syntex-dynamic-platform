@@ -21,15 +21,31 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 	
 		this.changeHandler = (state) =>
         {
-			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state.power);
-			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).updateValue(state.hue);
-			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).updateValue(state.saturation);
-			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).updateValue(state.brightness);
+			if(state instanceof Object)
+			{
+				var v = [
+					{ type : 'power', Characteristic : Characteristic.On },
+					{ type : 'hue', Characteristic : Characteristic.Hue },
+					{ type : 'saturation', Characteristic : Characteristic.Saturation },
+					{ type : 'brightness', Characteristic : Characteristic.Brightness }
+				];
 
-			super.setValue('state', state.power);
-			super.setValue('hue', state.hue);
-			super.setValue('saturation', state.saturation);
-			super.setValue('brightness', state.brightness);
+				for(const i in v)
+				{
+					if(state[v[i].type] != null)
+					{
+						homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(v[i].Characteristic).updateValue(state[v[i].type]);
+						
+						super.setValue('state', state[v[i].type]);
+					}
+				}
+			}
+			else
+			{
+				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
+					
+				super.setValue('state', state);
+			}
         };
 	}
 

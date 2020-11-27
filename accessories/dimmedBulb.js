@@ -20,11 +20,29 @@ module.exports = class ColoredBulbService extends LightBulbService
 	
 		this.changeHandler = (state) =>
         {
-			homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state.power);
-            homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).updateValue(state.brightness);
+			if(state instanceof Object)
+			{
+				var v = [
+					{ type : 'power', Characteristic : Characteristic.On },
+					{ type : 'brightness', Characteristic : Characteristic.Brightness }
+				];
 
-			super.setValue('state', state.power);
-			super.setValue('brightness', state.brightness);
+				for(const i in v)
+				{
+					if(state[v[i].type] != null)
+					{
+						homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(v[i].Characteristic).updateValue(state[v[i].type]);
+						
+						super.setValue('state', state[v[i].type]);
+					}
+				}
+			}
+			else
+			{
+				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
+					
+				super.setValue('state', state);
+			}
         };
 	}
 
