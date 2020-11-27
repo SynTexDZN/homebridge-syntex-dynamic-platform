@@ -16,8 +16,6 @@ module.exports = class ColoredBulbService extends LightBulbService
         
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
-		console.log(this.letters);
-
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
 	}
 

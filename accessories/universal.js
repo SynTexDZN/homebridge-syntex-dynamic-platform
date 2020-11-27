@@ -4,6 +4,7 @@ const SwitchService = require('./switch');
 const LightBulbService = require('./lightBulb');
 const DimmedBulbService = require('./dimmedBulb');
 const ColoredBulbService = require('./coloredBulb');
+const ContactService = require('./contact');
 
 let PlatformAccessory;
 let Service;
@@ -39,8 +40,6 @@ module.exports = class UniversalAccessory
 
 		this.setAccessoryInformation();
 
-		console.log(typeof this.services, Array.isArray(this.services), this.services);
-
 		if(Array.isArray(this.services))
 		{
 			for(var i = 0; i < this.services.length; i++)
@@ -68,7 +67,7 @@ module.exports = class UniversalAccessory
 			this.subtypes[type] = 0;
 		}
 
-		this.setService(config, this.subtypes[type]);
+		this.setService(config, this.subtypes[type].toString());
 
 		this.subtypes[type]++;
 	}
@@ -137,6 +136,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'rgb')
 		{
 			service = new ColoredBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+		}
+		else if(type == 'contact')
+		{
+			service = new ContactService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
 		}
 
 		if(service != null)

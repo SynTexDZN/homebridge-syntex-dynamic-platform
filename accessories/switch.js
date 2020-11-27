@@ -11,8 +11,6 @@ module.exports = class SwitchService extends BaseService
         
 		super(homebridgeAccessory, deviceConfig, serviceConfig, Service.Switch, manager);
 		
-		console.log(this.letters);
-
 		homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
 	}
 
