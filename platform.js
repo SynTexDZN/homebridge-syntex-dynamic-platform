@@ -3,7 +3,7 @@ const UniversalAccessory = require('./accessories/universal');
 const pluginID = 'homebridge-syntex-dynamic-platform';
 const pluginName = 'SynTexDynamicPlatform';
 
-let logger = require('./logger');
+let logger = require('./logger'), WebServer = require('./webserver');;
 
 module.exports = class SynTexDynamicPlatform
 {
@@ -11,8 +11,63 @@ module.exports = class SynTexDynamicPlatform
     {
         this.log = log;
         this.config = config;
+        this.port = config.port;
+
+        console.log(this.port);
 
         this.logger = new logger(pluginName, config.log_directory, api.user.storagePath());
+
+        if(this.port != null)
+        {
+            WebServer = new WebServer(pluginName, this.logger, this.port, false);
+
+            WebServer.addPage('/serverside/version', (response) => {
+
+                response.write(require('./package.json').version);
+                response.end();
+            });
+    
+            WebServer.addPage('/serverside/check-restart', (response) => {
+    
+                response.write(restart.toString());
+                response.end();
+            });
+    
+            WebServer.addPage('/serverside/update', (response, urlParams) => {
+    
+                var version = urlParams.version != null ? urlParams.version : 'latest';
+    
+                const { exec } = require('child_process');
+                
+                exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
+    
+                    try
+                    {
+                        if(error || stderr.includes('ERR!'))
+                        {
+                            logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' konnte nicht aktualisiert werden! ' + (error || stderr));
+                        }
+                        else
+                        {
+                            logger.log('success', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' wurde auf die Version [' + version + '] aktualisiert!');
+    
+                            restart = true;
+    
+                            logger.log('warn', 'bridge', 'Bridge', 'Die Homebridge wird neu gestartet ..');
+    
+                            exec('sudo systemctl restart homebridge');
+                        }
+    
+                        response.write(error || stderr.includes('ERR!') ? 'Error' : 'Success');
+                        response.end();
+                    }
+                    catch(e)
+                    {
+                        logger.err(e);
+                    }
+                });
+            });
+        }
 
         if(!config)
         {

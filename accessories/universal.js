@@ -116,30 +116,31 @@ module.exports = class UniversalAccessory
 		}
 
 		var service = null;
+		var serviceConfig = { name : name, type : type, subtype : subtype };
 
 		if(type == 'switch')
 		{
-			service = new SwitchService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new SwitchService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 		else if(type == 'outlet')
 		{
-			service = new OutletService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new OutletService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 		else if(type == 'led')
 		{
-			service = new LightBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new LightBulbService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 		else if(type == 'dimmer')
 		{
-			service = new DimmedBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new DimmedBulbService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 		else if(type == 'rgb')
 		{
-			service = new ColoredBulbService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new ColoredBulbService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 		else if(type == 'contact')
 		{
-			service = new ContactService(this.homebridgeAccessory, this.deviceConfig, { name : name, type : type, subtype : subtype }, this.manager);
+			service = new ContactService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)

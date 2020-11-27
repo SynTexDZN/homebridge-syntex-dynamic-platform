@@ -17,7 +17,7 @@ module.exports = class AccessoryInformationService
 		{
 			manager.logger.debug('Erstelle neuen Informations-Service! ' + deviceConfig.name + ' ( ' +  deviceConfig.id + ' )');
 
-            service = homebridgeAccessory.addService(Service.AccessoryInformation, deviceConfig.name)
+            service = homebridgeAccessory.addService(Service.AccessoryInformation, deviceConfig.name);
         }
 
         service.setCharacteristic(Characteristic.Manufacturer, serviceConfig.manufacturer)
