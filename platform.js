@@ -1,17 +1,19 @@
 const UniversalAccessory = require('./accessories/universal');
 
-const pluginID = 'homebridge-syntex-dynamic-platform';
-const pluginName = 'SynTexDynamicPlatform';
+var pluginID = 'homebridge-syntex-dynamic-platform';
+var pluginName = 'SynTexDynamicPlatform';
 
 let logger = require('./logger'), WebServer = require('./webserver');;
 
 module.exports = class SynTexDynamicPlatform
 {
-    constructor(log, config, api)
+    constructor(config, api, pluginID, pluginName)
     {
-        this.log = log;
         this.config = config;
         this.port = config.port;
+
+        pluginID = pluginID;
+        pluginName = pluginName;
 
         console.log(this.port);
 
