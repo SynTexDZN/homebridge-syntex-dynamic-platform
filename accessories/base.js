@@ -33,7 +33,7 @@ module.exports = class BaseService
         }
 	}
 
-	getValue(key)
+	getValue(key, verbose)
 	{
 		var value = null;
 
@@ -47,7 +47,10 @@ module.exports = class BaseService
 		{
 			value = this.homebridgeAccessory.context.data[this.letters][key];
 
-			this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+			if(verbose)
+			{
+				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+			}
 		}
 		else
 		{
@@ -57,7 +60,7 @@ module.exports = class BaseService
 		return value;
 	}
 
-	setValue(key, value)
+	setValue(key, value, verbose)
 	{
 		if(this.homebridgeAccessory && this.homebridgeAccessory.context)
 		{
@@ -73,7 +76,10 @@ module.exports = class BaseService
 
 			this.homebridgeAccessory.context.data[this.letters][key] = value;
 
-			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+			if(verbose)
+			{
+				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+			}
 
 			return true;
 		}

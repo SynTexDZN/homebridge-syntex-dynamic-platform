@@ -23,7 +23,7 @@ module.exports = class OutletService extends BaseService
 	
 	getState(callback)
 	{
-        callback(super.getValue('state'));
+        callback(super.getValue('state', true));
 	}
 
 	setState(level, callback)
