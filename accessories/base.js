@@ -5,7 +5,7 @@ module.exports = class BaseService
 		this.id = deviceConfig['id'];
 		this.name = serviceConfig['name'];
 
-		console.log(5, deviceConfig, serviceConfig);
+		console.log(5, homebridgeAccessory != null, deviceConfig, serviceConfig);
 
 		var subtype = serviceConfig.subtype;
 
