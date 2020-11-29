@@ -13,10 +13,8 @@ var pluginName = 'SynTexDynamicPlatform';
 
 let logger = require('./logger'), WebServer = require('./webserver');;
 
-module.exports = class SynTexDynamicPlatform
+let DynamicPlatform = class SynTexDynamicPlatform
 {
-    Accessory = { UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService };
-
     constructor(config, api, pID, pName)
     {
         this.config = config;
@@ -242,3 +240,5 @@ module.exports = class SynTexDynamicPlatform
         return state;
     }
 }
+
+module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService };
