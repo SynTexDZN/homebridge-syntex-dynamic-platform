@@ -11,11 +11,11 @@ module.exports = class AccessoryInformationService
 
         if(service)
 		{
-			this.logger.debug('Existierenden Informations-Service gefunden! ' + deviceConfig.name + ' ( ' +  deviceConfig.id + ' )');
+			manager.logger.debug('Existierenden Informations-Service gefunden! ' + deviceConfig.name + ' ( ' +  deviceConfig.id + ' )');
 		}
 		else
 		{
-			this.logger.debug('Erstelle neuen Informations-Service! ' + deviceConfig.name + ' ( ' +  deviceConfig.id + ' )');
+			manager.logger.debug('Erstelle neuen Informations-Service! ' + deviceConfig.name + ' ( ' +  deviceConfig.id + ' )');
 
             service = homebridgeAccessory.addService(Service.AccessoryInformation, deviceConfig.name);
         }
