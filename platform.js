@@ -15,12 +15,12 @@ let logger = require('./logger'), WebServer = require('./webserver');;
 
 module.exports = class SynTexDynamicPlatform
 {
+    Accessory = { UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService };
+
     constructor(config, api, pID, pName)
     {
         this.config = config;
         this.port = config.port;
-
-        this.Accessory = { UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService };
 
         pluginID = pID;
         pluginName = pName;
