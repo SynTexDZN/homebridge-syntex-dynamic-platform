@@ -77,11 +77,11 @@ module.exports = class SynTexDynamicPlatform
         }
 
         this.accessories = new Map();
-
+        
         if(api)
         {
             this.api = api;
-
+            /*
             this.api.on('didFinishLaunching', () => {
 
                 // Demo Stuff
@@ -140,6 +140,7 @@ module.exports = class SynTexDynamicPlatform
                     
                 }, 30000);
             });
+            */
         }
     }
 
