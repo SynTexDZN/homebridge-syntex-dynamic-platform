@@ -1,3 +1,4 @@
+const { pid } = require('process');
 const UniversalAccessory = require('./accessories/universal');
 
 var pluginID = 'homebridge-syntex-dynamic-platform';
@@ -7,13 +8,13 @@ let logger = require('./logger'), WebServer = require('./webserver');;
 
 module.exports = class SynTexDynamicPlatform
 {
-    constructor(config, api, pluginID, pluginName)
+    constructor(config, api, pID, pName)
     {
         this.config = config;
         this.port = config.port;
 
-        pluginID = pluginID;
-        pluginName = pluginName;
+        pluginID = pID;
+        pluginName = pName;
 
         console.log(this.port);
 
