@@ -1,5 +1,12 @@
 const { pid } = require('process');
 const UniversalAccessory = require('./accessories/universal');
+const AccessoryInformationService = require('./info');
+const OutletService = require('./outlet');
+const SwitchService = require('./switch');
+const LightBulbService = require('./lightBulb');
+const DimmedBulbService = require('./dimmedBulb');
+const ColoredBulbService = require('./coloredBulb');
+const ContactService = require('./contact');
 
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
@@ -12,6 +19,8 @@ module.exports = class SynTexDynamicPlatform
     {
         this.config = config;
         this.port = config.port;
+
+        this.Accessory = { UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService };
 
         pluginID = pID;
         pluginName = pName;
