@@ -161,6 +161,11 @@ module.exports = class SynTexDynamicPlatform
         this.logger.debug('Registriere Platform Accessory [' + platformAccessory.displayName + ']');
         this.api.registerPlatformAccessories(pluginID, pluginName, [platformAccessory]);
     }
+
+    getPlatformAccessory()
+    {
+        return this;
+    }
     
     addAccessory(accessory)
     {
@@ -169,9 +174,17 @@ module.exports = class SynTexDynamicPlatform
         const uuid = this.api.hap.uuid.generate(accessory.id);
         const homebridgeAccessory = this.accessories.get(uuid);
 
-        let deviceAccessory = new UniversalAccessory(homebridgeAccessory, accessory, { platform : this, logger : this.logger });
+        //let deviceAccessory = new UniversalAccessory(homebridgeAccessory, accessory, { platform : this, logger : this.logger });
         
-        this.accessories.set(uuid, deviceAccessory);
+        this.accessories.set(uuid, accessory);
+    }
+
+    getAccessory(id)
+    {
+        const uuid = this.api.hap.uuid.generate(id);
+        const homebridgeAccessory = this.accessories.get(uuid);
+
+        return homebridgeAccessory;
     }
 
     configureAccessory(accessory)
