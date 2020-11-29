@@ -1,12 +1,12 @@
 const { pid } = require('process');
 const UniversalAccessory = require('./accessories/universal');
-const AccessoryInformationService = require('./info');
-const OutletService = require('./outlet');
-const SwitchService = require('./switch');
-const LightBulbService = require('./lightBulb');
-const DimmedBulbService = require('./dimmedBulb');
-const ColoredBulbService = require('./coloredBulb');
-const ContactService = require('./contact');
+const AccessoryInformationService = require('./accessories/info');
+const OutletService = require('./accessories/outlet');
+const SwitchService = require('./accessories/switch');
+const LightBulbService = require('./accessories/lightBulb');
+const DimmedBulbService = require('./accessories/dimmedBulb');
+const ColoredBulbService = require('./accessories/coloredBulb');
+const ContactService = require('./accessories/contact');
 
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
