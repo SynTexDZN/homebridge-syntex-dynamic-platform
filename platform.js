@@ -23,8 +23,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
         pluginID = pID;
         pluginName = pName;
 
-        console.log(this.port);
-
         this.logger = new logger(pluginName, config.log_directory, api.user.storagePath());
 
         if(this.port != null)

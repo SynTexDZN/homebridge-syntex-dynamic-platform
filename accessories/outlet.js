@@ -11,8 +11,6 @@ module.exports = class OutletService extends BaseService
         
 		super(homebridgeAccessory, deviceConfig, serviceConfig, Service.Outlet, manager);
 		
-		console.log(4, homebridgeAccessory != null, deviceConfig, serviceConfig);
-
 		homebridgeAccessory.getServiceById(Service.Outlet, serviceConfig.subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
 	
 		this.changeHandler = (state) =>
