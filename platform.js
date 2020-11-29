@@ -30,7 +30,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
         if(this.port != null)
         {
             WebServer = new WebServer(pluginName, this.logger, this.port, false);
-
+            /*
             WebServer.addPage('/serverside/version', (response) => {
 
                 response.write(require('./package.json').version);
@@ -77,6 +77,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
                     }
                 });
             });
+            */
         }
 
         if(!config)

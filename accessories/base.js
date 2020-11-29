@@ -1,5 +1,3 @@
-let logger;
-
 module.exports = class BaseService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, serviceType, manager)
@@ -17,19 +15,19 @@ module.exports = class BaseService
 		this.letters = typeToLetter(serviceConfig.type) + subtype;
 		this.homebridgeAccessory = homebridgeAccessory;
 
-		logger = manager.logger;
+		this.logger = manager.logger;
 
         var service = homebridgeAccessory.getServiceById(serviceType, serviceConfig.subtype);
 
         if(service)
 		{
-			logger.debug('Existierenden Service gefunden! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
+			this.logger.debug('Existierenden Service gefunden! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
 
 			service.setCharacteristic(manager.platform.api.hap.Characteristic.Name, serviceConfig.name);
 		}
 		else
 		{
-			logger.debug('Erstelle neuen Service! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
+			this.logger.debug('Erstelle neuen Service! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
 
             homebridgeAccessory.addService(serviceType, serviceConfig.name, serviceConfig.subtype)
         }
@@ -49,11 +47,11 @@ module.exports = class BaseService
 		{
 			value = this.homebridgeAccessory.context.data[this.letters][key];
 
-			logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+			this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
 		}
 		else
 		{
-			logger.log('warn', this.id, this.letters, '[' + this.name + '] wurde nicht im Cache gefunden! ( ' + this.id + ' )');
+			this.logger.log('warn', this.id, this.letters, '[' + this.name + '] wurde nicht im Cache gefunden! ( ' + this.id + ' )');
 		}
 
 		return value;
@@ -75,13 +73,13 @@ module.exports = class BaseService
 
 			this.homebridgeAccessory.context.data[this.letters][key] = value;
 
-			logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
 
 			return true;
 		}
 		else
 		{
-			logger.log('error', this.id, this.letters, '[' + this.name + '] konnte nicht im Cache gespeichert werden! ( ' + this.id + ' )');
+			this.logger.log('error', this.id, this.letters, '[' + this.name + '] konnte nicht im Cache gespeichert werden! ( ' + this.id + ' )');
 
 			return false;
 		}
@@ -100,7 +98,7 @@ module.exports = class BaseService
 		}
 		else
 		{
-			logger.log('warn', this.id, this.letters, '[' + this.name + '] wurde nicht im Cache gefunden! ( ' + this.id + ' )');
+			this.logger.log('warn', this.id, this.letters, '[' + this.name + '] wurde nicht im Cache gefunden! ( ' + this.id + ' )');
 		}
 
 		return values;
