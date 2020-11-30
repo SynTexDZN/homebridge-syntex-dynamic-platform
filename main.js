@@ -22,7 +22,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
             return;
         }
-        
+
         this.config = config;
         this.port = config.port;
 
@@ -33,7 +33,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
         if(this.port != null)
         {
-            this.WebServer = new WebServer(pluginName, this.logger, this.port, false);
+            this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
             /*
             WebServer.addPage('/serverside/version', (response) => {
 
@@ -166,6 +166,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
     addAccessory(accessory)
     {
         this.logger.log('info', 'bridge', 'Bridge', 'Hinzufügen: ' + accessory.name + ' ( ' + accessory.id + ' )');
+
+        const uuid = this.api.hap.uuid.generate(accessory.id);
 
         this.accessories.set(uuid, accessory);
     }
