@@ -48,7 +48,7 @@ module.exports = class ColoredBulbService extends LightBulbService
 
 	getBrightness(callback)
 	{
-		callback(null, super.getValue('brightness') || 100);
+		callback(super.getValue('brightness', true));
 	}
 
 	setBrightness(level, callback)

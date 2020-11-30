@@ -23,7 +23,7 @@ module.exports = class SwitchService extends BaseService
 
 	getState(callback)
 	{
-        callback(null, super.getValue('state') || false);
+        callback(super.getValue('state', true));
 	}
 
 	setState(level, callback)

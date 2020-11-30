@@ -51,7 +51,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	getHue(callback)
 	{
-		callback(null, super.getValue('hue') || 0);
+		callback(super.getValue('hue', true));
 	}
 
 	setHue(level, callback)
@@ -63,7 +63,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	getSaturation(callback)
 	{
-		callback(null, super.getValue('saturation') || 100);
+		callback(super.getValue('saturation', true));
 	}
 
 	setSaturation(level, callback)
