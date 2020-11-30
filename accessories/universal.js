@@ -153,4 +153,24 @@ module.exports = class UniversalAccessory
 	{
 
 	}
+
+	getID()
+    {
+        return this.mac;
+    }
+
+    getManufacturer()
+    {
+        return this.manufacturer
+    }
+
+    getModel()
+    {
+        return this.model;
+    }
+
+    getVersion()
+    {
+        return this.version;
+    }
 }
