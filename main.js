@@ -1,4 +1,3 @@
-const { pid } = require('process');
 const UniversalAccessory = require('./accessories/universal');
 const AccessoryInformationService = require('./accessories/info');
 const OutletService = require('./accessories/outlet');
@@ -17,6 +16,13 @@ let DynamicPlatform = class SynTexDynamicPlatform
 {
     constructor(config, api, pID, pName)
     {
+        if(!config)
+        {
+            this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!');
+
+            return;
+        }
+        
         this.config = config;
         this.port = config.port;
 
@@ -27,7 +33,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
         if(this.port != null)
         {
-            WebServer = new WebServer(pluginName, this.logger, this.port, false);
+            this.WebServer = new WebServer(pluginName, this.logger, this.port, false);
             /*
             WebServer.addPage('/serverside/version', (response) => {
 
@@ -76,13 +82,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
                 });
             });
             */
-        }
-
-        if(!config)
-        {
-            this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!');
-
-            return;
         }
 
         this.accessories = new Map();
@@ -168,11 +167,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
     {
         this.logger.log('info', 'bridge', 'Bridge', 'Hinzufügen: ' + accessory.name + ' ( ' + accessory.id + ' )');
 
-        const uuid = this.api.hap.uuid.generate(accessory.id);
-        const homebridgeAccessory = this.accessories.get(uuid);
-
-        //let deviceAccessory = new UniversalAccessory(homebridgeAccessory, accessory, { platform : this, logger : this.logger });
-        
         this.accessories.set(uuid, accessory);
     }
 
@@ -206,7 +200,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
         accessory.updateReachability(state);
     }
     */
-
     updateAccessoryService(id, letters, value)
     {
         const uuid = this.api.hap.uuid.generate(id);

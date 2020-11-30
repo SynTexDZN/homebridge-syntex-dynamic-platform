@@ -2,14 +2,13 @@
   "name": "homebridge-syntex-dynamic-platform",
   "version": "1.0.0-b25",
   "description": "A Dynamic Platform Accessory",
-  "main": "platform.js",
+  "main": "main.js",
   "author": "SynTexDZN",
   "engines": {
     "homebridge": ">=0.3.0",
     "node": ">=9.11.2"
   },
   "dependencies": {
-    "json-fs-store": "^1.0.1",
     "request": "^2.88.0"
   },
   "keywords": [
