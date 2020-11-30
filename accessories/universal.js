@@ -92,7 +92,7 @@ module.exports = class UniversalAccessory
 
 	setAccessoryInformation()
 	{
-		var service = new AccessoryInformationService(this.homebridgeAccessory, this.deviceConfig, { manufacturer : this.manufacturer, model : this.model, version : this.version }, this.manager);
+		var service = new AccessoryInformationService(this.homebridgeAccessory, this.deviceConfig, { manufacturer : this.getManufacturer(), model : this.getModel(), version : this.getVersion() }, this.manager);
 
 		this.service.push(service);
 	}
