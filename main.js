@@ -24,7 +24,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
         }
 
         this.config = config;
-        this.port = config.port;
+        this.debug = config['debug'] || false;
+        this.port = config['debug'];
 
         pluginID = pID;
         pluginName = pName;
