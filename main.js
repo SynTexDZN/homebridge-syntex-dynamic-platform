@@ -25,12 +25,12 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
         this.config = config;
         this.debug = config['debug'] || false;
-        this.port = config['debug'];
+        this.port = config['port'];
 
         pluginID = pID;
         pluginName = pName;
 
-        this.logger = new logger(pluginName, config.log_directory, api.user.storagePath());
+        this.logger = new logger(pluginName, config.log_directory, this.debug);
 
         if(this.port != null)
         {

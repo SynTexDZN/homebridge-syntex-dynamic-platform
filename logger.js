@@ -3,17 +3,22 @@ var prefix, logs, logger, que = [], debugLevel = 'success', inWork = false;
 
 module.exports = class Logger
 {
-    constructor(pluginName, logDirectory, configDirectory)
+    constructor(pluginName, logDirectory, debug)
     {
         prefix = pluginName;
         logs = store(logDirectory);
 
         logger = this;
+
+        if(debug)
+        {
+            debugLevel = 'debug';
+        }
     }
 
     log(level, mac, letters, message)
     {
-        var levels = ['success', 'update', 'read', 'info', 'warn', 'error', 'debug'];
+        var levels = ['debug', 'success', 'update', 'read', 'info', 'warn', 'error'];
 
         if(levels.indexOf(level) >= levels.indexOf(debugLevel))
         {
