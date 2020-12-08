@@ -46,14 +46,14 @@ module.exports = class ColoredBulbService extends LightBulbService
         };
 	}
 
-	getBrightness(callback)
+	getBrightness(callback, verbose)
 	{
-		callback(super.getValue('brightness', true));
+		callback(super.getValue('brightness', verbose));
 	}
 
-	setBrightness(level, callback)
+	setBrightness(level, callback, verbose)
 	{
-        super.setValue('brightness', level);		
+        super.setValue('brightness', level, verbose);		
 
 		callback();
 	}

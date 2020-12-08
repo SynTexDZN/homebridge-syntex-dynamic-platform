@@ -26,14 +26,14 @@ module.exports = class LightBulbService extends BaseService
         };
 	}
 
-	getState(callback)
+	getState(callback, verbose)
 	{
-        callback(super.getValue('state', true));
+        callback(super.getValue('state', verbose));
 	}
 
-	setState(level, callback)
+	setState(level, callback, verbose)
 	{
-		super.setValue('state', level);		
+		super.setValue('state', level, verbose);		
 
 		callback();
 	}

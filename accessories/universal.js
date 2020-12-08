@@ -156,7 +156,7 @@ module.exports = class UniversalAccessory
 
 	getID()
     {
-        return this.mac;
+        return this.id;
     }
 
     getManufacturer()

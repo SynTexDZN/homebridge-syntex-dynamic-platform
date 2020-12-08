@@ -21,8 +21,8 @@ module.exports = class ContactService extends BaseService
         };
     }
 
-	getState(callback)
+	getState(callback, verbose)
 	{
-        callback(super.getValue('state', true));
+        callback(super.getValue('state', verbose));
 	}
 }

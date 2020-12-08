@@ -190,7 +190,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
     removeAccessory(accessory)
     {
-        this.logger.debug('Entferne Accessory [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
+        this.logger.log('info', 'bridge', 'Bridge', 'Entferne Accessory [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
         this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
 

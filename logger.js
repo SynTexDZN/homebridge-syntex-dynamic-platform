@@ -16,7 +16,7 @@ module.exports = class Logger
         }
     }
 
-    log(level, mac, letters, message)
+    log(level, id, letters, message)
     {
         var levels = ['debug', 'success', 'update', 'read', 'info', 'warn', 'error'];
 
@@ -60,7 +60,7 @@ module.exports = class Logger
 
             console.log('[' + prefix + '] ' + color + '[' + level.toUpperCase() + '] \x1b[0m' + message);
 
-            saveLog(level[0].toUpperCase() + level.substring(1), mac, letters, Math.round(new Date().getTime() / 1000), message);
+            saveLog(level[0].toUpperCase() + level.substring(1), id, letters, Math.round(new Date().getTime() / 1000), message);
         }
     }
 
@@ -125,9 +125,9 @@ module.exports = class Logger
     }
 }
 
-function saveLog(level, mac, letters, time, message)
+function saveLog(level, id, letters, time, message)
 {
-    var queOBJ = { mac : mac, letters : letters, time : time, level : level, message : message };
+    var queOBJ = { id : id, letters : letters, time : time, level : level, message : message };
 
     if(inWork)
     {
@@ -151,17 +151,17 @@ function saveLog(level, mac, letters, time, message)
             {    
                 device = removeExpired(device);
 
-                if(!device[mac])
+                if(!device[id])
                 {
-                    device[mac] = {};
+                    device[id] = {};
                 }
 
-                if(!device[mac][letters])
+                if(!device[id][letters])
                 {
-                    device[mac][letters] = [];
+                    device[id][letters] = [];
                 }
 
-                device[mac][letters][device[mac][letters].length] = { t : time, l : level, m : message };
+                device[id][letters][device[id][letters].length] = { t : time, l : level, m : message };
 
                 logs.add(device, (err) => {
 
@@ -174,7 +174,7 @@ function saveLog(level, mac, letters, time, message)
 
                     if(que.length != 0)
                     {
-                        saveLog(que[0].level, que[0].mac, que[0].letters, que[0].time, que[0].message);
+                        saveLog(que[0].level, que[0].id, que[0].letters, que[0].time, que[0].message);
                     }
                 });
             }
@@ -182,9 +182,9 @@ function saveLog(level, mac, letters, time, message)
             {
                 var entry = { id : prefix };
 
-                entry[mac] = {};
+                entry[id] = {};
 
-                entry[mac][letters] = [ { t : time, l : level, m : message } ];
+                entry[id][letters] = [ { t : time, l : level, m : message } ];
 
                 logs.add(entry, (err) => {
 
@@ -197,7 +197,7 @@ function saveLog(level, mac, letters, time, message)
 
                     if(que.length != 0)
                     {
-                        saveLog(que[0].level, que[0].mac, que[0].letters, que[0].time, que[0].message);
+                        saveLog(que[0].level, que[0].id, que[0].letters, que[0].time, que[0].message);
                     }
                 });
             }

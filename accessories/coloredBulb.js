@@ -49,26 +49,26 @@ module.exports = class ColoredBulbService extends DimmedBulbService
         };
 	}
 
-	getHue(callback)
+	getHue(callback, verbose)
 	{
-		callback(super.getValue('hue', true));
+		callback(super.getValue('hue', verbose));
 	}
 
-	setHue(level, callback)
+	setHue(level, callback, verbose)
 	{
-        super.setValue('hue', level);		
+        super.setValue('hue', level, verbose);		
 
 		callback();
 	}
 
-	getSaturation(callback)
+	getSaturation(callback, verbose)
 	{
-		callback(super.getValue('saturation', true));
+		callback(super.getValue('saturation', verbose));
 	}
 
-	setSaturation(level, callback)
+	setSaturation(level, callback, verbose)
 	{
-        super.setValue('saturation', level);		
+        super.setValue('saturation', level, verbose);		
 
 		callback();
 	}
