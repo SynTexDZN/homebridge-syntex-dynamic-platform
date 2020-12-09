@@ -1,39 +1,39 @@
 {
-  "name": "homebridge-syntex-dynamic-platform",
-  "version": "1.0.0",
-  "description": "A Dynamic Platform Accessory",
-  "main": "main.js",
-  "author": "SynTexDZN",
-  "engines": {
-    "homebridge": ">=0.3.0",
-    "node": ">=9.11.2"
-  },
-  "dependencies": {
-    "json-fs-store": "^1.0.1",
-    "request": "^2.88.0"
-  },
-  "keywords": [
-    "syntex",
-    "syntex-platform",
-    "homebridge-plugin",
-    "homebridge",
-    "plugin",
-    "http",
-    "tuya",
-    "homekit",
-    "smarthome",
-    "siri"
-  ],
-  "homepage": "https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform#readme",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/SynTexDZN/homebridge-syntex-dynamic-platform.git"
-  },
-  "bugs": {
-    "url": "https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform/issues"
-  },
-  "license": "ISC",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+	"name": "homebridge-syntex-dynamic-platform",
+	"version": "1.0.0",
+	"description": "A Dynamic Platform Accessory",
+	"main": "main.js",
+	"author": "SynTexDZN",
+	"engines": {
+		"homebridge": ">=0.3.0",
+		"node": ">=9.11.2"
+	},
+	"dependencies": {
+		"json-fs-store": "^1.0.1",
+		"request": "^2.88.0"
+	},
+	"keywords": [
+		"syntex",
+		"syntex-platform",
+		"homebridge-plugin",
+		"homebridge",
+		"plugin",
+		"http",
+		"tuya",
+		"homekit",
+		"smarthome",
+		"siri"
+	],
+	"homepage": "https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform#readme",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/SynTexDZN/homebridge-syntex-dynamic-platform.git"
+	},
+	"bugs": {
+		"url": "https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform/issues"
+	},
+	"license": "ISC",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	}
 }

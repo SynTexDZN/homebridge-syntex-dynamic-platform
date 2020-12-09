@@ -13,13 +13,13 @@ module.exports = class ColoredBulbService extends LightBulbService
 		{
 			serviceConfig.subtype = 'dimmer-' + serviceConfig.subtype;
 		}
-        
+		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
 	
 		this.changeHandler = (state) =>
-        {
+		{
 			if(state instanceof Object)
 			{
 				var v = [
@@ -43,7 +43,7 @@ module.exports = class ColoredBulbService extends LightBulbService
 					
 				super.setValue('state', state);
 			}
-        };
+		};
 	}
 
 	getBrightness(callback, verbose)
@@ -53,7 +53,7 @@ module.exports = class ColoredBulbService extends LightBulbService
 
 	setBrightness(level, callback, verbose)
 	{
-        super.setValue('brightness', level, verbose);		
+		super.setValue('brightness', level, verbose);		
 
 		callback();
 	}

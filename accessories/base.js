@@ -17,9 +17,9 @@ module.exports = class BaseService
 
 		this.logger = manager.logger;
 
-        var service = homebridgeAccessory.getServiceById(serviceType, serviceConfig.subtype);
+		var service = homebridgeAccessory.getServiceById(serviceType, serviceConfig.subtype);
 
-        if(service)
+		if(service)
 		{
 			this.logger.debug('Existierenden Service gefunden! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
 
@@ -29,8 +29,8 @@ module.exports = class BaseService
 		{
 			this.logger.debug('Erstelle neuen Service! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
 
-            homebridgeAccessory.addService(serviceType, serviceConfig.name, serviceConfig.subtype)
-        }
+			homebridgeAccessory.addService(serviceType, serviceConfig.name, serviceConfig.subtype)
+		}
 	}
 
 	getValue(key, verbose)

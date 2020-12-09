@@ -19,12 +19,12 @@ module.exports = class UniversalAccessory
 		this.logger = manager['logger'];
 
 		this.service = [];
-        this.id = deviceConfig['id'];
-        this.name = deviceConfig['name'];
-        this.services = deviceConfig['services'];
+		this.id = deviceConfig['id'];
+		this.name = deviceConfig['name'];
+		this.services = deviceConfig['services'];
 
 		this.manufacturer = deviceConfig['manufacturer'] || 'SynTex';
-        this.model = deviceConfig['model'] || 'Virtual Accessory';
+		this.model = deviceConfig['model'] || 'Virtual Accessory';
 		this.version = deviceConfig['version'] || '1.0.0';
 
 		this.manager = manager;
@@ -155,22 +155,22 @@ module.exports = class UniversalAccessory
 	}
 
 	getID()
-    {
-        return this.id;
-    }
+	{
+		return this.id;
+	}
 
-    getManufacturer()
-    {
-        return this.manufacturer
-    }
+	getManufacturer()
+	{
+		return this.manufacturer
+	}
 
-    getModel()
-    {
-        return this.model;
-    }
+	getModel()
+	{
+		return this.model;
+	}
 
-    getVersion()
-    {
-        return this.version;
-    }
+	getVersion()
+	{
+		return this.version;
+	}
 }

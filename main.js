@@ -14,122 +14,122 @@ let logger = require('./logger'), WebServer = require('./webserver');;
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
-    constructor(config, api, pID, pName)
-    {
-        if(!config)
-        {
-            this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!');
+	constructor(config, api, pID, pName)
+	{
+		if(!config)
+		{
+			this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!');
 
-            return;
-        }
+			return;
+		}
 
-        this.config = config;
-        this.debug = config['debug'] || false;
-        this.port = config['port'];
+		this.config = config;
+		this.debug = config['debug'] || false;
+		this.port = config['port'];
 
-        pluginID = pID;
-        pluginName = pName;
+		pluginID = pID;
+		pluginName = pName;
 
-        this.accessories = new Map();
+		this.accessories = new Map();
 
-        if(api)
-        {
-            this.api = api;
-        }
+		if(api)
+		{
+			this.api = api;
+		}
 
-        if(config.log_directory != null)
-        {
-            this.logger = new logger(pluginName, config.log_directory, this.debug);
+		if(config.log_directory != null)
+		{
+			this.logger = new logger(pluginName, config.log_directory, this.debug);
 
-            if(this.port != null)
-            {
-                this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
-            }
-        }
-    }
+			if(this.port != null)
+			{
+				this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
+			}
+		}
+	}
 
-    registerPlatformAccessory(platformAccessory)
-    {
-        this.logger.debug('Registriere Platform Accessory [' + platformAccessory.displayName + ']');
+	registerPlatformAccessory(platformAccessory)
+	{
+		this.logger.debug('Registriere Platform Accessory [' + platformAccessory.displayName + ']');
 
-        this.api.registerPlatformAccessories(pluginID, pluginName, [platformAccessory]);
-    }
+		this.api.registerPlatformAccessories(pluginID, pluginName, [platformAccessory]);
+	}
 
-    getPlatformAccessory()
-    {
-        return this;
-    }
-    
-    addAccessory(accessory)
-    {
-        this.logger.log('info', 'bridge', 'Bridge', 'Hinzufügen: ' + accessory.name + ' ( ' + accessory.id + ' )');
+	getPlatformAccessory()
+	{
+		return this;
+	}
+	
+	addAccessory(accessory)
+	{
+		this.logger.log('info', 'bridge', 'Bridge', 'Hinzufügen: ' + accessory.name + ' ( ' + accessory.id + ' )');
 
-        const uuid = this.api.hap.uuid.generate(accessory.id);
+		const uuid = this.api.hap.uuid.generate(accessory.id);
 
-        this.accessories.set(uuid, accessory);
-    }
+		this.accessories.set(uuid, accessory);
+	}
 
-    getAccessory(id)
-    {
-        const uuid = this.api.hap.uuid.generate(id);
-        const homebridgeAccessory = this.accessories.get(uuid);
+	getAccessory(id)
+	{
+		const uuid = this.api.hap.uuid.generate(id);
+		const homebridgeAccessory = this.accessories.get(uuid);
 
-        return homebridgeAccessory;
-    }
+		return homebridgeAccessory;
+	}
 
-    configureAccessory(accessory)
-    {
-        this.logger.debug('Konfiguriere Accessory aus dem Cache Speicher [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
+	configureAccessory(accessory)
+	{
+		this.logger.debug('Konfiguriere Accessory aus dem Cache Speicher [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
-        this.accessories.set(accessory.UUID, accessory);
-    }
+		this.accessories.set(accessory.UUID, accessory);
+	}
 
-    removeAccessory(accessory)
-    {
-        this.logger.log('info', 'bridge', 'Bridge', 'Entferne Accessory [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
+	removeAccessory(accessory)
+	{
+		this.logger.log('info', 'bridge', 'Bridge', 'Entferne Accessory [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
-        this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
+		this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
 
-        this.accessories.delete(accessory.uuid);
-    }
-    /*
-    updateAccessoryReachability(accessory, state)
-    {
-        this.log("Update Reachability [%s]", accessory.displayName, state);
-        accessory.updateReachability(state);
-    }
-    */
-    updateAccessoryService(id, letters, value)
-    {
-        const uuid = this.api.hap.uuid.generate(id);
-        const homebridgeAccessory = this.accessories.get(uuid);
+		this.accessories.delete(accessory.uuid);
+	}
+	/*
+	updateAccessoryReachability(accessory, state)
+	{
+		this.log("Update Reachability [%s]", accessory.displayName, state);
+		accessory.updateReachability(state);
+	}
+	*/
+	updateAccessoryService(id, letters, value)
+	{
+		const uuid = this.api.hap.uuid.generate(id);
+		const homebridgeAccessory = this.accessories.get(uuid);
 
-        for(var i = 0; i < homebridgeAccessory.service.length; i++)
-        {
-            if(homebridgeAccessory.service[i].letters == letters)
-            {
-                homebridgeAccessory.service[i].changeHandler(value);
-            }
-        }
-    }
+		for(var i = 0; i < homebridgeAccessory.service.length; i++)
+		{
+			if(homebridgeAccessory.service[i].letters == letters)
+			{
+				homebridgeAccessory.service[i].changeHandler(value);
+			}
+		}
+	}
 
-    readAccessoryService(id, letters)
-    {
-        const uuid = this.api.hap.uuid.generate(id);
-        const homebridgeAccessory = this.accessories.get(uuid);
+	readAccessoryService(id, letters)
+	{
+		const uuid = this.api.hap.uuid.generate(id);
+		const homebridgeAccessory = this.accessories.get(uuid);
 
-        var state = null;
+		var state = null;
 
-        for(var i = 0; i < homebridgeAccessory.service.length; i++)
-        {
-            if(homebridgeAccessory.service[i].letters == letters)
-            {
-                state = homebridgeAccessory.service[i].getValues();
-            }
-        }
+		for(var i = 0; i < homebridgeAccessory.service.length; i++)
+		{
+			if(homebridgeAccessory.service[i].letters == letters)
+			{
+				state = homebridgeAccessory.service[i].getValues();
+			}
+		}
 
-        return state;
-    }
+		return state;
+	}
 }
 
 module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService };

@@ -14,7 +14,7 @@ A plugin framefork for dynamic platform accessory.
 
 ```
 {
-    "platform": "SynTexDynamicPlatform",
-    "log_directory": "./SynTex/log"
+	"platform": "SynTexDynamicPlatform",
+	"log_directory": "./SynTex/log"
 }
 ```

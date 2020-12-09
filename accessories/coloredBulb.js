@@ -13,14 +13,14 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		{
 			serviceConfig.subtype = 'rgb-' + serviceConfig.subtype;
 		}
-        
+		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
 		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
 	
 		this.changeHandler = (state) =>
-        {
+		{
 			if(state instanceof Object)
 			{
 				var v = [
@@ -46,7 +46,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 					
 				super.setValue('state', state);
 			}
-        };
+		};
 	}
 
 	getHue(callback, verbose)
@@ -56,7 +56,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	setHue(level, callback, verbose)
 	{
-        super.setValue('hue', level, verbose);		
+		super.setValue('hue', level, verbose);		
 
 		callback();
 	}
@@ -68,7 +68,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	setSaturation(level, callback, verbose)
 	{
-        super.setValue('saturation', level, verbose);		
+		super.setValue('saturation', level, verbose);		
 
 		callback();
 	}
