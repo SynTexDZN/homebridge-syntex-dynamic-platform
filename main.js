@@ -30,132 +30,28 @@ let DynamicPlatform = class SynTexDynamicPlatform
         pluginID = pID;
         pluginName = pName;
 
-        this.logger = new logger(pluginName, config.log_directory, this.debug);
-
-        if(this.port != null)
-        {
-            this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
-            /*
-            WebServer.addPage('/serverside/version', (response) => {
-
-                response.write(require('./package.json').version);
-                response.end();
-            });
-    
-            WebServer.addPage('/serverside/check-restart', (response) => {
-    
-                response.write(restart.toString());
-                response.end();
-            });
-    
-            WebServer.addPage('/serverside/update', (response, urlParams) => {
-    
-                var version = urlParams.version != null ? urlParams.version : 'latest';
-    
-                const { exec } = require('child_process');
-                
-                exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
-    
-                    try
-                    {
-                        if(error || stderr.includes('ERR!'))
-                        {
-                            logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' konnte nicht aktualisiert werden! ' + (error || stderr));
-                        }
-                        else
-                        {
-                            logger.log('success', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' wurde auf die Version [' + version + '] aktualisiert!');
-    
-                            restart = true;
-    
-                            logger.log('warn', 'bridge', 'Bridge', 'Die Homebridge wird neu gestartet ..');
-    
-                            exec('sudo systemctl restart homebridge');
-                        }
-    
-                        response.write(error || stderr.includes('ERR!') ? 'Error' : 'Success');
-                        response.end();
-                    }
-                    catch(e)
-                    {
-                        logger.err(e);
-                    }
-                });
-            });
-            */
-        }
-
         this.accessories = new Map();
-        
+
         if(api)
         {
             this.api = api;
-            /*
-            this.api.on('didFinishLaunching', () => {
+        }
 
-                // Demo Stuff
+        if(config.log_directory != null)
+        {
+            this.logger = new logger(pluginName, config.log_directory, this.debug);
 
-                this.logger.debug('Initialisiere ' + pluginName + ' ...');
-
-                var devices = ['acc1', 'acc2', 'acc3', 'acc4', 'acc5'];
-
-                for(const id of devices)
-                {
-                    if(this.accessories.get(this.api.hap.uuid.generate(id)) != null)
-                    {
-                        //this.removeAccessory(this.accessories.get(this.api.hap.uuid.generate(id)));
-                    }
-                }
-
-                var devices = [{id : 'acc1', name : 'Accessory 1', services : [{ type : 'outlet', name : 'Outlet 1' }, { type : 'outlet', name : 'Outlet 2' }, { type : 'outlet', name : 'Outlet 3' }, { type : 'outlet', name : 'Outlet 4' }, { type : 'outlet', name : 'Outlet 5' }]},
-                    {id : 'acc2', name : 'Accessory 2', services : ['led', 'dimmer', 'rgb', 'switch']},
-                    {id : 'acc3', name : 'Accessory 3', services : ['dimmer']},
-                    {id : 'acc4', name : 'Accessory 4', services : 'led'},
-                    {id : 'acc5', name : 'Accessory 5', services : 'contact'}];
-
-                for(const device of devices)
-                {
-                    this.addAccessory(device);
-                }
-
-                for(const accessory of this.accessories)
-                {
-                    for(const x in accessory[1].service)
-                    {
-                        if(accessory[1].service[x].letters)
-                        {
-                            console.log(accessory[1].id, accessory[1].service[x].letters);
-
-                            console.log(this.readAccessoryService(accessory[1].id, accessory[1].service[x].letters));
-                        }
-                    }
-                }
-
-                setTimeout(() => {
-
-                    this.updateAccessoryService('acc5', 'A0', false);
-                    
-                }, 10000);
-
-                setTimeout(() => {
-
-                    this.updateAccessoryService('acc5', 'A0', true);
-                    
-                }, 20000);
-
-                setTimeout(() => {
-
-                    this.updateAccessoryService('acc3', '90', { power : true, brightness : 75 });
-                    
-                }, 30000);
-            });
-            */
+            if(this.port != null)
+            {
+                this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
+            }
         }
     }
 
     registerPlatformAccessory(platformAccessory)
     {
         this.logger.debug('Registriere Platform Accessory [' + platformAccessory.displayName + ']');
+
         this.api.registerPlatformAccessories(pluginID, pluginName, [platformAccessory]);
     }
 
