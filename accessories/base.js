@@ -37,8 +37,6 @@ module.exports = class BaseService
 	{
 		var value = null;
 
-		console.log(key, this.homebridgeAccessory.context);
-
 		if(this.homebridgeAccessory != null
 			&& this.homebridgeAccessory.context != null
 			&& this.homebridgeAccessory.context.data != null
