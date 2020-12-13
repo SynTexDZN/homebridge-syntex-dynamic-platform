@@ -7,6 +7,7 @@ const DimmedBulbService = require('./accessories/dimmedBulb');
 const ColoredBulbService = require('./accessories/coloredBulb');
 const ContactService = require('./accessories/contact');
 const LightService = require('./accessories/light');
+const MotionService = require('./accessories/motion');
 
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
@@ -133,4 +134,4 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	}
 }
 
-module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService };
+module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService };
