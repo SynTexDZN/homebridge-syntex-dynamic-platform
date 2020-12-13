@@ -5,6 +5,7 @@ const LightBulbService = require('./lightBulb');
 const DimmedBulbService = require('./dimmedBulb');
 const ColoredBulbService = require('./coloredBulb');
 const ContactService = require('./contact');
+const LightService = require('./light');
 
 let PlatformAccessory;
 let Service;
@@ -141,6 +142,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'contact')
 		{
 			service = new ContactService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+		}
+		else if(type == 'light')
+		{
+			service = new LightService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)
