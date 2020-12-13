@@ -1,12 +1,13 @@
 const AccessoryInformationService = require('./info');
-const OutletService = require('./outlet');
-const SwitchService = require('./switch');
-const LightBulbService = require('./lightBulb');
-const DimmedBulbService = require('./dimmedBulb');
-const ColoredBulbService = require('./coloredBulb');
-const ContactService = require('./contact');
-const LightService = require('./light');
-const MotionService = require('./motion');
+const OutletService = require('./accessories/outlet');
+const SwitchService = require('./accessories/switch');
+const LightBulbService = require('./accessories/lightBulb');
+const DimmedBulbService = require('./accessories/dimmedBulb');
+const ColoredBulbService = require('./accessories/coloredBulb');
+const ContactService = require('./accessories/contact');
+const LightService = require('./accessories/light');
+const MotionService = require('./accessories/motion');
+const TemperatureService = require('./accessories/temperature');
 
 let PlatformAccessory;
 let Service;
@@ -151,6 +152,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'motion')
 		{
 			service = new MotionService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+		}
+		else if(type == 'temperature')
+		{
+			service = new TemperatureService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)

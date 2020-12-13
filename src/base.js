@@ -20,9 +20,9 @@ module.exports = class BaseService
 		this.options = {};
 
 		if(serviceConfig.requests != null)
-        {
-            this.options.requests = serviceConfig.requests;
-        }
+		{
+			this.options.requests = serviceConfig.requests;
+		}
 
 		var service = homebridgeAccessory.getServiceById(serviceType, serviceConfig.subtype);
 

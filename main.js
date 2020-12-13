@@ -1,13 +1,14 @@
-const UniversalAccessory = require('./accessories/universal');
-const AccessoryInformationService = require('./accessories/info');
-const OutletService = require('./accessories/outlet');
-const SwitchService = require('./accessories/switch');
-const LightBulbService = require('./accessories/lightBulb');
-const DimmedBulbService = require('./accessories/dimmedBulb');
-const ColoredBulbService = require('./accessories/coloredBulb');
-const ContactService = require('./accessories/contact');
-const LightService = require('./accessories/light');
-const MotionService = require('./accessories/motion');
+const UniversalAccessory = require('./src/universal');
+const AccessoryInformationService = require('./src/info');
+const OutletService = require('./src/accessories/outlet');
+const SwitchService = require('./src/accessories/switch');
+const LightBulbService = require('./src/accessories/lightBulb');
+const DimmedBulbService = require('./src/accessories/dimmedBulb');
+const ColoredBulbService = require('./src/accessories/coloredBulb');
+const ContactService = require('./src/accessories/contact');
+const LightService = require('./src/accessories/light');
+const MotionService = require('./src/accessories/motion');
+const TemperatureService = require('./src/accessories/temperature');
 
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
@@ -134,4 +135,4 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	}
 }
 
-module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService };
+module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService };

@@ -1,4 +1,4 @@
-const BaseService = require('./base');
+const BaseService = require('../base');
 
 let Service, Characteristic;
 
