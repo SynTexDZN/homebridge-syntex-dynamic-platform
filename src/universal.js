@@ -11,6 +11,7 @@ const TemperatureService = require('./accessories/temperature');
 const HumidityService = require('./accessories/humidity');
 const LeakService = require('./accessories/leak');
 const OccupancyService = require('./accessories/occupancy');
+const StatelessSwitchService = require('./accessories/statelessswitch');
 
 let PlatformAccessory;
 let Service;
@@ -171,6 +172,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'occupancy')
 		{
 			service = new OccupancyService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+		}
+		else if(type == 'statelessswitch')
+		{
+			service = new StatelessSwitchService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)
