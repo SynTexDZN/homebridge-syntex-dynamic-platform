@@ -8,6 +8,7 @@ const ContactService = require('./accessories/contact');
 const LightService = require('./accessories/light');
 const MotionService = require('./accessories/motion');
 const TemperatureService = require('./accessories/temperature');
+const HumidityService = require('./accessories/humidity');
 
 let PlatformAccessory;
 let Service;
@@ -156,6 +157,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'temperature')
 		{
 			service = new TemperatureService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+		}
+		else if(type == 'humidity')
+		{
+			service = new HumidityService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)
