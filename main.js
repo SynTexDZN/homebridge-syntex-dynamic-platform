@@ -11,6 +11,7 @@ const MotionService = require('./src/accessories/motion');
 const TemperatureService = require('./src/accessories/temperature');
 const HumidityService = require('./src/accessories/humidity');
 const LeakService = require('./src/accessories/leak');
+const OccupancyService = require('./src/accessories/occupancy');
 
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
@@ -137,4 +138,4 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	}
 }
 
-module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService };
+module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService };

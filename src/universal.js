@@ -10,6 +10,7 @@ const MotionService = require('./accessories/motion');
 const TemperatureService = require('./accessories/temperature');
 const HumidityService = require('./accessories/humidity');
 const LeakService = require('./accessories/leak');
+const OccupancyService = require('./accessories/occupancy');
 
 let PlatformAccessory;
 let Service;
@@ -166,6 +167,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'leak')
 		{
 			service = new LeakService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+		}
+		else if(type == 'occupancy')
+		{
+			service = new OccupancyService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)
