@@ -89,7 +89,7 @@ module.exports = class UniversalAccessory
 		{
 			this.logger.debug('Erstelle neues Accessory! ' + this.name + ' ( ' +  this.id + ' )');
 
-			this.homebridgeAccessory = new PlatformAccessory(this.name, UUIDGen.generate(this.id), Service.Switch);
+			this.homebridgeAccessory = new PlatformAccessory(this.name, UUIDGen.generate(this.id), Service.AccessoryInformation);
 
 			this.platform.registerPlatformAccessory(this.homebridgeAccessory);
 		}
