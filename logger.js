@@ -148,7 +148,7 @@ function saveLog(level, id, letters, time, message)
 		logs.load(prefix, (err, device) => {    
 
 			if(device && !err)
-			{    
+			{
 				device = removeExpired(device);
 
 				if(!device[id])
