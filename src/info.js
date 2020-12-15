@@ -12,6 +12,8 @@ module.exports = class AccessoryInformationService
 		if(service)
 		{
 			manager.logger.debug('Existierenden Informations-Service gefunden! ' + deviceConfig.name + ' ( ' +  deviceConfig.id + ' )');
+		
+			service.setCharacteristic(Characteristic.Name, deviceConfig.name);
 		}
 		else
 		{
