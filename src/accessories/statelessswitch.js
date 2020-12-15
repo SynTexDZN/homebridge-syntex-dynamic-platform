@@ -13,18 +13,34 @@ module.exports = class StatelessSwitchService extends BaseService
 
         this.options.buttons = serviceConfig.buttons;
 
-        for(var i = 0; i < this.options.buttons; i++)
+        if(this.options.button > 1)
         {
-            var button = new Service.StatelessProgrammableSwitch(this.id + i, '' + i);
-            var props = {
-                minValue : Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
-                maxValue : Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS
-            };
+            for(var i = 1; i < this.options.buttons; i++)
+            {
+                var service = this.homebridgeAccessory.getServiceById(Service.StatelessProgrammableSwitch, i);
 
-            button.getCharacteristic(Characteristic.ProgrammableSwitchEvent).setProps(props);
-            button.getCharacteristic(Characteristic.ServiceLabelIndex).setValue(i + 1);
+                if(service)
+                {
+                    this.logger.debug('Existierenden Service gefunden! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + i + ' ( ' +  this.id + ' )');
 
-            this.homebridgeAccessory.service.push(button);
+                    service.setCharacteristic(manager.platform.api.hap.Characteristic.Name, serviceConfig.name);
+                }
+                else
+                {
+                    this.logger.debug('Erstelle neuen Service! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + i + ' ( ' +  this.id + ' )');
+
+                    var button = new Service.StatelessProgrammableSwitch(manager.hap.uuid.generate(this.id), i);
+                    var props = {
+                        minValue : Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+                        maxValue : Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS
+                    };
+
+                    button.getCharacteristic(Characteristic.ProgrammableSwitchEvent).setProps(props);
+                    button.getCharacteristic(Characteristic.ServiceLabelIndex).setValue(i + 1);
+
+                    this.homebridgeAccessory.addService(button);
+                }
+            }
         }
         /*
         homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
@@ -50,17 +66,4 @@ module.exports = class StatelessSwitchService extends BaseService
             }
         };
 	}
-    /*
-	getState(callback, verbose)
-	{
-		callback(super.getValue('state', verbose));
-	}
-
-	setState(level, callback, verbose)
-	{
-		super.setValue('state', level, verbose);		
-
-		callback();
-    }
-    */
 }
