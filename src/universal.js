@@ -1,3 +1,5 @@
+let PlatformAccessory, Service, UUIDGen;
+
 const AccessoryInformationService = require('./info');
 const OutletService = require('./accessories/outlet');
 const SwitchService = require('./accessories/switch');
@@ -12,10 +14,6 @@ const HumidityService = require('./accessories/humidity');
 const LeakService = require('./accessories/leak');
 const OccupancyService = require('./accessories/occupancy');
 const StatelessSwitchService = require('./accessories/statelessswitch');
-
-let PlatformAccessory;
-let Service;
-let UUIDGen;
 
 module.exports = class UniversalAccessory
 {

@@ -1,7 +1,11 @@
+let Characteristic;
+
 module.exports = class BaseService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, serviceType, manager)
 	{
+		Characteristic = manager.platform.api.hap.Characteristic;
+
 		this.id = deviceConfig['id'];
 		this.name = serviceConfig['name'];
 
@@ -19,24 +23,26 @@ module.exports = class BaseService
 
 		this.options = {};
 
-		if(serviceConfig.requests != null)
-		{
-			this.options.requests = serviceConfig.requests;
-		}
+		this.options.requests = serviceConfig.requests || [];
 
-		var service = homebridgeAccessory.getServiceById(serviceType, serviceConfig.subtype);
+		this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
+	}
+
+	createService(serviceType, type, subtype)
+	{
+		var service = this.homebridgeAccessory.getServiceById(serviceType, subtype);
 
 		if(service)
 		{
-			this.logger.debug('Existierenden Service gefunden! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
+			this.logger.debug('Existierenden Service gefunden! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
 
-			service.setCharacteristic(manager.platform.api.hap.Characteristic.Name, serviceConfig.name);
+			service.setCharacteristic(Characteristic.Name, this.name);
 		}
 		else
 		{
-			this.logger.debug('Erstelle neuen Service! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + serviceConfig.subtype + ' ( ' +  this.id + ' )');
+			this.logger.debug('Erstelle neuen Service! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
 
-			homebridgeAccessory.addService(serviceType, serviceConfig.name, serviceConfig.subtype)
+			this.homebridgeAccessory.addService(serviceType, this.name, subtype);
 		}
 	}
 

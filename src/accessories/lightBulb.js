@@ -1,6 +1,6 @@
-const BaseService = require('../base');
-
 let Service, Characteristic;
+
+const BaseService = require('../base');
 
 module.exports = class LightBulbService extends BaseService
 {

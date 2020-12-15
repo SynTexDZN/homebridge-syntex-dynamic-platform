@@ -1,6 +1,6 @@
-const DimmedBulbService = require('./dimmedBulb');
-
 let Service, Characteristic;
+
+const DimmedBulbService = require('./dimmedBulb');
 
 module.exports = class ColoredBulbService extends DimmedBulbService
 {

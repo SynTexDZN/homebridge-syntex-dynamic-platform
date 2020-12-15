@@ -1,6 +1,6 @@
-const BaseService = require('../base');
+let Service, Characteristic, UUIDGen;
 
-let Service, Characteristic;
+const BaseService = require('../base');
 
 module.exports = class StatelessSwitchService extends BaseService
 {
@@ -8,50 +8,19 @@ module.exports = class StatelessSwitchService extends BaseService
 	{
         Characteristic = manager.platform.api.hap.Characteristic;
         Service = manager.platform.api.hap.Service;
+        UUIDGen = manager.platform.api.hap.uuid;
         
         super(homebridgeAccessory, deviceConfig, serviceConfig, Service.StatelessProgrammableSwitch, manager);
 
-        this.options.buttons = serviceConfig.buttons;
+        this.options.buttons = serviceConfig.buttons || 1;
 
-        if(this.options.button > 1)
+        if(this.options.buttons > 1)
         {
             for(var i = 1; i < this.options.buttons; i++)
             {
-                var service = this.homebridgeAccessory.getServiceById(Service.StatelessProgrammableSwitch, i);
-
-                if(service)
-                {
-                    this.logger.debug('Existierenden Service gefunden! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + i + ' ( ' +  this.id + ' )');
-
-                    service.setCharacteristic(manager.platform.api.hap.Characteristic.Name, serviceConfig.name);
-                }
-                else
-                {
-                    this.logger.debug('Erstelle neuen Service! ' + serviceConfig.name + ' ' + serviceConfig.type + ' ' + i + ' ( ' +  this.id + ' )');
-
-                    var button = new Service.StatelessProgrammableSwitch(manager.hap.uuid.generate(this.id), i);
-                    var props = {
-                        minValue : Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
-                        maxValue : Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS
-                    };
-
-                    button.getCharacteristic(Characteristic.ProgrammableSwitchEvent).setProps(props);
-                    button.getCharacteristic(Characteristic.ServiceLabelIndex).setValue(i + 1);
-
-                    this.homebridgeAccessory.addService(button);
-                }
+                this.createService(Service.StatelessProgrammableSwitch, serviceConfig.type, i);
             }
         }
-        /*
-        homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
-    
-        this.changeHandler = (state) =>
-        {
-            homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
-
-            super.setValue('state', state);
-        };
-        */
 
         this.changeHandler = (state) =>
         {
@@ -65,5 +34,32 @@ module.exports = class StatelessSwitchService extends BaseService
                 }
             }
         };
+    }
+    
+    createService(serviceType, type, subtype)
+	{
+        var service = this.homebridgeAccessory.getServiceById(serviceType, subtype);
+
+        if(service)
+        {
+            this.logger.debug('Existierenden Service gefunden! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
+
+            service.setCharacteristic(Characteristic.Name, this.name);
+        }
+        else
+        {
+            this.logger.debug('Erstelle neuen Service! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
+
+            var button = new serviceType(UUIDGen.generate(this.id), subtype);
+            var props = {
+                minValue : Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+                maxValue : Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS
+            };
+
+            button.getCharacteristic(Characteristic.ProgrammableSwitchEvent).setProps(props);
+            button.getCharacteristic(Characteristic.ServiceLabelIndex).setValue(subtype + 1);
+
+            this.homebridgeAccessory.addService(button);
+        }
 	}
 }
