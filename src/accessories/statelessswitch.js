@@ -18,20 +18,24 @@ module.exports = class StatelessSwitchService extends BaseService
 		{
 			for(var i = 1; i < this.options.buttons; i++)
 			{
-				this.createService(Service.StatelessProgrammableSwitch, serviceConfig.type, i);
+				this.createService(Service.StatelessProgrammableSwitch, serviceConfig.type, i.toString());
 			}
 		}
 
 		this.changeHandler = (state) =>
 		{
-			for(var i = 1; i < this.service.length - 1; i++)
+			if(state.event != null)
 			{
-				if(i - 1 == state)
-				{
-					logger.log('update', this.mac, this.letters, '[' + buttonName + ']: Event [' + (i + 1) + '] wurde ausgeführt! ( ' + this.mac + ' )');
+				var value = 0;
 
-					homebridgeAccessory.getServiceById(Service.StatelessProgrammableSwitch, state).getCharacteristic(Characteristic.ProgrammableSwitchEvent).updateValue(value);
+				if(state.value != null)
+				{
+					value = state.value;
 				}
+				
+				this.logger.log('update', this.id, this.letters, '[' + this.name + ']: Event [' + (state.event + 1) + '] wurde ausgeführt! ( ' + this.id + ' )');
+
+				homebridgeAccessory.getServiceById(Service.StatelessProgrammableSwitch, state.event.toString()).getCharacteristic(Characteristic.ProgrammableSwitchEvent).updateValue(value);
 			}
 		};
 	}
