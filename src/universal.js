@@ -15,6 +15,7 @@ const LeakService = require('./accessories/leak');
 const OccupancyService = require('./accessories/occupancy');
 const StatelessSwitchService = require('./accessories/statelessswitch');
 const SmokeService = require('./accessories/smoke');
+const AirQualityService = require('./accessories/airquality');
 
 module.exports = class UniversalAccessory
 {
@@ -179,6 +180,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'smoke')
 		{
 			service = new SmokeService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+		}
+		else if(type == 'airquality')
+		{
+			service = new AirQualityService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)
