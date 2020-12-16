@@ -14,6 +14,7 @@ const HumidityService = require('./accessories/humidity');
 const LeakService = require('./accessories/leak');
 const OccupancyService = require('./accessories/occupancy');
 const StatelessSwitchService = require('./accessories/statelessswitch');
+const SmokeService = require('./accessories/smoke');
 
 module.exports = class UniversalAccessory
 {
@@ -174,6 +175,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'statelessswitch')
 		{
 			service = new StatelessSwitchService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+		}
+		else if(type == 'smoke')
+		{
+			service = new SmokeService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)
