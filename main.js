@@ -99,7 +99,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
 
-		this.accessories.delete(accessory.uuid);
+		this.accessories.delete(accessory.UUID);
 	}
 	/*
 	updateAccessoryReachability(accessory, state)

@@ -18,7 +18,7 @@ module.exports = class StatelessSwitchService extends BaseService
 		{
 			for(var i = 1; i < this.options.buttons; i++)
 			{
-				this.createService(Service.StatelessProgrammableSwitch, serviceConfig.type, i.toString());
+				this.createService(Service.StatelessProgrammableSwitch, serviceConfig.type, i);
 			}
 		}
 
@@ -42,7 +42,7 @@ module.exports = class StatelessSwitchService extends BaseService
 	
 	createService(serviceType, type, subtype)
 	{
-		var service = this.homebridgeAccessory.getServiceById(serviceType, subtype);
+		var service = this.homebridgeAccessory.getServiceById(serviceType, subtype.toString());
 
 		if(service)
 		{
@@ -54,7 +54,7 @@ module.exports = class StatelessSwitchService extends BaseService
 		{
 			this.logger.debug('Erstelle neuen Service! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
 
-			var button = new serviceType(UUIDGen.generate(this.id), subtype);
+			var button = new serviceType(UUIDGen.generate(this.id), subtype.toString());
 			var props = {
 				minValue : Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
 				maxValue : Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS
