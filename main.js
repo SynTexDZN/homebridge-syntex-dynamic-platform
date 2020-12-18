@@ -71,7 +71,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	
 	addAccessory(accessory)
 	{
-		this.logger.log('info', 'bridge', 'Bridge', 'Hinzufügen: ' + accessory.name + ' ( ' + accessory.id + ' )');
+		this.logger.log('info', 'bridge', 'Bridge', '[' + accessory.name + '] wurde dem System hinzugefügt! ( ' + accessory.id + ' )');
 
 		const uuid = this.api.hap.uuid.generate(accessory.id);
 
