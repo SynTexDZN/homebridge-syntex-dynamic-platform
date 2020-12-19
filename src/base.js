@@ -60,7 +60,29 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+				var stateText = JSON.stringify(value);
+
+				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]) > 1)
+				{
+					stateText = 'power: ' + JSON.stringify(value);
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
+				{
+					stateText += ', hue: ' + this.homebridgeAccessory.context.data[this.letters]['hue'];
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['saturation'] != null)
+				{
+					stateText += ', saturation: ' + this.homebridgeAccessory.context.data[this.letters]['saturation'];
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
+				{
+					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
+				}
+
+				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + stateText + '] ( ' + this.id + ' )');
 			}
 		}
 		else
@@ -89,7 +111,29 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + JSON.stringify(value) + '] ( ' + this.id + ' )');
+				var stateText = JSON.stringify(value);
+
+				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]) > 1)
+				{
+					stateText = 'power: ' + JSON.stringify(value);
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
+				{
+					stateText += ', hue: ' + this.homebridgeAccessory.context.data[this.letters]['hue'];
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['saturation'] != null)
+				{
+					stateText += ', saturation: ' + this.homebridgeAccessory.context.data[this.letters]['saturation'];
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
+				{
+					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
+				}
+
+				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + stateText + '] ( ' + this.id + ' )');
 			}
 
 			return true;
