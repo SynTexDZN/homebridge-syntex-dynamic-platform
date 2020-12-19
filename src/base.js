@@ -25,7 +25,7 @@ module.exports = class BaseService
 
 		this.options.requests = serviceConfig.requests || [];
 
-		this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
+		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 	}
 
 	createService(serviceType, type, subtype)
@@ -42,8 +42,10 @@ module.exports = class BaseService
 		{
 			this.logger.debug('Erstelle neuen Service! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
 
-			this.homebridgeAccessory.addService(serviceType, this.name, subtype);
+			service = this.homebridgeAccessory.addService(serviceType, this.name, subtype);
 		}
+
+		return service;
 	}
 
 	getValue(key, verbose)
