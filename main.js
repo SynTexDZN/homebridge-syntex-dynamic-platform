@@ -125,56 +125,63 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		const accessory = this.getAccessory(id);
 
-		var name = accessory.name;
-
-		for(var i = 0; i < accessory.service.length; i++)
-		{
-			if(accessory.service[i].letters == letters)
-			{
-				name = accessory.service[i].name;
-			}
-		}
-
 		var value = null;
 
-		if(accessory.homebridgeAccessory != null
-			&& accessory.homebridgeAccessory.context != null
-			&& accessory.homebridgeAccessory.context.data != null
-			&& accessory.homebridgeAccessory.context.data[letters] != null
-			&& accessory.homebridgeAccessory.context.data[letters]['state'] != null)
+		if(accessory != null)
 		{
-			value = accessory.homebridgeAccessory.context.data[letters]['state'];
+			var name = accessory.name;
 
-			if(verbose)
+			for(var i = 0; i < accessory.service.length; i++)
 			{
-				var stateText = JSON.stringify(value);
-
-				if(Object.keys(accessory.homebridgeAccessory.context.data[letters]) > 1)
+				if(accessory.service[i].letters == letters)
 				{
-					stateText = 'power: ' + JSON.stringify(value);
+					name = accessory.service[i].name;
 				}
+			}
 
-				if(accessory.homebridgeAccessory.context.data[letters]['hue'] != null)
+			if(accessory.homebridgeAccessory != null
+				&& accessory.homebridgeAccessory.context != null
+				&& accessory.homebridgeAccessory.context.data != null
+				&& accessory.homebridgeAccessory.context.data[letters] != null
+				&& accessory.homebridgeAccessory.context.data[letters]['state'] != null)
+			{
+				value = accessory.homebridgeAccessory.context.data[letters]['state'];
+	
+				if(verbose)
 				{
-					stateText += ', hue: ' + accessory.homebridgeAccessory.context.data[letters]['hue'];
+					var stateText = JSON.stringify(value);
+	
+					if(Object.keys(accessory.homebridgeAccessory.context.data[letters]) > 1)
+					{
+						stateText = 'power: ' + JSON.stringify(value);
+					}
+	
+					if(accessory.homebridgeAccessory.context.data[letters]['hue'] != null)
+					{
+						stateText += ', hue: ' + accessory.homebridgeAccessory.context.data[letters]['hue'];
+					}
+	
+					if(accessory.homebridgeAccessory.context.data[letters]['saturation'] != null)
+					{
+						stateText += ', saturation: ' + accessory.homebridgeAccessory.context.data[letters]['saturation'];
+					}
+	
+					if(accessory.homebridgeAccessory.context.data[letters]['brightness'] != null)
+					{
+						stateText += ', brightness: ' + accessory.homebridgeAccessory.context.data[letters]['brightness'];
+					}
+	
+					this.logger.log('read', accessory.id, letters, 'HomeKit Status für [' + name + '] ist [' + stateText + '] ( ' + accessory.id + ' )');
 				}
-
-				if(accessory.homebridgeAccessory.context.data[letters]['saturation'] != null)
-				{
-					stateText += ', saturation: ' + accessory.homebridgeAccessory.context.data[letters]['saturation'];
-				}
-
-				if(accessory.homebridgeAccessory.context.data[letters]['brightness'] != null)
-				{
-					stateText += ', brightness: ' + accessory.homebridgeAccessory.context.data[letters]['brightness'];
-				}
-
-				this.logger.log('read', accessory.id, letters, 'HomeKit Status für [' + name + '] ist [' + stateText + '] ( ' + accessory.id + ' )');
+			}
+			else
+			{
+				this.logger.log('warn', accessory.id, letters, '[state] von [' + name + '] wurde nicht im Cache gefunden! ( ' + accessory.id + ' )');
 			}
 		}
 		else
 		{
-			this.logger.log('warn', accessory.id, letters, '[state] von [' + name + '] wurde nicht im Cache gefunden! ( ' + accessory.id + ' )');
+			this.logger.log('warn', id, letters, '[' + id + '] wurde nicht in der Config gefunden! ( ' + id + ' )');
 		}
 
 		return value;
