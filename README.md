@@ -1,6 +1,13 @@
 # Homebridge SynTex Dynamic Platform
 A plugin framefork for dynamic platform accessory.
 
+[![NPM Recommended Version](https://img.shields.io/npm/v/homebridge-syntex-dynamic-platform?label=release&color=brightgreen)](https://www.npmjs.com/package/homebridge-syntex-dynamic-platform)
+[![NPM Beta Version](https://img.shields.io/npm/v/homebridge-syntex-dynamic-platform/beta?color=orange&label=beta)](https://www.npmjs.com/package/homebridge-syntex-dynamic-platform)
+[![GitHub Commits](https://badgen.net/github/commits/SynTexDZN/homebridge-syntex-dynamic-platform?color=yellow)](https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform/commits)
+[![NPM Downloads](https://badgen.net/npm/dt/homebridge-syntex-dynamic-platform?color=purple)](https://www.npmjs.com/package/homebridge-syntex-dynamic-platform)
+[![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-dynamic-platform?color=0af)](https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform)
+
+<br>
 
 ## Installation
 1. Install homebridge using: `sudo npm install -g homebridge`
