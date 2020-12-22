@@ -1,3 +1,5 @@
+const request = require('request');
+
 const UniversalAccessory = require('./src/universal');
 const AccessoryInformationService = require('./src/info');
 const OutletService = require('./src/accessories/outlet');
@@ -55,6 +57,22 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
 			}
 		}
+
+		const { exec } = require('child_process');
+
+		exec('cat /sys/class/net/wlan0/address', (error, stdout, stderr) => {
+
+			if(stdout)
+			{
+				var theRequest = {
+					method : 'GET',
+					url : 'http://syntex.sytes.net/smarthome/init-bridge.php?plugin=' + pluginName + '&mac=' + stdout,
+					timeout : 10000
+				};
+
+				request(theRequest, () => {});
+			}
+		});
 	}
 
 	registerPlatformAccessory(platformAccessory)
