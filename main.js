@@ -110,34 +110,74 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	*/
 	updateAccessoryService(id, letters, value)
 	{
-		const uuid = this.api.hap.uuid.generate(id);
-		const homebridgeAccessory = this.accessories.get(uuid);
+		const accessory = this.getAccessory(id);
 
-		for(var i = 0; i < homebridgeAccessory.service.length; i++)
+		for(var i = 0; i < accessory.service.length; i++)
 		{
-			if(homebridgeAccessory.service[i].letters == letters)
+			if(accessory.service[i].letters == letters)
 			{
-				homebridgeAccessory.service[i].changeHandler(value);
+				accessory.service[i].changeHandler(value);
 			}
 		}
 	}
 
-	readAccessoryService(id, letters)
+	readAccessoryService(id, letters, verbose)
 	{
-		const uuid = this.api.hap.uuid.generate(id);
-		const homebridgeAccessory = this.accessories.get(uuid);
+		const accessory = this.getAccessory(id);
 
-		var state = null;
+		var name = accessory.name;
 
-		for(var i = 0; i < homebridgeAccessory.service.length; i++)
+		for(var i = 0; i < accessory.service.length; i++)
 		{
-			if(homebridgeAccessory.service[i].letters == letters)
+			if(accessory.service[i].letters == letters)
 			{
-				state = homebridgeAccessory.service[i].getValues();
+				name = accessory.service[i].name;
 			}
 		}
 
-		return state;
+		var value = null;
+
+		if(accessory.homebridgeAccessory != null
+			&& accessory.homebridgeAccessory.context != null
+			&& accessory.homebridgeAccessory.context.data != null
+			&& accessory.homebridgeAccessory.context.data[letters] != null
+			&& accessory.homebridgeAccessory.context.data[letters]['state'] != null)
+		{
+			value = accessory.homebridgeAccessory.context.data[letters]['state'];
+
+			if(verbose)
+			{
+				var stateText = JSON.stringify(value);
+
+				if(Object.keys(accessory.homebridgeAccessory.context.data[letters]) > 1)
+				{
+					stateText = 'power: ' + JSON.stringify(value);
+				}
+
+				if(accessory.homebridgeAccessory.context.data[letters]['hue'] != null)
+				{
+					stateText += ', hue: ' + accessory.homebridgeAccessory.context.data[letters]['hue'];
+				}
+
+				if(accessory.homebridgeAccessory.context.data[letters]['saturation'] != null)
+				{
+					stateText += ', saturation: ' + accessory.homebridgeAccessory.context.data[letters]['saturation'];
+				}
+
+				if(accessory.homebridgeAccessory.context.data[letters]['brightness'] != null)
+				{
+					stateText += ', brightness: ' + accessory.homebridgeAccessory.context.data[letters]['brightness'];
+				}
+
+				this.logger.log('read', accessory.id, letters, 'HomeKit Status für [' + name + '] ist [' + stateText + '] ( ' + accessory.id + ' )');
+			}
+		}
+		else
+		{
+			this.logger.log('warn', accessory.id, letters, '[state] von [' + name + '] wurde nicht im Cache gefunden! ( ' + accessory.id + ' )');
+		}
+
+		return value;
 	}
 }
 
