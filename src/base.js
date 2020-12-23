@@ -64,7 +64,7 @@ module.exports = class BaseService
 			{
 				var stateText = JSON.stringify(value);
 
-				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]) > 1)
+				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]).length > 1)
 				{
 					stateText = 'power: ' + JSON.stringify(value);
 				}
