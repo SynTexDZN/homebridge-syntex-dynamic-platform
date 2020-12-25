@@ -6,7 +6,7 @@ A plugin framefork for dynamic platform accessory.
 [![GitHub Commits](https://badgen.net/github/commits/SynTexDZN/homebridge-syntex-dynamic-platform?color=yellow)](https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform/commits)
 [![NPM Downloads](https://badgen.net/npm/dt/homebridge-syntex-dynamic-platform?color=purple)](https://www.npmjs.com/package/homebridge-syntex-dynamic-platform)
 [![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-dynamic-platform?color=0af)](https://github.com/SynTexDZN/homebridge-syntex-dynamic-platform)
-[![Discord](https://img.shields.io/discord/442095224953634828?color=728ED5&label=discord)](https://discord.gg/Yh8aZAZq)
+[![Discord](https://img.shields.io/discord/442095224953634828?color=728ED5&label=discord)](https://discord.gg/XUqghtw4DE)
 
 <br>
 
