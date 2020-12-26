@@ -23,7 +23,7 @@ var pluginName = 'SynTexDynamicPlatform';
 var pluginVersion = '1.0.0';
 var restart = true;
 
-let logger = require('./logger'), WebServer = require('./webserver');;
+let logger = require('syntex-logger'), WebServer = require('./webserver');;
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
@@ -31,7 +31,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		if(!config)
 		{
-			this.logger.debug('Keine Config gefunden, das Plugin wird deaktiviert!');
+			console.log('Keine Config gefunden, das Plugin wird deaktiviert!');
 
 			return;
 		}
