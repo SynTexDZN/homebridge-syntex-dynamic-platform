@@ -146,6 +146,8 @@ function saveLog(level, id, letters, time, message)
 		allLogs[id][letters] = [];
 	}
 
+	removeExpired();
+
 	allLogs[id][letters].push({ t : time, l : level, m : message });
 
 	logs.add(allLogs, (err) => {
@@ -156,84 +158,25 @@ function saveLog(level, id, letters, time, message)
 		}
 	});
 }
-/*
-function saveLog(level, id, letters, time, message)
+
+function removeExpired()
 {
-	var queOBJ = { id : id, letters : letters, time : time, level : level, message : message };
-
-	if(inWork)
-	{
-		if(!que.some(element => element.time == time && element.message == message))
-		{
-			que.push(queOBJ);
-		}
-	}
-	else
-	{
-		inWork = true;
-
-		if(que.some(element => element.time == time && element.message == message))
-		{
-			que.shift();
-		}
-
-		//allLogs = removeExpired(allLogs);
-
-		console.log(1, allLogs);
-
-		if(!allLogs[id])
-		{
-			allLogs[id] = {};
-		}
-
-		if(!allLogs[id][letters])
-		{
-			allLogs[id][letters] = [];
-		}
-
-		allLogs[id][letters][allLogs[id][letters].length] = { t : time, l : level, m : message };
-
-		allLogs.id = prefix;
-
-		console.log(2, allLogs);
-
-		logs.add(allLogs, (err) => {
-
-			inWork = false;
-
-			if(err)
-			{
-				logger.log('error', 'bridge', 'Bridge', prefix + '.json konnte nicht aktualisiert werden! ' + err);
-			}
-
-			if(que.length != 0)
-			{
-				saveLog(que[0].level, que[0].id, que[0].letters, que[0].time, que[0].message);
-			}
-		});
-	}
-}
-*/
-function removeExpired(obj)
-{
-	for(const i in obj)
+	for(const i in allLogs)
 	{
 		if(i != 'id')
 		{
-			for(const j in obj[i])
+			for(const j in allLogs[i])
 			{
-				for(var k = 1; k < obj[i][j].length + 1; k++)
+				for(var k = 1; k < allLogs[i][j].length + 1; k++)
 				{
-					var time = obj[i][j][obj[i][j].length - k].t;
+					var time = allLogs[i][j][allLogs[i][j].length - k].t;
 
 					if(new Date() - new Date(time * 1000) > 86400000)
 					{
-						obj[i][j].splice(obj[i][j].length - k, 1);
+						allLogs[i][j].splice(allLogs[i][j].length - k, 1);
 					}
 				}
 			}
 		}
 	}
-	
-	return obj;
 }
