@@ -20,12 +20,13 @@ const AirQualityService = require('./src/accessories/airquality');
 
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
+var pluginVersion = '1.0.0';
 
 let logger = require('./logger'), WebServer = require('./webserver');;
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
-	constructor(config, api, pID, pName)
+	constructor(config, api, pID, pName, pVersion)
 	{
 		if(!config)
 		{
@@ -40,6 +41,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		pluginID = pID;
 		pluginName = pName;
+		pluginVersion = pVersion
 
 		this.accessories = new Map();
 
@@ -55,6 +57,40 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			if(this.port != null)
 			{
 				this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
+
+				this.WebServer.addPage('/serverside/version', (response) => {
+	
+					response.write(pluginVersion);
+					response.end();
+				});
+
+				this.WebServer.addPage('/serverside/update', (response, urlParams) => {
+	
+					var version = urlParams.version != null ? urlParams.version : 'latest';
+			
+					const { exec } = require('child_process');
+					
+					exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
+			
+						response.write(error || (stderr && stderr.includes('ERR!')) ? 'Error' : 'Success');
+						response.end();
+		
+						if(error || (stderr && stderr.includes('ERR!')))
+						{
+							this.logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' konnte nicht aktualisiert werden! ' + (error || stderr));
+						}
+						else
+						{
+							this.logger.log('success', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' wurde auf die Version [' + version + '] aktualisiert!');
+		
+							restart = true;
+		
+							this.logger.log('warn', 'bridge', 'Bridge', 'Die Homebridge wird neu gestartet ..');
+		
+							exec('sudo systemctl restart homebridge');
+						}
+					});
+				});
 			}
 		}
 
@@ -66,7 +102,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			{
 				var theRequest = {
 					method : 'GET',
-					url : 'http://syntex.sytes.net/smarthome/init-bridge.php?plugin=' + pluginName + '&mac=' + stdout,
+					url : 'http://syntex.sytes.net/smarthome/init-bridge.php?plugin=' + pluginName + '&mac=' + stdout + '&version=' + pluginVersion,
 					timeout : 10000
 				};
 
