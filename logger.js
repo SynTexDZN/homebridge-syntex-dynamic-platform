@@ -1,5 +1,5 @@
 const store = require('json-fs-store');
-var prefix, logs, logger, debugLevel = 'success', allLogs = {};
+var prefix, logs, logger, debugLevel = 'success', allLogs = {}, ready = false;
 
 module.exports = class Logger
 {
@@ -14,14 +14,49 @@ module.exports = class Logger
 			debugLevel = 'debug';
 		}
 
+		allLogs.id = pluginName;
+
 		logs.load(pluginName, (err, obj) => {    
 
 			if(obj && !err)
 			{
-				allLogs = obj;
-			}
+				for(const id in obj)
+				{
+					if(id != 'id')
+					{
+						for(const letters in obj[id])
+						{
+							if(allLogs[id] == null)
+							{
+								allLogs[id] = {};
+							}
 
-			allLogs.id = pluginName;
+							if(allLogs[id][letters] == null)
+							{
+								allLogs[id][letters] = [];
+							}
+
+							allLogs[id][letters] = obj[id][letters].concat(allLogs[id][letters]);
+						}
+					}
+				}
+
+				removeExpired();
+
+				logs.add(allLogs, (err) => {
+
+					if(err)
+					{
+						logger.log('error', 'bridge', 'Bridge', prefix + '.json konnte nicht aktualisiert werden! ' + err); // REMOVE?
+					}
+
+					ready = true;
+				});
+			}
+			else
+			{
+				ready = true;
+			}
 		});
 	}
 
@@ -150,13 +185,16 @@ function saveLog(level, id, letters, time, message)
 
 	allLogs[id][letters].push({ t : time, l : level, m : message });
 
-	logs.add(allLogs, (err) => {
+	if(ready)
+	{
+		logs.add(allLogs, (err) => {
 
-		if(err)
-		{
-			logger.log('error', 'bridge', 'Bridge', prefix + '.json konnte nicht aktualisiert werden! ' + err); // REMOVE?
-		}
-	});
+			if(err)
+			{
+				logger.log('error', 'bridge', 'Bridge', prefix + '.json konnte nicht aktualisiert werden! ' + err); // REMOVE?
+			}
+		});
+	}
 }
 
 function removeExpired()
