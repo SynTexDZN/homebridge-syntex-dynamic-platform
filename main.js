@@ -21,6 +21,7 @@ const AirQualityService = require('./src/accessories/airquality');
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
 var pluginVersion = '1.0.0';
+var restart = true;
 
 let logger = require('./logger'), WebServer = require('./webserver');;
 
@@ -218,6 +219,12 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						response.write('Error');
 					}
 		
+					response.end();
+				});
+
+				this.WebServer.addPage('/serverside/check-restart', (response) => {
+
+					response.write(restart.toString());
 					response.end();
 				});
 			}
@@ -428,6 +435,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		var letters = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 		return letters[types.indexOf(type.toLowerCase())];
+	}
+
+	finishInit()
+	{
+		restart = false;
 	}
 }
 
