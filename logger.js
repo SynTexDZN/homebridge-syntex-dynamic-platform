@@ -1,6 +1,5 @@
 const store = require('json-fs-store');
-var prefix, logs, logger, que = [], debugLevel = 'success', inWork = false;
-var allLogs = {};
+var prefix, logs, logger, debugLevel = 'success', allLogs = {};
 
 module.exports = class Logger
 {
@@ -8,23 +7,22 @@ module.exports = class Logger
 	{
 		prefix = pluginName;
 		logs = store(logDirectory);
-
-		logs.load(pluginName, (err, obj) => {    
-
-			if(obj && !err)
-			{
-				allLogs = obj;
-
-				console.log(allLogs);
-			}
-		});
-
 		logger = this;
 
 		if(debug)
 		{
 			debugLevel = 'debug';
 		}
+
+		logs.load(pluginName, (err, obj) => {    
+
+			if(obj && !err)
+			{
+				allLogs = obj;
+			}
+
+			allLogs.id = pluginName;
+		});
 	}
 
 	log(level, id, letters, message)
@@ -138,6 +136,29 @@ module.exports = class Logger
 
 function saveLog(level, id, letters, time, message)
 {
+	if(allLogs[id] == null)
+	{
+		allLogs[id] = {};
+	}
+
+	if(allLogs[id][letters] == null)
+	{
+		allLogs[id][letters] = [];
+	}
+
+	allLogs[id][letters].push({ t : time, l : level, m : message });
+
+	logs.add(allLogs, (err) => {
+
+		if(err)
+		{
+			logger.log('error', 'bridge', 'Bridge', prefix + '.json konnte nicht aktualisiert werden! ' + err); // REMOVE?
+		}
+	});
+}
+/*
+function saveLog(level, id, letters, time, message)
+{
 	var queOBJ = { id : id, letters : letters, time : time, level : level, message : message };
 
 	if(inWork)
@@ -156,7 +177,9 @@ function saveLog(level, id, letters, time, message)
 			que.shift();
 		}
 
-		allLogs = removeExpired(allLogs);
+		//allLogs = removeExpired(allLogs);
+
+		console.log(1, allLogs);
 
 		if(!allLogs[id])
 		{
@@ -171,6 +194,8 @@ function saveLog(level, id, letters, time, message)
 		allLogs[id][letters][allLogs[id][letters].length] = { t : time, l : level, m : message };
 
 		allLogs.id = prefix;
+
+		console.log(2, allLogs);
 
 		logs.add(allLogs, (err) => {
 
@@ -188,7 +213,7 @@ function saveLog(level, id, letters, time, message)
 		});
 	}
 }
-
+*/
 function removeExpired(obj)
 {
 	for(const i in obj)
