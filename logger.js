@@ -1,5 +1,6 @@
 const store = require('json-fs-store');
 var prefix, logs, logger, que = [], debugLevel = 'success', inWork = false;
+var allLogs = {};
 
 module.exports = class Logger
 {
@@ -7,6 +8,16 @@ module.exports = class Logger
 	{
 		prefix = pluginName;
 		logs = store(logDirectory);
+
+		logs.load(pluginName, (err, obj) => {    
+
+			if(obj && !err)
+			{
+				allLogs = obj;
+
+				console.log(allLogs);
+			}
+		});
 
 		logger = this;
 
@@ -86,17 +97,17 @@ module.exports = class Logger
 
 				if(obj && !err)
 				{    
-					var logs = [];
+					var l = [];
 
 					for(const i in obj)
 					{
 						if(i != 'id' && (group == null || group == i))
 						{
-							logs.push(obj[i]);
+							l.push(obj[i]);
 						}
 					}
 
-					resolve(logs);
+					resolve(l);
 				}
 				else
 				{
@@ -145,61 +156,34 @@ function saveLog(level, id, letters, time, message)
 			que.shift();
 		}
 
-		logs.load(prefix, (err, device) => {    
+		allLogs = removeExpired(allLogs);
 
-			if(device && !err)
+		if(!allLogs[id])
+		{
+			allLogs[id] = {};
+		}
+
+		if(!allLogs[id][letters])
+		{
+			allLogs[id][letters] = [];
+		}
+
+		allLogs[id][letters][allLogs[id][letters].length] = { t : time, l : level, m : message };
+
+		allLogs.id = prefix;
+
+		logs.add(allLogs, (err) => {
+
+			inWork = false;
+
+			if(err)
 			{
-				device = removeExpired(device);
-
-				if(!device[id])
-				{
-					device[id] = {};
-				}
-
-				if(!device[id][letters])
-				{
-					device[id][letters] = [];
-				}
-
-				device[id][letters][device[id][letters].length] = { t : time, l : level, m : message };
-
-				logs.add(device, (err) => {
-
-					inWork = false;
-
-					if(err)
-					{
-						logger.log('error', 'bridge', 'Bridge', prefix + '.json konnte nicht aktualisiert werden! ' + err);
-					}
-
-					if(que.length != 0)
-					{
-						saveLog(que[0].level, que[0].id, que[0].letters, que[0].time, que[0].message);
-					}
-				});
+				logger.log('error', 'bridge', 'Bridge', prefix + '.json konnte nicht aktualisiert werden! ' + err);
 			}
-			else
+
+			if(que.length != 0)
 			{
-				var entry = { id : prefix };
-
-				entry[id] = {};
-
-				entry[id][letters] = [ { t : time, l : level, m : message } ];
-
-				logs.add(entry, (err) => {
-
-					inWork = false;
-
-					if(err)
-					{
-						logger.log('error', 'bridge', 'Bridge', prefix + '.json konnte nicht aktualisiert werden! ' + err);
-					}
-
-					if(que.length != 0)
-					{
-						saveLog(que[0].level, que[0].id, que[0].letters, que[0].time, que[0].message);
-					}
-				});
+				saveLog(que[0].level, que[0].id, que[0].letters, que[0].time, que[0].message);
 			}
 		});
 	}
