@@ -23,7 +23,7 @@ var pluginName = 'SynTexDynamicPlatform';
 var pluginVersion = '1.0.0';
 var restart = true;
 
-let logger = require('syntex-logger'), WebServer = require('./webserver');;
+let logger = require('syntex-logger'), WebServer = require('syntex-webserver');;
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
