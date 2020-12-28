@@ -23,7 +23,7 @@ var pluginName = 'SynTexDynamicPlatform';
 var pluginVersion = '1.0.0';
 var restart = true;
 
-let logger = require('syntex-logger'), WebServer = require('syntex-webserver'), LanguageSwitcher = require('./src/languages/language_switcher');
+let logger = require('syntex-logger'), WebServer = require('syntex-webserver');
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
@@ -56,8 +56,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		if(config.log_directory != null)
 		{
-			this.logger = new logger(pluginName, config.log_directory, this.debug);
-			this.LanguageSwitcher = new LanguageSwitcher(this.language);
+			this.logger = new logger(pluginName, config.log_directory, this.debug, this.language);
 
 			if(this.port != null)
 			{
