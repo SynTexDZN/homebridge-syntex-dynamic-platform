@@ -84,7 +84,7 @@ module.exports = class BaseService
 					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
 				}
 
-				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + stateText + '] ( ' + this.id + ' )');
+				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
 			}
 		}
 		else
@@ -135,7 +135,7 @@ module.exports = class BaseService
 					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
 				}
 
-				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + stateText + '] ( ' + this.id + ' )');
+				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + stateText + '] ( ' + this.id + ' )');
 			}
 
 			return true;

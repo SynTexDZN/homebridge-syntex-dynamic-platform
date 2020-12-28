@@ -409,7 +409,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						stateText += ', brightness: ' + accessory.homebridgeAccessory.context.data[letters]['brightness'];
 					}
 	
-					this.logger.log('read', accessory.id, letters, 'HomeKit Status für [' + name + '] ist [' + stateText + '] ( ' + accessory.id + ' )');
+					this.logger.log('read', accessory.id, letters, '%read_state[0]% [' + name + '] %read_state[1]% [' + stateText + '] ( ' + accessory.id + ' )');
 				}
 			}
 			else
