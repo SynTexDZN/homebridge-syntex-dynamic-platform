@@ -1,4 +1,4 @@
-const request = require('request');
+const request = require('request'), store = require('json-fs-store');
 
 const UniversalAccessory = require('./src/universal');
 const AccessoryInformationService = require('./src/info');
@@ -39,6 +39,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.config = config;
 		this.debug = config['debug'] || false;
 		this.port = config['port'];
+
+		this.configJSON = store(api.user.storagePath());
 
 		pluginID = pID;
 		pluginName = pName;
@@ -192,7 +194,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							{
 								if(urlParams.remove == 'CONFIRM')
 								{
-									this.removeAccessory(accessory.homebridgeAccessory != null ? accessory.homebridgeAccessory : accessory);
+									this.removeAccessory(accessory.homebridgeAccessory != null ? accessory.homebridgeAccessory : accessory, urlParams.id);
 								}
 		
 								response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
@@ -289,10 +291,49 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.accessories.set(accessory.UUID, accessory);
 	}
 
-	removeAccessory(accessory)
+	removeAccessory(accessory, id)
 	{
 		this.logger.log('info', 'bridge', 'Bridge', 'Entferne Accessory [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
+		this.configJSON.load('config', (err, obj) => {
+
+			if(obj != null && err == null)
+			{
+				var changed = false;
+
+				obj.id = 'config';
+
+				for(const i in obj.platforms)
+				{
+					if(obj.platforms[i].platform == pluginName && obj.platforms[i].accessories != null)
+					{
+						for(const j in obj.platforms[i].accessories)
+						{
+							if(obj.platforms[i].accessories[j].id == id)
+							{
+								obj.platforms[i].accessories.splice(j, 1);
+
+								changed = true;
+							}
+						}
+					}
+				}
+
+				if(changed)
+				{
+					console.log(obj);
+
+					this.configJSON.add(obj, (err) => {
+
+						if(err)
+						{
+							logger.log('error', 'bridge', 'Bridge', '[' + id + '] konnte nicht entfernt werden! ' + err);
+						}
+					});
+				}
+			}
+		});
+		
 		this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
 
 		this.accessories.delete(accessory.UUID);
