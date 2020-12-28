@@ -24,6 +24,7 @@ module.exports = class UniversalAccessory
 		this.subtypes = {};
 		this.platform = manager['platform'];
 		this.logger = manager['logger'];
+		this.LanguageSwitcher = manager['LanguageSwitcher'];
 
 		this.service = [];
 		this.id = deviceConfig['id'];

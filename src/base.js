@@ -20,6 +20,7 @@ module.exports = class BaseService
 		this.homebridgeAccessory = homebridgeAccessory;
 
 		this.logger = manager.logger;
+		this.LanguageSwitcher = manager.LanguageSwitcher;
 
 		this.options = {};
 
