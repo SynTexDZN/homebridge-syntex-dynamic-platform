@@ -9,7 +9,7 @@ module.exports = class LanguageSwitcher
         {
             this.language = German;
         }
-        else if(language == 'en')
+        else if(language == 'en' || language == 'us')
         {
             this.language = English;
         }
