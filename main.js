@@ -202,12 +202,18 @@ let DynamicPlatform = class SynTexDynamicPlatform
 								var state = null;
 								
 								if(accessory.homebridgeAccessory != null
-									&& accessory.homebridgeAccessory.context != null
-									&& accessory.homebridgeAccessory.context.data != null
-									&& service != null
-									&& service.letters != null)
+								&& accessory.homebridgeAccessory.context != null
+								&& accessory.homebridgeAccessory.context.data != null)
 								{
-									state = accessory.homebridgeAccessory.context.data[service.letters];
+									if(urlParams.type == null)
+									{
+										state = accessory.homebridgeAccessory.context.data;
+									}
+									else if(service != null
+									&& service.letters != null)
+									{
+										state = accessory.homebridgeAccessory.context.data[service.letters];
+									}
 								}
 		
 								response.write(state != null ? JSON.stringify(state) : 'Error');
@@ -330,10 +336,10 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			}
 
 			if(accessory.homebridgeAccessory != null
-				&& accessory.homebridgeAccessory.context != null
-				&& accessory.homebridgeAccessory.context.data != null
-				&& accessory.homebridgeAccessory.context.data[letters] != null
-				&& accessory.homebridgeAccessory.context.data[letters]['state'] != null)
+			&& accessory.homebridgeAccessory.context != null
+			&& accessory.homebridgeAccessory.context.data != null
+			&& accessory.homebridgeAccessory.context.data[letters] != null
+			&& accessory.homebridgeAccessory.context.data[letters]['state'] != null)
 			{
 				value = accessory.homebridgeAccessory.context.data[letters]['state'];
 	

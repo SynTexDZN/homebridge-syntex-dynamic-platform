@@ -53,10 +53,10 @@ module.exports = class BaseService
 		var value = null;
 
 		if(this.homebridgeAccessory != null
-			&& this.homebridgeAccessory.context != null
-			&& this.homebridgeAccessory.context.data != null
-			&& this.homebridgeAccessory.context.data[this.letters] != null
-			&& this.homebridgeAccessory.context.data[this.letters][key] != null)
+		&& this.homebridgeAccessory.context != null
+		&& this.homebridgeAccessory.context.data != null
+		&& this.homebridgeAccessory.context.data[this.letters] != null
+		&& this.homebridgeAccessory.context.data[this.letters][key] != null)
 		{
 			value = this.homebridgeAccessory.context.data[this.letters][key];
 
@@ -153,9 +153,9 @@ module.exports = class BaseService
 		var values = null;
 
 		if(this.homebridgeAccessory != null
-			&& this.homebridgeAccessory.context != null
-			&& this.homebridgeAccessory.context.data != null
-			&& this.homebridgeAccessory.context.data[this.letters] != null)
+		&& this.homebridgeAccessory.context != null
+		&& this.homebridgeAccessory.context.data != null
+		&& this.homebridgeAccessory.context.data[this.letters] != null)
 		{
 			values = this.homebridgeAccessory.context.data[this.letters];
 		}
