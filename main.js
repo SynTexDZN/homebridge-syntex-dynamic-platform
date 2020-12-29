@@ -81,15 +81,15 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		
 						if(error || (stderr && stderr.includes('ERR!')))
 						{
-							this.logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' %update_error%! ' + (error || stderr));
+							this.logger.log('warn', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %update_error%! ' + (error || stderr));
 						}
 						else
 						{
-							this.logger.log('success', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' wurde auf die Version [' + version + '] aktualisiert!');
+							this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_updated[0]% [' + version + '] %plugin_updated[1]%!');
 		
 							restart = true;
 		
-							this.logger.log('warn', 'bridge', 'Bridge', 'Die Homebridge wird neu gestartet ..');
+							this.logger.log('warn', 'bridge', 'Bridge', '%restart_homebridge% ..');
 		
 							exec('sudo systemctl restart homebridge');
 						}
@@ -123,7 +123,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		
 						if(accessory == null)
 						{
-							this.logger.log('error', urlParams.id, '', 'Es wurde kein passendes Gerät in der Config gefunden! ( ' + urlParams.id + ' )');
+							this.logger.log('error', urlParams.id, '', '%config_read_error[1]%! ( ' + urlParams.id + ' )');
 		
 							response.write('Error');
 						}
@@ -152,7 +152,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							
 							if(service == null && urlParams.remove == null)
 							{
-								this.logger.log('error', urlParams.id, '', 'Es wurde kein passendes ' + (urlParams.event ? 'Event' : 'Gerät') + ' in der Config gefunden! ( ' + urlParams.id + ' )');
+								this.logger.log('error', urlParams.id, '', (urlParams.event == null ? '%plugin_updated[1]%' : '%plugin_updated[2]%') + ' ( ' + urlParams.id + ' )');
 		
 								response.write('Error');
 							}
@@ -270,7 +270,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	
 	addAccessory(accessory)
 	{
-		this.logger.debug('[' + accessory.name + '] wurde dem System hinzugefügt! ( ' + accessory.id + ' )');
+		this.logger.debug('[' + accessory.name + '] %accessory_add%! ( ' + accessory.id + ' )');
 
 		const uuid = this.api.hap.uuid.generate(accessory.id);
 
@@ -287,14 +287,14 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	configureAccessory(accessory)
 	{
-		this.logger.debug('Konfiguriere Accessory aus dem Cache Speicher [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
+		this.logger.debug('%accessory_configure% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
 		this.accessories.set(accessory.UUID, accessory);
 	}
 
 	removeAccessory(accessory, id)
 	{
-		this.logger.log('info', 'bridge', 'Bridge', 'Entferne Accessory [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
+		this.logger.log('info', 'bridge', 'Bridge', '%accessory_remove% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
 		this.configJSON.load('config', (err, obj) => {
 
@@ -419,7 +419,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		}
 		else
 		{
-			this.logger.log('warn', id, letters, '[' + id + '] wurde nicht in der Config gefunden! ( ' + id + ' )');
+			this.logger.log('warn', id, letters, '[' + id + '] %config_read_error[0]%! ( ' + id + ' )');
 		}
 
 		return value;
@@ -454,7 +454,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			}
 			catch(e)
 			{
-				this.logger.log('warn', id, letters, 'Konvertierungsfehler: [' + state[i] + '] konnte nicht gelesen werden! ( ' + id + ' )');
+				this.logger.log('warn', id, letters, '%conversion_error_parse[0]%: [' + state[i] + '] %conversion_error_parse[1]%! ( ' + id + ' )');
 
 				return null;
 			}
@@ -468,7 +468,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			if(typeof state[i] != format)
 			{
-				this.logger.log('warn', id, letters, 'Konvertierungsfehler: [' + state[i] + '] ist keine ' + (format == 'boolean' ? 'boolsche' : format == 'number' ? 'numerische' : 'korrekte') + ' Variable! ( ' + id + ' )');
+				this.logger.log('warn', id, letters, '%conversion_error_format[0]%: [' + state[i] + '] %conversion_error_format[1]% ' + (format == 'boolean' ? '%conversion_error_format[2]%' : format == 'number' ? '%conversion_error_format[3]%' : '%conversion_error_format[4]%') + ' %conversion_error_format[5]%! ( ' + id + ' )');
 
 				return null;
 			}
