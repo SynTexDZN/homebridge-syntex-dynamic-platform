@@ -33,7 +33,7 @@ module.exports = class StatelessSwitchService extends BaseService
 					value = state.value;
 				}
 				
-				this.logger.log('update', this.id, this.letters, '[' + this.name + ']: Event [' + (state.event + 1) + '] wurde ausgeführt! ( ' + this.id + ' )');
+				this.logger.log('update', this.id, this.letters, '[' + this.name + ']: %event_fired[0]% [' + (state.event + 1) + '] %event_fired[1]%! ( ' + this.id + ' )');
 
 				homebridgeAccessory.getServiceById(Service.StatelessProgrammableSwitch, state.event.toString()).getCharacteristic(Characteristic.ProgrammableSwitchEvent).updateValue(value);
 			}
@@ -46,13 +46,13 @@ module.exports = class StatelessSwitchService extends BaseService
 
 		if(service)
 		{
-			this.logger.debug('Existierenden Service gefunden! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
+			this.logger.debug('%service_found%! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
 
 			service.setCharacteristic(Characteristic.Name, this.name);
 		}
 		else
 		{
-			this.logger.debug('Erstelle neuen Service! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
+			this.logger.debug('%create_service%! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
 
 			var button = new serviceType(UUIDGen.generate(this.id), subtype.toString());
 			var props = {

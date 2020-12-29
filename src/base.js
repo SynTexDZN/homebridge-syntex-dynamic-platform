@@ -34,13 +34,13 @@ module.exports = class BaseService
 
 		if(service)
 		{
-			this.logger.debug('Existierenden Service gefunden! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
+			this.logger.debug('%service_found%! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
 
 			service.setCharacteristic(Characteristic.Name, this.name);
 		}
 		else
 		{
-			this.logger.debug('Erstelle neuen Service! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
+			this.logger.debug('%service_create%! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
 
 			service = this.homebridgeAccessory.addService(serviceType, this.name, subtype);
 		}
@@ -89,7 +89,7 @@ module.exports = class BaseService
 		}
 		else
 		{
-			this.logger.log('warn', this.id, this.letters, '[' + key + '] von [' + this.name + '] wurde nicht im Cache gefunden! ( ' + this.id + ' )');
+			this.logger.log('warn', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
 		return value;
@@ -142,7 +142,7 @@ module.exports = class BaseService
 		}
 		else
 		{
-			this.logger.log('error', this.id, this.letters, '[' + key + '] von [' + this.name + '] konnte nicht im Cache gespeichert werden! ( ' + this.id + ' )');
+			this.logger.log('error', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_update_error%! ( ' + this.id + ' )');
 
 			return false;
 		}
@@ -161,7 +161,7 @@ module.exports = class BaseService
 		}
 		else
 		{
-			this.logger.log('warn', this.id, this.letters, '[' + key + '] von [' + this.name + '] wurde nicht im Cache gefunden! ( ' + this.id + ' )');
+			this.logger.log('warn', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
 		return values;

@@ -81,7 +81,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		
 						if(error || (stderr && stderr.includes('ERR!')))
 						{
-							this.logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' konnte nicht aktualisiert werden! ' + (error || stderr));
+							this.logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' %update_error%! ' + (error || stderr));
 						}
 						else
 						{
@@ -186,7 +186,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 								}
 								else
 								{
-									this.logger.log('error', urlParams.id, service.letters, '[' + service.name + '] konnte nicht aktualisiert werden! ( ' + urlParams.id + ' )');
+									this.logger.log('error', urlParams.id, service.letters, '[' + service.name + '] %update_error%! ( ' + urlParams.id + ' )');
 								}
 		
 								response.write(state != null ? 'Success' : 'Error');
@@ -258,7 +258,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	registerPlatformAccessory(platformAccessory)
 	{
-		this.logger.debug('Registriere Platform Accessory [' + platformAccessory.displayName + ']');
+		this.logger.debug('%accessory_register% [' + platformAccessory.displayName + ']');
 
 		this.api.registerPlatformAccessories(pluginID, pluginName, [platformAccessory]);
 	}
@@ -414,7 +414,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			}
 			else
 			{
-				this.logger.log('warn', accessory.id, letters, '[state] von [' + name + '] wurde nicht im Cache gefunden! ( ' + accessory.id + ' )');
+				this.logger.log('warn', accessory.id, letters, '[state] %of% [' + name + '] %cache_read_error%! ( ' + accessory.id + ' )');
 			}
 		}
 		else
