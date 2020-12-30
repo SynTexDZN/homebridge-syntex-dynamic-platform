@@ -322,8 +322,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				if(changed)
 				{
-					console.log(obj);
-
 					this.configJSON.add(obj, (err) => {
 
 						if(err)
