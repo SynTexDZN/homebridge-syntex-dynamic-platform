@@ -54,9 +54,9 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			this.api = api;
 		}
 
-		if(config.log_directory != null)
+		if(config.logDirectory != null)
 		{
-			this.logger = new logger(pluginName, config.log_directory, this.debug, this.language);
+			this.logger = new logger(pluginName, config.logDirectory, this.debug, this.language);
 
 			if(this.port != null)
 			{
