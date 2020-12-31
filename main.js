@@ -326,7 +326,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 						if(err)
 						{
-							logger.log('error', 'bridge', 'Bridge', '[' + id + '] konnte nicht entfernt werden! ' + err);
+							logger.log('error', 'bridge', 'Bridge', '[' + id + '] %accessory_remove_error%! ' + err);
 						}
 					});
 				}
