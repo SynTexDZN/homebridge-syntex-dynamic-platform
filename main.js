@@ -115,7 +115,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					response.end();
 				});
 
-				this.WebServer.addPage('/devices', (response, urlParams) => {
+				this.WebServer.addPage('/devices', async (response, urlParams) => {
 	
 					if(urlParams.id != null)
 					{
@@ -195,7 +195,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							{
 								if(urlParams.remove == 'CONFIRM')
 								{
-									this.removeAccessory(accessory.homebridgeAccessory != null ? accessory.homebridgeAccessory : accessory, urlParams.id);
+									await this.removeAccessory(accessory.homebridgeAccessory != null ? accessory.homebridgeAccessory : accessory, urlParams.id);
 								}
 		
 								response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
@@ -294,48 +294,61 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	removeAccessory(accessory, id)
 	{
-		this.logger.log('info', 'bridge', 'Bridge', '%accessory_remove% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
+		return new Promise(async (resolve) => {
 
-		this.configJSON.load('config', (err, obj) => {
+			this.logger.log('info', 'bridge', 'Bridge', '%accessory_remove% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
-			if(obj != null && err == null)
-			{
-				var changed = false;
+			this.configJSON.load('config', (err, obj) => {
 
-				obj.id = 'config';
-
-				for(const i in obj.platforms)
+				if(obj != null && err == null)
 				{
-					if(obj.platforms[i].platform == pluginName && obj.platforms[i].accessories != null)
-					{
-						for(const j in obj.platforms[i].accessories)
-						{
-							if(obj.platforms[i].accessories[j].id == id)
-							{
-								obj.platforms[i].accessories.splice(j, 1);
+					var changed = false;
 
-								changed = true;
+					obj.id = 'config';
+
+					for(const i in obj.platforms)
+					{
+						if(obj.platforms[i].platform == pluginName && obj.platforms[i].accessories != null)
+						{
+							for(const j in obj.platforms[i].accessories)
+							{
+								if(obj.platforms[i].accessories[j].id == id)
+								{
+									obj.platforms[i].accessories.splice(j, 1);
+
+									changed = true;
+								}
 							}
 						}
 					}
-				}
 
-				if(changed)
+					if(changed)
+					{
+						this.configJSON.add(obj, (err) => {
+
+							if(err)
+							{
+								logger.log('error', 'bridge', 'Bridge', '[' + id + '] %accessory_remove_error%! ' + err);
+							}
+
+							resolve();
+						});
+					}
+					else
+					{
+						resolve();
+					}
+				}
+				else
 				{
-					this.configJSON.add(obj, (err) => {
-
-						if(err)
-						{
-							logger.log('error', 'bridge', 'Bridge', '[' + id + '] %accessory_remove_error%! ' + err);
-						}
-					});
+					resolve();
 				}
-			}
-		});
-		
-		this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
+			});
+			
+			this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
 
-		this.accessories.delete(accessory.UUID);
+			this.accessories.delete(accessory.UUID);
+		});
 	}
 	/*
 	updateAccessoryReachability(accessory, state)
