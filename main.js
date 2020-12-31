@@ -85,7 +85,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						}
 						else
 						{
-							this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_updated[0]% [' + version + '] %plugin_updated[1]%!');
+							this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_update_success[0]% [' + version + '] %plugin_update_success[1]%!');
 		
 							restart = true;
 		
@@ -152,7 +152,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							
 							if(service == null && urlParams.remove == null)
 							{
-								this.logger.log('error', urlParams.id, '', (urlParams.event == null ? '%plugin_updated[1]%' : '%plugin_updated[2]%') + ' ( ' + urlParams.id + ' )');
+								this.logger.log('error', urlParams.id, '', (urlParams.event == null ? '%plugin_update_success[1]%' : '%plugin_update_success[2]%') + ' ( ' + urlParams.id + ' )');
 		
 								response.write('Error');
 							}
