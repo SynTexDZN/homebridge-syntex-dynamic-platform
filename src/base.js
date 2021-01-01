@@ -27,7 +27,13 @@ module.exports = class BaseService
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 
-		AutomationSystem.addInputStream('SynTexAutomation', (state) => this.changeHandler(state));
+		AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
+
+			if(reciever.id == this.id && reciever.letters == this.letters)
+			{
+				this.changeHandler(state);
+			}
+		});
 	}
 
 	createService(serviceType, type, subtype)
