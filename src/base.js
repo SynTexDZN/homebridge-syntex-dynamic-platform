@@ -1,4 +1,4 @@
-let Characteristic;
+let Characteristic, AutomationSystem = require('syntex-automation');
 
 module.exports = class BaseService
 {
@@ -26,6 +26,8 @@ module.exports = class BaseService
 		this.options.requests = serviceConfig.requests || [];
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
+
+		AutomationSystem.addInputStream('SynTexAutomation', (state) => this.changeHandler(state));
 	}
 
 	createService(serviceType, type, subtype)
