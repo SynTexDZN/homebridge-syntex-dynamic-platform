@@ -54,189 +54,186 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			this.api = api;
 		}
 
-		if(config.logDirectory != null)
+		this.logger = new logger(pluginName, config.logDirectory, this.debug, this.language);
+
+		if(this.port != null)
 		{
-			this.logger = new logger(pluginName, config.logDirectory, this.debug, this.language);
+			this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
 
-			if(this.port != null)
-			{
-				this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
+			this.WebServer.addPage('/serverside/version', (response) => {
 
-				this.WebServer.addPage('/serverside/version', (response) => {
-	
-					response.write(pluginVersion);
+				response.write(pluginVersion);
+				response.end();
+			});
+
+			this.WebServer.addPage('/serverside/update', (response, urlParams) => {
+
+				var version = urlParams.version != null ? urlParams.version : 'latest';
+
+				const { exec } = require('child_process');
+
+				exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
+
+					response.write(error || (stderr && stderr.includes('ERR!')) ? 'Error' : 'Success');
 					response.end();
-				});
 
-				this.WebServer.addPage('/serverside/update', (response, urlParams) => {
-	
-					var version = urlParams.version != null ? urlParams.version : 'latest';
-			
-					const { exec } = require('child_process');
-					
-					exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
-			
-						response.write(error || (stderr && stderr.includes('ERR!')) ? 'Error' : 'Success');
-						response.end();
-		
-						if(error || (stderr && stderr.includes('ERR!')))
-						{
-							this.logger.log('warn', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %update_error%! ' + (error || stderr));
-						}
-						else
-						{
-							this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_update_success[0]% [' + version + '] %plugin_update_success[1]%!');
-		
-							restart = true;
-		
-							this.logger.log('warn', 'bridge', 'Bridge', '%restart_homebridge% ..');
-		
-							exec('sudo systemctl restart homebridge');
-						}
-					});
-				});
-
-				this.WebServer.addPage('/accessories', (response) => {
-	
-					var accessories = [];
-		
-					for(const accessory of this.accessories)
+					if(error || (stderr && stderr.includes('ERR!')))
 					{
-						accessories.push({
-							id: accessory[1].id,
-							name: accessory[1].name,
-							services: accessory[1].services,
-							version: accessory[1].version || '99.99.99',
-							plugin: pluginName
-						});
+						this.logger.log('warn', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %update_error%! ' + (error || stderr));
 					}
-			
-					response.write(JSON.stringify(accessories));
-					response.end();
-				});
-
-				this.WebServer.addPage('/devices', async (response, urlParams) => {
-	
-					if(urlParams.id != null)
+					else
 					{
-						var accessory = this.getAccessory(urlParams.id);
-		
-						if(accessory == null)
+						this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_update_success[0]% [' + version + '] %plugin_update_success[1]%!');
+
+						restart = true;
+
+						this.logger.log('warn', 'bridge', 'Bridge', '%restart_homebridge% ..');
+
+						exec('sudo systemctl restart homebridge');
+					}
+				});
+			});
+
+			this.WebServer.addPage('/accessories', (response) => {
+
+				var accessories = [];
+
+				for(const accessory of this.accessories)
+				{
+					accessories.push({
+						id: accessory[1].id,
+						name: accessory[1].name,
+						services: accessory[1].services,
+						version: accessory[1].version || '99.99.99',
+						plugin: pluginName
+					});
+				}
+
+				response.write(JSON.stringify(accessories));
+				response.end();
+			});
+
+			this.WebServer.addPage('/devices', async (response, urlParams) => {
+
+				if(urlParams.id != null)
+				{
+					var accessory = this.getAccessory(urlParams.id);
+	
+					if(accessory == null)
+					{
+						this.logger.log('error', urlParams.id, '', '%config_read_error[1]%! ( ' + urlParams.id + ' )');
+	
+						response.write('Error');
+					}
+					else
+					{
+						var service = null;
+	
+						if(accessory.service != null)
 						{
-							this.logger.log('error', urlParams.id, '', '%config_read_error[1]%! ( ' + urlParams.id + ' )');
-		
-							response.write('Error');
-						}
-						else
-						{
-							var service = null;
-		
-							if(accessory.service != null)
+							service = accessory.service[1];
+							
+							if(urlParams.event == null)
 							{
-								service = accessory.service[1];
-								
-								if(urlParams.event == null)
+								for(var j = 0; j < accessory.service.length; j++)
 								{
-									for(var j = 0; j < accessory.service.length; j++)
+									if(accessory.service[j].id != null && accessory.service[j].letters != null)
 									{
-										if(accessory.service[j].id != null && accessory.service[j].letters != null)
+										if((urlParams.type == null || accessory.service[j].letters[0] == this.typeToLetter(urlParams.type)) && (urlParams.counter == null || accessory.service[j].letters[1] == urlParams.counter))
 										{
-											if((urlParams.type == null || accessory.service[j].letters[0] == this.typeToLetter(urlParams.type)) && (urlParams.counter == null || accessory.service[j].letters[1] == urlParams.counter))
-											{
-												service = accessory.service[j];
-											}
+											service = accessory.service[j];
 										}
 									}
 								}
 							}
+						}
+						
+						if(service == null && urlParams.remove == null)
+						{
+							this.logger.log('error', urlParams.id, '', (urlParams.event == null ? '%plugin_update_success[1]%' : '%plugin_update_success[2]%') + ' ( ' + urlParams.id + ' )');
+	
+							response.write('Error');
+						}
+						else if(urlParams.value != null)
+						{
+							var state = { value : urlParams.value };
+	
+							if(urlParams.hue != null)
+							{
+								state.hue = urlParams.hue;
+							}
 							
-							if(service == null && urlParams.remove == null)
+							if(urlParams.saturation != null)
 							{
-								this.logger.log('error', urlParams.id, '', (urlParams.event == null ? '%plugin_update_success[1]%' : '%plugin_update_success[2]%') + ' ( ' + urlParams.id + ' )');
-		
-								response.write('Error');
+								state.saturation = urlParams.saturation;
 							}
-							else if(urlParams.value != null)
+	
+							if(urlParams.brightness != null)
 							{
-								var state = { value : urlParams.value };
-		
-								if(urlParams.hue != null)
-								{
-									state.hue = urlParams.hue;
-								}
-								
-								if(urlParams.saturation != null)
-								{
-									state.saturation = urlParams.saturation;
-								}
-		
-								if(urlParams.brightness != null)
-								{
-									state.brightness = urlParams.brightness;
-								}
-		
-								if(urlParams.event != null)
-								{
-									state.event = urlParams.event;
-								}
-		
-								if((state = this.validateUpdate(urlParams.id, service.letters, state)) != null)
-								{
-									service.changeHandler(state);
-								}
-								else
-								{
-									this.logger.log('error', urlParams.id, service.letters, '[' + service.name + '] %update_error%! ( ' + urlParams.id + ' )');
-								}
-		
-								response.write(state != null ? 'Success' : 'Error');
+								state.brightness = urlParams.brightness;
 							}
-							else if(urlParams.remove != null)
+	
+							if(urlParams.event != null)
 							{
-								if(urlParams.remove == 'CONFIRM')
-								{
-									await this.removeAccessory(accessory.homebridgeAccessory != null ? accessory.homebridgeAccessory : accessory, urlParams.id);
-								}
-		
-								response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
+								state.event = urlParams.event;
+							}
+	
+							if((state = this.validateUpdate(urlParams.id, service.letters, state)) != null)
+							{
+								service.changeHandler(state);
 							}
 							else
 							{
-								var state = null;
-								
-								if(accessory.homebridgeAccessory != null
-								&& accessory.homebridgeAccessory.context != null
-								&& accessory.homebridgeAccessory.context.data != null)
-								{
-									if(urlParams.type == null)
-									{
-										state = accessory.homebridgeAccessory.context.data;
-									}
-									else if(service != null
-									&& service.letters != null)
-									{
-										state = accessory.homebridgeAccessory.context.data[service.letters];
-									}
-								}
-		
-								response.write(state != null ? JSON.stringify(state) : 'Error');
+								this.logger.log('error', urlParams.id, service.letters, '[' + service.name + '] %update_error%! ( ' + urlParams.id + ' )');
 							}
+	
+							response.write(state != null ? 'Success' : 'Error');
+						}
+						else if(urlParams.remove != null)
+						{
+							if(urlParams.remove == 'CONFIRM')
+							{
+								await this.removeAccessory(accessory.homebridgeAccessory != null ? accessory.homebridgeAccessory : accessory, urlParams.id);
+							}
+	
+							response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
+						}
+						else
+						{
+							var state = null;
+							
+							if(accessory.homebridgeAccessory != null
+							&& accessory.homebridgeAccessory.context != null
+							&& accessory.homebridgeAccessory.context.data != null)
+							{
+								if(urlParams.type == null)
+								{
+									state = accessory.homebridgeAccessory.context.data;
+								}
+								else if(service != null
+								&& service.letters != null)
+								{
+									state = accessory.homebridgeAccessory.context.data[service.letters];
+								}
+							}
+	
+							response.write(state != null ? JSON.stringify(state) : 'Error');
 						}
 					}
-					else
-					{
-						response.write('Error');
-					}
-		
-					response.end();
-				});
+				}
+				else
+				{
+					response.write('Error');
+				}
+	
+				response.end();
+			});
 
-				this.WebServer.addPage('/serverside/check-restart', (response) => {
+			this.WebServer.addPage('/serverside/check-restart', (response) => {
 
-					response.write(restart.toString());
-					response.end();
-				});
-			}
+				response.write(restart.toString());
+				response.end();
+			});
 		}
 
 		const { exec } = require('child_process');
