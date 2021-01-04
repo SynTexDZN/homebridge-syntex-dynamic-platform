@@ -1,4 +1,4 @@
-let Characteristic, AutomationSystem = require('syntex-automation');
+let Characteristic;
 
 module.exports = class BaseService
 {
@@ -27,11 +27,7 @@ module.exports = class BaseService
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 
-		console.log(AutomationSystem);
-
-		AutomationSystem = new AutomationSystem(this.logger, null, null);
-
-		AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
+		manager.AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
 
 			if(reciever.id == this.id && reciever.letters == this.letters)
 			{
