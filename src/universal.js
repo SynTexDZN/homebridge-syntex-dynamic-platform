@@ -129,7 +129,7 @@ module.exports = class UniversalAccessory
 		{
 			service = new SwitchService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
-		else if(type == 'outlet')
+		else if(type == 'outlet' || type == 'relais')
 		{
 			service = new OutletService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
