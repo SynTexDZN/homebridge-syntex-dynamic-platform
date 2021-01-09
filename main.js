@@ -40,7 +40,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.debug = config['debug'] || false;
 		this.port = config['port'];
 		this.language = config['language'] || 'en';
-		this.automationDirectory = config['automationSirectory'];
+		this.automationDirectory = config['automationDirectory'];
 
 		this.configJSON = store(api.user.storagePath());
 
