@@ -44,14 +44,14 @@ module.exports = class BaseService
 
 		if(service)
 		{
-			this.logger.debug('%service_found%! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
-
 			service.setCharacteristic(Characteristic.Name, this.name);
+
+			this.logger.debug('%service_found%! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
 		}
 		else
 		{
 			this.logger.debug('%service_create%! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
-
+			
 			service = this.homebridgeAccessory.addService(serviceType, this.name, subtype);
 		}
 

@@ -33,9 +33,9 @@ module.exports = class StatelessSwitchService extends BaseService
 					value = state.value;
 				}
 				
-				this.logger.log('update', this.id, this.letters, '[' + this.name + ']: %event_fired[0]% [' + (state.event + 1) + '] %event_fired[1]%! ( ' + this.id + ' )');
-
 				homebridgeAccessory.getServiceById(Service.StatelessProgrammableSwitch, state.event.toString()).getCharacteristic(Characteristic.ProgrammableSwitchEvent).updateValue(value);
+			
+				this.logger.log('update', this.id, this.letters, '[' + this.name + ']: %event_fired[0]% [' + (state.event + 1) + '] %event_fired[1]%! ( ' + this.id + ' )');
 			}
 		};
 	}
@@ -46,9 +46,9 @@ module.exports = class StatelessSwitchService extends BaseService
 
 		if(service)
 		{
-			this.logger.debug('%service_found%! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
-
 			service.setCharacteristic(Characteristic.Name, this.name);
+
+			this.logger.debug('%service_found%! ' + this.name + ' ' + type + ' ' + subtype + ' ( ' +  this.id + ' )');
 		}
 		else
 		{

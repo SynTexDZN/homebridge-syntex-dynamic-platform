@@ -83,14 +83,14 @@ module.exports = class UniversalAccessory
 	{
 		if(this.homebridgeAccessory)
 		{
-			this.logger.debug('%accessory_found%! [' + this.name + '] ( ' +  this.id + ' )');
-
 			this.homebridgeAccessory.displayName = this.name;
+
+			this.logger.debug('%accessory_found%! [' + this.name + '] ( ' +  this.id + ' )');
 		}
 		else
 		{
 			this.logger.debug('%accessory_create%! [' + this.name + '] ( ' +  this.id + ' )');
-
+			
 			this.homebridgeAccessory = new PlatformAccessory(this.name, UUIDGen.generate(this.id), Service.AccessoryInformation);
 
 			this.platform.registerPlatformAccessory(this.homebridgeAccessory);

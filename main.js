@@ -84,9 +84,9 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					}
 					else
 					{
-						this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_update_success[0]% [' + version + '] %plugin_update_success[1]%!');
-
 						restart = true;
+
+						this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_update_success[0]% [' + version + '] %plugin_update_success[1]%!');
 
 						this.logger.log('warn', 'bridge', 'Bridge', '%restart_homebridge% ..');
 
@@ -122,9 +122,9 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	
 					if(accessory == null)
 					{
-						this.logger.log('error', urlParams.id, '', '%config_read_error[1]%! ( ' + urlParams.id + ' )');
-	
 						response.write('Error');
+
+						this.logger.log('error', urlParams.id, '', '%config_read_error[1]%! ( ' + urlParams.id + ' )');
 					}
 					else
 					{
@@ -151,9 +151,9 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						
 						if(service == null && urlParams.remove == null)
 						{
-							this.logger.log('error', urlParams.id, '', (urlParams.event == null ? '%plugin_update_success[1]%' : '%plugin_update_success[2]%') + ' ( ' + urlParams.id + ' )');
-	
 							response.write('Error');
+
+							this.logger.log('error', urlParams.id, '', (urlParams.event == null ? '%plugin_update_success[1]%' : '%plugin_update_success[2]%') + ' ( ' + urlParams.id + ' )');
 						}
 						else if(urlParams.value != null)
 						{
@@ -286,7 +286,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	configureAccessory(accessory)
 	{
 		this.logger.debug('%accessory_configure% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
-
+		
 		this.accessories.set(accessory.UUID, accessory);
 	}
 
