@@ -32,6 +32,8 @@ module.exports = class BaseService
 			if(reciever.id == this.id && reciever.letters == this.letters)
 			{
 				this.changeHandler(state);
+
+				this.logger.debug('<<< SynTexAutomation' + ' ' + JSON.stringify(reciever) + ' ' + JSON.stringify(values));
 			}
 		});
 	}
