@@ -33,7 +33,7 @@ module.exports = class BaseService
 			{
 				this.changeHandler(state);
 
-				this.logger.debug('<<< SynTexAutomation' + ' ' + JSON.stringify(reciever) + ' ' + JSON.stringify(values));
+				this.logger.debug('<<< SynTexAutomation' + ' ' + JSON.stringify(reciever) + ' ' + JSON.stringify(state));
 			}
 		});
 	}
