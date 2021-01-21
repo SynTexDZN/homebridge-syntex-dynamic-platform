@@ -27,15 +27,18 @@ module.exports = class BaseService
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 
-		manager.AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
+		if(manager.AutomationSystem != null)
+		{
+			manager.AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
 
-			if(reciever.id == this.id && reciever.letters == this.letters)
-			{
-				this.changeHandler(state);
-
-				this.logger.debug('<<< SynTexAutomation' + ' ' + JSON.stringify(reciever) + ' ' + JSON.stringify(state));
-			}
-		});
+				if(reciever.id == this.id && reciever.letters == this.letters)
+				{
+					this.changeHandler(state);
+	
+					this.logger.debug('<<< SynTexAutomation' + ' ' + JSON.stringify(reciever) + ' ' + JSON.stringify(state));
+				}
+			});
+		}
 	}
 
 	createService(serviceType, type, subtype)
