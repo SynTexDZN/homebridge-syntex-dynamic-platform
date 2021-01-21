@@ -324,12 +324,12 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					{
 						this.configJSON.add(obj, (err) => {
 
+							resolve();
+							
 							if(err)
 							{
 								logger.log('error', 'bridge', 'Bridge', '[' + id + '] %accessory_remove_error%! ' + err);
 							}
-
-							resolve();
 						});
 					}
 					else
