@@ -372,7 +372,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		const accessory = this.getAccessory(id);
 
-		var value = null;
+		var values = null;
 
 		if(accessory != null)
 		{
@@ -389,33 +389,32 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			if(accessory.homebridgeAccessory != null
 			&& accessory.homebridgeAccessory.context != null
 			&& accessory.homebridgeAccessory.context.data != null
-			&& accessory.homebridgeAccessory.context.data[letters] != null
-			&& accessory.homebridgeAccessory.context.data[letters]['state'] != null)
+			&& accessory.homebridgeAccessory.context.data[letters] != null)
 			{
-				value = accessory.homebridgeAccessory.context.data[letters]['state'];
+				values = accessory.homebridgeAccessory.context.data[letters];
 	
 				if(verbose)
 				{
-					var stateText = JSON.stringify(value);
+					var stateText = JSON.stringify(values['state']);
 	
-					if(Object.keys(accessory.homebridgeAccessory.context.data[letters]) > 1)
+					if(Object.keys(values) > 1)
 					{
-						stateText = 'power: ' + JSON.stringify(value);
+						stateText = 'power: ' + JSON.stringify(values['state']);
 					}
 	
-					if(accessory.homebridgeAccessory.context.data[letters]['hue'] != null)
+					if(values['hue'] != null)
 					{
-						stateText += ', hue: ' + accessory.homebridgeAccessory.context.data[letters]['hue'];
+						stateText += ', hue: ' + values['hue'];
 					}
 	
-					if(accessory.homebridgeAccessory.context.data[letters]['saturation'] != null)
+					if(values['saturation'] != null)
 					{
-						stateText += ', saturation: ' + accessory.homebridgeAccessory.context.data[letters]['saturation'];
+						stateText += ', saturation: ' + values['saturation'];
 					}
 	
-					if(accessory.homebridgeAccessory.context.data[letters]['brightness'] != null)
+					if(values['brightness'] != null)
 					{
-						stateText += ', brightness: ' + accessory.homebridgeAccessory.context.data[letters]['brightness'];
+						stateText += ', brightness: ' + values['brightness'];
 					}
 	
 					this.logger.log('read', accessory.id, letters, '%read_state[0]% [' + name + '] %read_state[1]% [' + stateText + '] ( ' + accessory.id + ' )');
@@ -431,7 +430,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			this.logger.log('warn', id, letters, '[' + id + '] %config_read_error[0]%! ( ' + id + ' )');
 		}
 
-		return value;
+		return values;
 	}
 
 	validateUpdate(id, letters, state)
