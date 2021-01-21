@@ -11,9 +11,9 @@
 	"dependencies": {
 		"json-fs-store": "^1.0.1",
 		"request": "^2.88.0",
-		"syntex-logger": "^1.0.2",
+		"syntex-logger": "1.0.4-b2",
 		"syntex-webserver": "^1.0.1",
-		"syntex-automation": "1.0.2-b18"
+		"syntex-automation": "1.0.2-b19"
 	},
 	"keywords": [
 		"syntex",
