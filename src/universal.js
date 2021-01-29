@@ -204,7 +204,7 @@ module.exports = class UniversalAccessory
 
 	getManufacturer()
 	{
-		return this.manufacturer
+		return this.manufacturer;
 	}
 
 	getModel()
