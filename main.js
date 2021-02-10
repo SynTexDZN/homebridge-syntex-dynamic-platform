@@ -153,7 +153,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						{
 							response.write('Error');
 
-							this.logger.log('error', urlParams.id, '', (urlParams.event == null ? '%plugin_update_success[1]%' : '%plugin_update_success[2]%') + ' ( ' + urlParams.id + ' )');
+							this.logger.log('error', urlParams.id, '', '%config_read_error[2]% ( ' + urlParams.id + ' )');
 						}
 						else if(urlParams.value != null)
 						{
