@@ -21,7 +21,7 @@ const AirQualityService = require('./src/accessories/airquality');
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
 var pluginVersion = '1.0.0';
-var restart = true;
+var restart = true, updating = false;
 
 let logger = require('syntex-logger'), WebServer = require('syntex-webserver');
 
@@ -69,30 +69,42 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			this.WebServer.addPage('/serverside/update', (response, urlParams) => {
 
-				var version = urlParams.version != null ? urlParams.version : 'latest';
-
-				const { exec } = require('child_process');
-
-				exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
-
-					response.write(error || (stderr && stderr.includes('ERR!')) ? 'Error' : 'Success');
+				if(urlParams.status != null)
+				{
+					response.write(updating.toString());
 					response.end();
+				}
+				else
+				{
+					var version = urlParams.version != null ? urlParams.version : 'latest';
 
-					if(error || (stderr && stderr.includes('ERR!')))
-					{
-						this.logger.log('warn', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %update_error%! ' + (error || stderr));
-					}
-					else
-					{
-						restart = true;
+					updating = true;
 
-						this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_update_success[0]% [' + version + '] %plugin_update_success[1]%!');
+					const { exec } = require('child_process');
 
-						this.logger.log('warn', 'bridge', 'Bridge', '%restart_homebridge% ..');
+					exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
 
-						exec('sudo systemctl restart homebridge');
-					}
-				});
+						response.write(error || (stderr && stderr.includes('ERR!')) ? 'Error' : 'Success');
+						response.end();
+
+						if(error || (stderr && stderr.includes('ERR!')))
+						{
+							this.logger.log('warn', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %update_error%! ' + (error || stderr));
+						}
+						else
+						{
+							this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_update_success[0]% [' + version + '] %plugin_update_success[1]%!');
+
+							restart = true;
+
+							this.logger.log('warn', 'bridge', 'Bridge', '%restart_homebridge% ..');
+
+							exec('sudo systemctl restart homebridge');
+						}
+
+						updating = false;
+					});
+				}
 			});
 
 			this.WebServer.addPage('/accessories', (response) => {
