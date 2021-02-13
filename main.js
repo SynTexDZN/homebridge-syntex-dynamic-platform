@@ -113,10 +113,18 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				for(const accessory of this.accessories)
 				{
+					var context = accessory[1].context, services = 'deleted';
+
+					if(accessory[1].homebridgeAccessory != null)
+					{
+						context = accessory[1].homebridgeAccessory.context;
+						services = accessory[1].services;
+					}
+
 					accessories.push({
-						id: accessory[1].id,
-						name: accessory[1].name,
-						services: accessory[1].services,
+						id: context.id,
+						name: context.name,
+						services: services,
 						version: accessory[1].version || '99.99.99',
 						plugin: pluginName
 					});
