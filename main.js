@@ -84,9 +84,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 					exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
 
-						response.write(error || (stderr && stderr.includes('ERR!')) ? 'Error' : 'Success');
-						response.end();
-
 						if(error || (stderr && stderr.includes('ERR!')))
 						{
 							this.logger.log('warn', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %update_error%! ' + (error || stderr));
@@ -104,6 +101,9 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 						updating = false;
 					});
+
+					response.write('Success');
+					response.end();
 				}
 			});
 
