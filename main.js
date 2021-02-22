@@ -113,7 +113,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				for(const accessory of this.accessories)
 				{
-					var context = accessory[1].context, services = 'deleted';
+					var context = accessory[1].context, services = 'removed';
 
 					if(accessory[1].homebridgeAccessory != null)
 					{
