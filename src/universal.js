@@ -25,6 +25,8 @@ module.exports = class UniversalAccessory
 		this.platform = manager['platform'];
 		this.logger = manager['logger'];
 
+		// TODO: Device Config Reload ( When Config / Version Updated )
+
 		this.service = [];
 		this.id = deviceConfig['id'];
 		this.name = deviceConfig['name'];
