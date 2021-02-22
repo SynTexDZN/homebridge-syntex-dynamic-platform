@@ -9,6 +9,9 @@ module.exports = class BaseService
 		this.id = deviceConfig['id'];
 		this.name = serviceConfig['name'];
 
+		homebridgeAccessory.context.id = deviceConfig['id'];
+		homebridgeAccessory.context.name = serviceConfig['name'];
+
 		var subtype = serviceConfig.subtype;
 
 		if(subtype.includes('-'))
