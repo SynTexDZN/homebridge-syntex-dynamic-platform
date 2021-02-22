@@ -10,7 +10,7 @@ module.exports = class BaseService
 		this.name = serviceConfig['name'];
 
 		homebridgeAccessory.context.id = deviceConfig['id'];
-		homebridgeAccessory.context.name = serviceConfig['name'];
+		homebridgeAccessory.context.name = deviceConfig['name'];
 
 		var subtype = serviceConfig.subtype;
 
