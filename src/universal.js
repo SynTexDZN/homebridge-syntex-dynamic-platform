@@ -34,7 +34,7 @@ module.exports = class UniversalAccessory
 
 		this.manufacturer = deviceConfig['manufacturer'] || 'SynTex';
 		this.model = deviceConfig['model'] || 'Virtual Accessory';
-		this.version = deviceConfig['version'] || '99.99.99';
+		this.version = deviceConfig['version'] || '0.0.0';
 
 		this.manager = manager;
 
