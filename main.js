@@ -61,79 +61,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		{
 			this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
 
-			this.WebServer.addPage('/serverside/version', (response) => {
-
-				response.write(pluginVersion);
-				response.end();
-			});
-
-			this.WebServer.addPage('/serverside/update', (response, urlParams) => {
-
-				if(urlParams.status != null)
-				{
-					response.write(updating.toString());
-					response.end();
-				}
-				else
-				{
-					var version = urlParams.version != null ? urlParams.version : 'latest';
-
-					updating = true;
-
-					const { exec } = require('child_process');
-
-					exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
-
-						if(error || (stderr && stderr.includes('ERR!')))
-						{
-							this.logger.log('warn', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %update_error%! ' + (error || stderr));
-						}
-						else
-						{
-							this.logger.log('success', 'bridge', 'Bridge', '%the_plugin% ' + pluginName + ' %plugin_update_success[0]% [' + version + '] %plugin_update_success[1]%!');
-
-							restart = true;
-
-							this.logger.log('warn', 'bridge', 'Bridge', '%restart_homebridge% ..');
-
-							exec('sudo systemctl restart homebridge');
-						}
-
-						updating = false;
-					});
-
-					response.write('Success');
-					response.end();
-				}
-			});
-
-			this.WebServer.addPage('/accessories', (response) => {
-
-				var accessories = [];
-
-				for(const accessory of this.accessories)
-				{
-					var context = accessory[1].context, services = 'removed';
-
-					if(accessory[1].homebridgeAccessory != null)
-					{
-						context = accessory[1].homebridgeAccessory.context;
-						services = accessory[1].services;
-					}
-
-					accessories.push({
-						id: context.id,
-						name: context.name,
-						services: services,
-						version: accessory[1].version || '99.99.99',
-						plugin: pluginName
-					});
-				}
-
-				response.write(JSON.stringify(accessories));
-				response.end();
-			});
-
 			this.WebServer.addPage('/devices', async (response, urlParams) => {
 
 				if(urlParams.id != null)
@@ -247,12 +174,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					response.write('Error');
 				}
 	
-				response.end();
-			});
-
-			this.WebServer.addPage('/serverside/check-restart', (response) => {
-
-				response.write(restart.toString());
 				response.end();
 			});
 		}
