@@ -1,4 +1,4 @@
-const request = require('request'), store = require('json-fs-store');
+const axios = require('axios'), store = require('json-fs-store');
 
 const UniversalAccessory = require('./src/universal');
 const AccessoryInformationService = require('./src/info');
@@ -184,13 +184,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			if(stdout)
 			{
-				var theRequest = {
-					method : 'GET',
-					url : 'http://syntex.sytes.net/smarthome/init-bridge.php?plugin=' + pluginName + '&mac=' + stdout + '&version=' + pluginVersion,
-					timeout : 10000
-				};
-
-				request(theRequest, () => {});
+				axios.get('http://syntex.sytes.net/smarthome/init-bridge.php?plugin=' + pluginName + '&mac=' + stdout + '&version=' + pluginVersion, { timeout });	
 			}
 		});
 	}
