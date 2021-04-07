@@ -184,7 +184,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			if(stdout)
 			{
-				axios.get('http://syntex.sytes.net/smarthome/init-bridge.php?plugin=' + pluginName + '&mac=' + stdout + '&version=' + pluginVersion, { timeout });	
+				axios.get('http://syntex.sytes.net/smarthome/init-bridge.php?plugin=' + pluginName + '&mac=' + stdout + '&version=' + pluginVersion);	
 			}
 		});
 	}
