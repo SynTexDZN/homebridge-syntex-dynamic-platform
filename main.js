@@ -21,7 +21,6 @@ const AirQualityService = require('./src/accessories/airquality');
 var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
 var pluginVersion = '1.0.0';
-var restart = true, updating = false;
 
 let logger = require('syntex-logger'), WebServer = require('syntex-webserver');
 
@@ -426,11 +425,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		var letters = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 		return letters[types.indexOf(type.toLowerCase())];
-	}
-
-	finishInit()
-	{
-		restart = false;
 	}
 }
 
