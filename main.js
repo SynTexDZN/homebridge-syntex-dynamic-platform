@@ -58,7 +58,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		if(this.port != null)
 		{
-			this.WebServer = new WebServer(pluginName, this.logger, this.port, config.fileserver);
+			this.WebServer = new WebServer(pluginName, this.logger, this.port, this.language, config.fileserver);
 
 			this.WebServer.addPage('/devices', async (response, urlParams) => {
 
