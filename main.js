@@ -1,5 +1,6 @@
 const axios = require('axios'), store = require('json-fs-store');
 
+const ContextManager = require('./src/context');
 const UniversalAccessory = require('./src/universal');
 const AccessoryInformationService = require('./src/info');
 const OutletService = require('./src/accessories/outlet');
@@ -174,6 +175,18 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				}
 	
 				response.end();
+			});
+			
+			console.log(this.WebServer, this.WebServer.addSocket, this.WebServer.addPage, this.WebServer.addTest);
+
+			this.WebServer.addSocket('devices', (ws, params) => {
+
+				var state = ContextManager.addClient(ws, params.id);
+
+				if(state != null)
+				{
+					ws.send(JSON.stringify(state));
+				}
 			});
 		}
 
@@ -428,4 +441,4 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	}
 }
 
-module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService, StatelessSwitchService, SmokeService, AirQualityService };
+module.exports = { DynamicPlatform, ContextManager, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService, StatelessSwitchService, SmokeService, AirQualityService };
