@@ -177,8 +177,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				response.end();
 			});
 			
-			console.log(this.WebServer, this.WebServer.addSocket, this.WebServer.addPage, this.WebServer.addTest);
-
 			this.WebServer.addSocket('devices', (ws, params) => {
 
 				var state = ContextManager.addClient(ws, params.id);
