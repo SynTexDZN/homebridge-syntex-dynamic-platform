@@ -181,10 +181,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				var state = ContextManager.addClient(ws, params.id);
 
-				if(state != null)
-				{
-					ws.send(JSON.stringify(state));
-				}
+				ws.send(JSON.stringify(state || {}));
 			});
 		}
 
