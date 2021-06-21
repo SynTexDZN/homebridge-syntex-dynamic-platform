@@ -146,27 +146,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	
 							response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
 						}
-						else
-						{
-							var state = null;
-							
-							if(accessory.homebridgeAccessory != null
-							&& accessory.homebridgeAccessory.context != null
-							&& accessory.homebridgeAccessory.context.data != null)
-							{
-								if(urlParams.type == null)
-								{
-									state = accessory.homebridgeAccessory.context.data;
-								}
-								else if(service != null
-								&& service.letters != null)
-								{
-									state = accessory.homebridgeAccessory.context.data[service.letters];
-								}
-							}
-	
-							response.write(state != null ? JSON.stringify(state) : 'Error');
-						}
 					}
 				}
 				else
@@ -177,7 +156,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				response.end();
 			});
 			
-			this.WebServer.addSocket('devices', (ws, params) => {
+			this.WebServer.addSocket('/devices', 'getState', (ws, params) => {
 
 				var state = ContextManager.addClient(ws, params.id);
 
@@ -297,17 +276,24 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		accessory.updateReachability(state);
 	}
 	*/
-	updateAccessoryService(id, letters, value)
+	updateAccessoryService(id, letters, state)
 	{
 		const accessory = this.getAccessory(id);
 
-		for(var i = 0; i < accessory.service.length; i++)
+		if(accessory != null)
 		{
-			if(accessory.service[i].letters == letters)
+			for(var i = 0; i < accessory.service.length; i++)
 			{
-				accessory.service[i].changeHandler(value);
+				if(accessory.service[i].letters == letters)
+				{
+					accessory.service[i].changeHandler(state);
+
+					return true;
+				}
 			}
 		}
+
+		return false;
 	}
 
 	readAccessoryService(id, letters, verbose)
