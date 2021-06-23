@@ -17,12 +17,12 @@ module.exports = class AirQualityService extends BaseService
 		{
 			homebridgeAccessory.getServiceById(Service.AirQualitySensor, serviceConfig.subtype).getCharacteristic(Characteristic.AirQuality).updateValue(state);
 
-			super.setValue('state', state);
+			super.setValue('value', state);
 		};
 	}
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		callback(super.getValue('value', verbose));
 	}
 }

@@ -17,18 +17,18 @@ module.exports = class OutletService extends BaseService
 		{
 			homebridgeAccessory.getServiceById(Service.Outlet, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
 
-			super.setValue('state', state);
+			super.setValue('value', state);
 		};
 	}
 	
 	getState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		callback(super.getValue('value', verbose));
 	}
 
 	setState(level, callback, verbose)
 	{
-		super.setValue('state', level, verbose);		
+		super.setValue('value', level, verbose);		
 
 		callback();
 	}

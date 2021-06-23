@@ -17,12 +17,12 @@ module.exports = class LeakService extends BaseService
 		{
 			homebridgeAccessory.getServiceById(Service.LeakSensor, serviceConfig.subtype).getCharacteristic(Characteristic.LeakDetected).updateValue(state);
 
-			super.setValue('state', state);
+			super.setValue('value', state);
 		};
 	}
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		callback(super.getValue('value', verbose));
 	}
 }

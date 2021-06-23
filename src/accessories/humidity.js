@@ -17,12 +17,12 @@ module.exports = class HumidityService extends BaseService
 		{
 			homebridgeAccessory.getServiceById(Service.HumiditySensor, serviceConfig.subtype).getCharacteristic(Characteristic.CurrentRelativeHumidity).updateValue(state);
 
-			super.setValue('state', state);
+			super.setValue('value', state);
 		};
 	}
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		callback(super.getValue('value', verbose));
 	}
 }

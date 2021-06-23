@@ -17,12 +17,12 @@ module.exports = class SmokeService extends BaseService
 		{
 			homebridgeAccessory.getServiceById(Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(Characteristic.SmokeDetected).updateValue(state);
 
-			super.setValue('state', state);
+			super.setValue('value', state);
 		};
 	}
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		callback(super.getValue('value', verbose));
 	}
 }

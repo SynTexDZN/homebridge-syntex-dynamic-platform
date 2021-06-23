@@ -17,12 +17,12 @@ module.exports = class MotionService extends BaseService
 		{
 			homebridgeAccessory.getServiceById(Service.MotionSensor, serviceConfig.subtype).getCharacteristic(Characteristic.MotionDetected).updateValue(state);
 
-			super.setValue('state', state);
+			super.setValue('value', state);
 		};
 	}
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		callback(super.getValue('value', verbose));
 	}
 }

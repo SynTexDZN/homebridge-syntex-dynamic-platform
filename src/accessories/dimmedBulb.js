@@ -33,7 +33,7 @@ module.exports = class ColoredBulbService extends LightBulbService
 					{
 						homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(v[i].Characteristic).updateValue(state[v[i].type]);
 						
-						super.setValue('state', state[v[i].type]);
+						super.setValue('value', state[v[i].type]);
 					}
 				}
 			}
@@ -41,7 +41,7 @@ module.exports = class ColoredBulbService extends LightBulbService
 			{
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
 					
-				super.setValue('state', state);
+				super.setValue('value', state);
 			}
 		};
 	}

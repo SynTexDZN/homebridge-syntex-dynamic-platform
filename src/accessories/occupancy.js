@@ -17,12 +17,12 @@ module.exports = class OccupancyService extends BaseService
 		{
 			homebridgeAccessory.getServiceById(Service.OccupancySensor, serviceConfig.subtype).getCharacteristic(Characteristic.OccupancyDetected).updateValue(state);
 
-			super.setValue('state', state);
+			super.setValue('value', state);
 		};
 	}
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		callback(super.getValue('value', verbose));
 	}
 }

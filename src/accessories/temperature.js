@@ -18,12 +18,12 @@ module.exports = class TemperatureService extends BaseService
 		{
 			homebridgeAccessory.getServiceById(Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(Characteristic.CurrentTemperature).updateValue(state);
 
-			super.setValue('state', state);
+			super.setValue('value', state);
 		};
 	}
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		callback(super.getValue('value', verbose));
 	}
 }
