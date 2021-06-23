@@ -162,6 +162,45 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				ws.send(JSON.stringify(state || {}));
 			});
+
+			this.WebServer.addSocket('/devices', 'setState', (ws, params) => {
+
+				if(params.id != null && params.letters != null && params.name != null && params.value != null)
+				{
+					var state = { value : params.value };
+	
+					if(params.hue != null)
+					{
+						state.hue = params.hue;
+					}
+					
+					if(params.saturation != null)
+					{
+						state.saturation = params.saturation;
+					}
+
+					if(params.brightness != null)
+					{
+						state.brightness = params.brightness;
+					}
+
+					if(params.event != null)
+					{
+						state.event = params.event;
+					}
+
+					if((state = this.validateUpdate(params.id, params.letters, state)) != null)
+					{
+						this.updateAccessoryService(params.id, params.letters, state)
+					}
+					else
+					{
+						this.logger.log('error', params.id, params.letters, '[' + params.name + '] %update_error%! ( ' + params.id + ' )');
+					}
+
+					ws.send(state != null ? '{"' + params.letters + '":' + JSON.stringify(state) + '}' : 'Error');
+				}
+			});
 		}
 
 		const { exec } = require('child_process');
@@ -323,11 +362,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	
 				if(verbose)
 				{
-					var stateText = JSON.stringify(values['state']);
+					var stateText = JSON.stringify(values['value']);
 	
 					if(Object.keys(values) > 1)
 					{
-						stateText = 'power: ' + JSON.stringify(values['state']);
+						stateText = 'power: ' + JSON.stringify(values['value']);
 					}
 	
 					if(values['hue'] != null)
