@@ -112,56 +112,59 @@ module.exports = class BaseService
 
 	setValue(key, value, verbose)
 	{
-		if(this.homebridgeAccessory && this.homebridgeAccessory.context)
+		if(key != null && value != null && !isNaN(value))
 		{
-			if(!this.homebridgeAccessory.context.data)
+			if(this.homebridgeAccessory && this.homebridgeAccessory.context)
 			{
-				this.homebridgeAccessory.context.data = {};
-			}
+				if(!this.homebridgeAccessory.context.data)
+				{
+					this.homebridgeAccessory.context.data = {};
+				}
 
-			if(!this.homebridgeAccessory.context.data[this.letters])
+				if(!this.homebridgeAccessory.context.data[this.letters])
+				{
+					this.homebridgeAccessory.context.data[this.letters] = {};
+				}
+
+				this.homebridgeAccessory.context.data[this.letters][key] = value;
+
+				if(verbose)
+				{
+					var stateText = JSON.stringify(value);
+
+					if(Object.keys(this.homebridgeAccessory.context.data[this.letters]) > 1)
+					{
+						stateText = 'power: ' + JSON.stringify(value);
+					}
+
+					if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
+					{
+						stateText += ', hue: ' + this.homebridgeAccessory.context.data[this.letters]['hue'];
+					}
+
+					if(this.homebridgeAccessory.context.data[this.letters]['saturation'] != null)
+					{
+						stateText += ', saturation: ' + this.homebridgeAccessory.context.data[this.letters]['saturation'];
+					}
+
+					if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
+					{
+						stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
+					}
+
+					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + stateText + '] ( ' + this.id + ' )');
+				}
+
+				this.ContextManager.updateContext(this.id, this.letters, this.homebridgeAccessory.context.data[this.letters]);
+
+				return true;
+			}
+			else
 			{
-				this.homebridgeAccessory.context.data[this.letters] = {};
+				this.logger.log('error', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_update_error%! ( ' + this.id + ' )');
+
+				return false;
 			}
-
-			this.homebridgeAccessory.context.data[this.letters][key] = value;
-
-			if(verbose)
-			{
-				var stateText = JSON.stringify(value);
-
-				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]) > 1)
-				{
-					stateText = 'power: ' + JSON.stringify(value);
-				}
-
-				if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
-				{
-					stateText += ', hue: ' + this.homebridgeAccessory.context.data[this.letters]['hue'];
-				}
-
-				if(this.homebridgeAccessory.context.data[this.letters]['saturation'] != null)
-				{
-					stateText += ', saturation: ' + this.homebridgeAccessory.context.data[this.letters]['saturation'];
-				}
-
-				if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
-				{
-					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
-				}
-
-				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + stateText + '] ( ' + this.id + ' )');
-			}
-
-			this.ContextManager.updateContext(this.id, this.letters, this.homebridgeAccessory.context.data[this.letters]);
-
-			return true;
-		}
-		else
-		{
-			this.logger.log('error', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_update_error%! ( ' + this.id + ' )');
-
-			return false;
 		}
 	}
 
