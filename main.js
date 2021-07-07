@@ -29,6 +29,10 @@ let DynamicPlatform = class SynTexDynamicPlatform
 {
 	constructor(config, api, pID, pName, pVersion)
 	{
+		pluginID = pID;
+		pluginName = pName;
+		pluginVersion = pVersion
+
 		if(!config)
 		{
 			console.log('Keine Config gefunden, das Plugin wird deaktiviert!');
@@ -36,26 +40,22 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			return;
 		}
 
-		this.config = config;
 		this.debug = config['debug'] || false;
-		this.port = config['port'];
 		this.language = config['language'] || 'en';
-		this.automationDirectory = config['automationDirectory'];
 
-		this.configJSON = store(api.user.storagePath());
+		this.logger = new logger(pluginName, config.logDirectory, this.debug, this.language);
 
-		pluginID = pID;
-		pluginName = pName;
-		pluginVersion = pVersion
-
+		this.config = config;
 		this.accessories = new Map();
+		this.configJSON = store(api.user.storagePath());
+		this.automationDirectory = config['automationDirectory'];
 
 		if(api)
 		{
 			this.api = api;
 		}
 
-		this.logger = new logger(pluginName, config.logDirectory, this.debug, this.language);
+		this.port = config['port'];
 
 		if(this.port != null)
 		{
