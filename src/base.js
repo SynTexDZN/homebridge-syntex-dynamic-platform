@@ -107,6 +107,11 @@ module.exports = class BaseService
 			this.logger.log('warn', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
+		if(this.homebridgeAccessory.context.data[this.letters]['state'] != null)
+		{
+			delete this.homebridgeAccessory.context.data[this.letters]['state'];
+		}
+
 		return value;
 	}
 
