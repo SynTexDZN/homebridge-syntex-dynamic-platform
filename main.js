@@ -203,14 +203,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			});
 		}
 
-		const { exec } = require('child_process');
+		this.getBridgeID().then((bridgeID) => {
+			
+			this.bridgeID = bridgeID;
 
-		exec('cat /sys/class/net/wlan0/address', (error, stdout, stderr) => {
-
-			if(stdout)
-			{
-				axios.get('http://syntex.sytes.net/smarthome/init-bridge.php?plugin=' + pluginName + '&mac=' + stdout + '&version=' + pluginVersion);	
-			}
+			this.connectBridge();
 		});
 	}
 
@@ -458,6 +455,78 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		var letters = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 		return letters[types.indexOf(type.toLowerCase())];
+	}
+
+	connectBridge()
+	{
+		axios.get('http://syntex.sytes.net:8800/init-bridge?id=' + this.bridgeID + '&plugin=' + pluginName + '&version=' + pluginVersion).then((data) => {
+		
+			if(data.data != null)
+			{
+				if(data.data != this.bridgeID)
+				{
+					this.bridgeID = data.data;
+
+					setTimeout(() => this.setBridgeID(this.bridgeID), 10000);
+				}
+			}
+			else
+			{
+				setTimeout(() => this.connectBridge(), 30000);
+			}
+
+		}).catch((e) => {
+
+			this.logger.err(e);
+
+			setTimeout(() => this.connectBridge(), 30000);
+		});
+	}
+
+	getBridgeID()
+	{
+		return new Promise((resolve) => {
+			
+			this.configJSON.load('config', (err, obj) => {    
+
+				if(obj && !err)
+				{
+					resolve(obj.bridge.id || null);
+				}
+
+				resolve(null);
+			});
+		});
+	}
+
+	setBridgeID(bridgeID)
+	{
+		return new Promise((resolve) => {
+			
+			this.configJSON.load('config', (err, obj) => {    
+
+				if(obj && !err)
+				{
+					obj.bridge.id = bridgeID;
+
+					this.configJSON.add(obj, (err) => {
+
+						if(err)
+						{
+							this.logger.log('error', 'bridge', 'Bridge', 'Config.json %update_error%! ' + err);
+						}
+		
+						resolve(err == null);
+					});
+				}
+				else
+				{
+					this.logger.log('error', 'bridge', 'Bridge', 'Config.json %read_error%! ' + err);
+
+					resolve(false);
+				}
+			});
+		});
 	}
 }
 
