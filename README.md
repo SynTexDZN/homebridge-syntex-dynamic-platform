@@ -16,7 +16,8 @@ A plugin framefork for dynamic platform accessory.
 
 
 ## Example Config
-**Info:** If the `logDirectory` for the storage can't be created you have to do it by yourself and give it full write permissions!
+**Info:** If the `baseDirectory` for the storage can't be created you have to do it by yourself and give it full write permissions!
+- `sudo mkdir -p /var/homebridge/SynTex/` ( *create the directory* )
 - `sudo chown -R homebridge /var/homebridge/SynTex/` ( *permissions only for homebridge* )
 - `sudo chmod 777 -R homebridge /var/homebridge/SynTex/` ( *permissions for many processes* )
 
@@ -24,7 +25,7 @@ A plugin framefork for dynamic platform accessory.
 "platforms": [
     {
         "platform": "SynTexDynamicPlatform",
-        "logDirectory": "/var/homebridge/SynTex/log"
+        "baseDirectory": "/var/homebridge/SynTex"
     }
 ]
 ```
