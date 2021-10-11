@@ -1,4 +1,4 @@
-const axios = require('axios'), store = require('json-fs-store');
+const axios = require('axios'), store = require('json-fs-store'), path = require('path');
 
 const ContextManager = require('./src/context');
 const UniversalAccessory = require('./src/universal');
@@ -42,17 +42,16 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.baseDirectory = config['baseDirectory'] || api.user.storagePath() + '/SynTex';
 
-		this.files = new FileSystem(this.baseDirectory, ['automation', 'log']);
-
 		this.debug = config['debug'] || false;
 		this.language = config['language'] || 'en';
 
-		this.logger = new logger(pluginName, config.logDirectory, this.debug, this.language);
+		this.logger = new logger(pluginName, path.join(this.baseDirectory, 'log'), this.debug, this.language);
+
+		this.files = new FileSystem(this.baseDirectory, this.logger, ['automation', 'log']);
 
 		this.config = config;
 		this.accessories = new Map();
 		this.configJSON = store(api.user.storagePath());
-		this.automationDirectory = config['automationDirectory'];
 
 		if(api)
 		{
