@@ -23,7 +23,7 @@ var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
 var pluginVersion = '1.0.0';
 
-let logger = require('syntex-logger'), WebServer = require('syntex-webserver');
+let logger = require('syntex-logger'), WebServer = require('syntex-webserver'), FileSystem = require('syntex-filesystem');
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
@@ -39,6 +39,10 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			return;
 		}
+
+		this.baseDirectory = config['baseDirectory'] || api.user.storagePath() + '/SynTex';
+
+		this.files = new FileSystem(this.baseDirectory, ['automation', 'log']);
 
 		this.debug = config['debug'] || false;
 		this.language = config['language'] || 'en';
