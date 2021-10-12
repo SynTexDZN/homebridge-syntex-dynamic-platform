@@ -288,7 +288,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							
 							if(err)
 							{
-								logger.log('error', 'bridge', 'Bridge', '[' + id + '] %accessory_remove_error%! ' + err);
+								logger.log('error', 'bridge', 'Bridge', '[' + id + '] %accessory_remove_error%!', err);
 							}
 						});
 					}
@@ -516,7 +516,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 						if(err)
 						{
-							this.logger.log('error', 'bridge', 'Bridge', 'Config.json %update_error%! ' + err);
+							this.logger.log('error', 'bridge', 'Bridge', 'Config.json %update_error%!', err);
 						}
 		
 						resolve(err == null);
@@ -524,7 +524,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				}
 				else
 				{
-					this.logger.log('error', 'bridge', 'Bridge', 'Config.json %read_error%! ' + err);
+					this.logger.log('error', 'bridge', 'Bridge', 'Config.json %read_error%!', err);
 
 					resolve(false);
 				}
