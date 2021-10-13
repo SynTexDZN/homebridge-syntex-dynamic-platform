@@ -206,11 +206,19 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			});
 		}
 
-		this.getBridgeID().then((bridgeID) => {
-			
-			this.bridgeID = bridgeID;
+		this.config.load('config', (err, json) => {    
 
-			this.connectBridge();
+			if(json && !err)
+			{
+				this.bridgeName = json.bridge.name;
+			}
+
+			this.getBridgeID().then((bridgeID) => {
+			
+				this.bridgeID = bridgeID;
+	
+				this.connectBridge();
+			});
 		});
 	}
 
@@ -487,7 +495,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	connectBridge()
 	{
-		axios.get('http://syntex.sytes.net:8800/init-bridge?id=' + this.bridgeID + '&plugin=' + pluginName + '&version=' + pluginVersion).then((data) => {
+		axios.get('http://syntex.sytes.net:8800/init-bridge?id=' + this.bridgeID + '&plugin=' + pluginName + '&version=' + pluginVersion + '&name=' + this.bridgeName).then((data) => {
 		
 			if(data.data != null)
 			{
@@ -515,14 +523,16 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		return new Promise((resolve) => {
 			
-			this.configJSON.load('config', (err, obj) => {    
-
-				if(obj && !err)
+			this.files.readFile('config.json').then((data) => {
+				
+				if(data != null)
 				{
-					resolve(obj.bridge.id || null);
+					resolve(data.bridgeID || null);
 				}
-
-				resolve(null);
+				else
+				{
+					resolve(null);
+				}
 			});
 		});
 	}
@@ -531,28 +541,14 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		return new Promise((resolve) => {
 			
-			this.configJSON.load('config', (err, obj) => {    
-
-				if(obj && !err)
+			this.files.writeFile('config.json', { bridgeID }).then((success) => {
+				
+				if(!success)
 				{
-					obj.bridge.id = bridgeID;
-
-					this.configJSON.add(obj, (err) => {
-
-						if(err)
-						{
-							this.logger.log('error', 'bridge', 'Bridge', 'Config.json %update_error%!', err);
-						}
-		
-						resolve(err == null);
-					});
+					this.logger.log('error', 'bridge', 'Bridge', 'Config.json %update_error%!', err);
 				}
-				else
-				{
-					this.logger.log('error', 'bridge', 'Bridge', 'Config.json %read_error%!', err);
 
-					resolve(false);
-				}
+				resolve(success);
 			});
 		});
 	}
