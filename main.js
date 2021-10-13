@@ -206,7 +206,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			});
 		}
 
-		this.config.load('config', (err, json) => {    
+		this.configJSON.load('config', (err, json) => {    
 
 			if(json && !err)
 			{
