@@ -13,7 +13,7 @@
 		"json-fs-store": "^1.0.1",
 		"syntex-logger": "1.0.7-b8",
 		"syntex-webserver": "1.0.5-b9",
-		"syntex-automation": "1.0.3-b9",
+		"syntex-automation": "1.0.3-b10",
 		"syntex-filesystem": "1.0.1-b4"
 	},
 	"keywords": [
