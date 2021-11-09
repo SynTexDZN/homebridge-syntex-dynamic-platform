@@ -1,4 +1,4 @@
-const axios = require('axios'), store = require('json-fs-store'), path = require('path');
+const axios = require('axios'), store = require('json-fs-store'), fs = require('fs'), path = require('path');
 
 const ContextManager = require('./src/context');
 const UniversalAccessory = require('./src/universal');
@@ -213,12 +213,15 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				this.bridgeName = json.bridge.name;
 			}
 
-			this.getBridgeID().then((bridgeID) => {
-			
-				this.bridgeID = bridgeID;
-	
-				this.connectBridge();
-			});
+			if(fs.accessSync(this.baseDirectory, fs.constants.W_OK))
+			{
+				this.getBridgeID().then((bridgeID) => {
+		
+					this.bridgeID = bridgeID;
+		
+					this.connectBridge();
+				});
+			}
 		});
 	}
 
