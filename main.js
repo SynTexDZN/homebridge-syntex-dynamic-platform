@@ -213,14 +213,20 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				this.bridgeName = json.bridge.name;
 			}
 
-			if(fs.accessSync(this.baseDirectory, fs.constants.W_OK))
+			try
 			{
+				fs.accessSync(this.baseDirectory, fs.constants.W_OK);
+				
 				this.getBridgeID().then((bridgeID) => {
 		
 					this.bridgeID = bridgeID;
-		
+
 					this.connectBridge();
 				});
+			}
+			catch(e)
+			{
+				this.logger.err(e);
 			}
 		});
 	}
