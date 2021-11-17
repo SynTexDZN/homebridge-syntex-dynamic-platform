@@ -11,10 +11,10 @@
 	"dependencies": {
 		"axios": "^0.21.1",
 		"json-fs-store": "^1.0.1",
-		"syntex-logger": "1.0.7-b8",
-		"syntex-webserver": "1.0.5-b9",
-		"syntex-automation": "1.0.3-b11",
-		"syntex-filesystem": "1.0.1-b5"
+		"syntex-logger": "1.0.7",
+		"syntex-webserver": "1.0.5",
+		"syntex-automation": "1.0.3",
+		"syntex-filesystem": "1.0.1"
 	},
 	"keywords": [
 		"syntex",
