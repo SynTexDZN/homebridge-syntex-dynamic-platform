@@ -1,4 +1,4 @@
-let Characteristic;
+let Characteristic, TypeManager = require('../type-manager');
 
 module.exports = class BaseService
 {
@@ -16,7 +16,9 @@ module.exports = class BaseService
 			subtype = subtype.split('-')[1];
 		}
 
-		this.letters = typeToLetter(serviceConfig.type) + subtype;
+		this.TypeManager = new TypeManager(this.logger);
+
+		this.letters = this.TypeManager.typeToLetter(serviceConfig.type) + subtype;
 		this.homebridgeAccessory = homebridgeAccessory;
 
 		this.logger = manager.logger;
@@ -195,12 +197,4 @@ module.exports = class BaseService
 
 		return values;
 	}
-}
-
-function typeToLetter(type)
-{
-	var types = ['contact', 'motion', 'temperature', 'humidity', 'rain', 'light', 'occupancy', 'smoke', 'airquality', 'rgb', 'switch', 'relais', 'statelessswitch', 'outlet', 'led', 'dimmer'];
-	var letters = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-	return letters[types.indexOf(type.toLowerCase())];
 }
