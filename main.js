@@ -455,7 +455,14 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	connectBridge()
 	{
-		axios.get('http://syntex.sytes.net:8800/init-bridge?id=' + this.bridgeID + '&plugin=' + pluginName + '&version=' + pluginVersion + '&name=' + this.bridgeName).then((data) => {
+		var url = 'http://syntex.sytes.net:8800/init-bridge?name=' + this.bridgeName + '&plugin=' + pluginName + '&version=' + pluginVersion;
+
+		if(this.bridgeID != null)
+		{
+			url += '&id=' + this.bridgeID;
+		}
+
+		axios.get(url).then((data) => {
 		
 			if(data != null && data.data != null)
 			{
