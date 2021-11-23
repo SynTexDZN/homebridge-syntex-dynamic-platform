@@ -151,6 +151,26 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	
 							response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
 						}
+						else
+						{
+							var state = null;
+							
+							if(accessory.homebridgeAccessory != null
+							&& accessory.homebridgeAccessory.context != null
+							&& accessory.homebridgeAccessory.context.data != null)
+							{
+								if(urlParams.type == null)
+								{
+									state = accessory.homebridgeAccessory.context.data;
+								}
+								else if(service != null && service.letters != null)
+								{
+									state = accessory.homebridgeAccessory.context.data[service.letters];
+								}
+							}
+	
+							response.write(state != null ? JSON.stringify(state) : 'Error');
+						}
 					}
 				}
 				else
