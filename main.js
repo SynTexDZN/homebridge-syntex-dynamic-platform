@@ -40,12 +40,26 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			return;
 		}
 
-		this.baseDirectory = config['baseDirectory'] || api.user.storagePath() + '/SynTex';
+		if(config['baseDirectory'] != null)
+		{
+			try
+			{
+				fs.accessSync(config['baseDirectory'], fs.constants.W_OK);
+
+				this.baseDirectory = config['baseDirectory'];
+
+				this.logDirectory = path.join(this.baseDirectory, 'log');
+			}
+			catch(e)
+			{
+				console.log('Please apply write permissions to', config['baseDirectory'], e);
+			}
+		}
 
 		this.debug = config['debug'] || false;
 		this.language = config['language'] || 'en';
 
-		this.logger = new logger(pluginName, path.join(this.baseDirectory, 'log'), this.debug, this.language);
+		this.logger = new logger(pluginName, this.logDirectory, this.debug, this.language);
 
 		this.files = new FileSystem(this.baseDirectory, this.logger, ['automation', 'log']);
 
