@@ -508,14 +508,14 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		return new Promise((resolve) => {
 			
-			this.files.writeFile('config.json', { bridgeID }).then((success) => {
+			this.files.writeFile('config.json', { bridgeID }).then((response) => {
 				
-				if(!success)
+				if(!response.success)
 				{
 					this.logger.log('error', 'bridge', 'Bridge', 'Config.json %update_error%!', err);
 				}
 
-				resolve(success);
+				resolve(response.success);
 			});
 		});
 	}
