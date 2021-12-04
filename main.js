@@ -57,7 +57,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			}
 			catch(e)
 			{
-				this.logger.log('error', 'bridge', 'Bridge', '%directory_permission_error%', '[' + config['baseDirectory'] + ']', '%visit_github_for_support%: https://github.com/SynTexDZN/homebridge-syntex#troubleshooting', e);
+				this.logger.log('error', 'bridge', 'Bridge', '%directory_permission_error%', '[' + config['baseDirectory'] + ']', '%visit_github_for_support%: https://github.com/SynTexDZN/' + pluginID + '#troubleshooting', e);
 			}
 		}
 
