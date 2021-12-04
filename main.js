@@ -33,12 +33,17 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		pluginName = pName;
 		pluginVersion = pVersion
 
-		if(!config)
+		if(config == null || api == null)
 		{
 			console.log('Keine Config gefunden, das Plugin wird deaktiviert!');
 
 			return;
 		}
+
+		this.debug = config['debug'] || false;
+		this.language = config['language'] || 'en';
+
+		this.logger = new Logger(pluginName, this.debug, this.language);
 
 		if(config['baseDirectory'] != null)
 		{
@@ -48,18 +53,13 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				this.baseDirectory = config['baseDirectory'];
 
-				this.logDirectory = path.join(this.baseDirectory, 'log');
+				this.logger.setLogDirectory(path.join(this.baseDirectory, 'log'));
 			}
 			catch(e)
 			{
-				console.log('Please apply write permissions to', config['baseDirectory'], e);
+				this.logger.log('error', 'bridge', 'Bridge', '%directory_permission_error%', '[' + config['baseDirectory'] + ']', '%visit_github_for_support%: https://github.com/SynTexDZN/homebridge-syntex#troubleshooting', e);
 			}
 		}
-
-		this.debug = config['debug'] || false;
-		this.language = config['language'] || 'en';
-
-		this.logger = new logger(pluginName, this.logDirectory, this.debug, this.language);
 
 		this.files = new FileSystem(this.baseDirectory, this.logger, ['automation', 'log']);
 
