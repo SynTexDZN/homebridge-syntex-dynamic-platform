@@ -43,7 +43,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.debug = config['debug'] || false;
 		this.language = config['language'] || 'en';
 
-		this.logger = new Logger(pluginName, this.debug, this.language);
+		this.logger = new logger(pluginName, this.debug, this.language);
 
 		if(config['baseDirectory'] != null)
 		{
