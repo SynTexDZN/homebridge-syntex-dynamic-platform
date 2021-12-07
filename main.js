@@ -94,7 +94,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						}
 						else
 						{
-							var service = this.getService(urlParams.id, urlParams.type, urlParams.counter);
+							var service = this.getService({ id : urlParams.id, type : urlParams.type, counter : urlParams.counter });
 		
 							if(service != null)
 							{
@@ -181,7 +181,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				if(params.id != null && params.letters != null && params.value != null)
 				{
-					var service = this.getService(params.id, this.TypeManager.letterToType(params.letters[0]), params.letters[1]);
+					var service = this.getService({ id : params.id, letters : params.letters });
 
 					if(service != null)
 					{
@@ -355,41 +355,44 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		accessory.updateReachability(state);
 	}
 	*/
-	getService(id, type, counter)
+	getService(config)
 	{
-		var accessory = this.getAccessory(id);
-
-		if(accessory != null)
+		if(config.id != null)
 		{
-			var serviceConter = 0;
+			var accessory = this.getAccessory(config.id);
 
-			for(var i = 0; i < accessory.service.length; i++)
+			if(accessory != null)
 			{
-				if(accessory.service[i].letters != null)
-				{
-					if(type != null)
-					{
-						var letters = this.TypeManager.typeToLetter(type) + (counter || 0);
+				var serviceConter = 0;
 
-						if(accessory.service[i].letters == letters)
+				for(var i = 0; i < accessory.service.length; i++)
+				{
+					if(accessory.service[i].letters != null)
+					{
+						if(config.type != null || config.letters != null)
+						{
+							var letters = config.letters || this.TypeManager.typeToLetter(config.type) + (config.counter || 0);
+
+							if(accessory.service[i].letters == letters)
+							{
+								return accessory.service[i];
+							}
+						}
+						else if(config.counter != null)
+						{
+							if(serviceConter == config.counter)
+							{
+								return accessory.service[i];
+							}
+							else 
+							{
+								serviceConter++;
+							}
+						}
+						else
 						{
 							return accessory.service[i];
 						}
-					}
-					else if(counter != null)
-					{
-						if(serviceConter == counter)
-						{
-							return accessory.service[i];
-						}
-						else 
-						{
-							serviceConter++;
-						}
-					}
-					else
-					{
-						return accessory.service[i];
 					}
 				}
 			}
