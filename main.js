@@ -86,105 +86,80 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				{
 					var accessory = this.getAccessory(urlParams.id);
 	
-					if(accessory == null)
+					if(accessory != null)
+					{
+						if(urlParams.remove != null)
+						{
+							response.write(urlParams.remove == 'CONFIRM' && await this.removeAccessory(accessory.homebridgeAccessory || accessory, urlParams.id) ? 'Success' : 'Error');
+						}
+						else
+						{
+							var service = this.getService(urlParams.id, urlParams.type, urlParams.counter);
+		
+							if(service != null)
+							{
+								if(urlParams.value != null)
+								{
+									var state = { value : urlParams.value };
+			
+									if(urlParams.hue != null)
+									{
+										state.hue = urlParams.hue;
+									}
+									
+									if(urlParams.saturation != null)
+									{
+										state.saturation = urlParams.saturation;
+									}
+			
+									if(urlParams.brightness != null)
+									{
+										state.brightness = urlParams.brightness;
+									}
+			
+									if(urlParams.event != null)
+									{
+										state.event = urlParams.event;
+									}
+
+									state = this.updateAccessoryService(service, state);
+			
+									response.write(state != null ? 'Success' : 'Error');
+								}
+								else
+								{
+									var state = null;
+									
+									if(accessory.homebridgeAccessory != null
+									&& accessory.homebridgeAccessory.context != null
+									&& accessory.homebridgeAccessory.context.data != null)
+									{
+										if(urlParams.type == null && urlParams.counter == null)
+										{
+											state = accessory.homebridgeAccessory.context.data;
+										}
+										else if(service != null && service.letters != null)
+										{
+											state = accessory.homebridgeAccessory.context.data[service.letters];
+										}
+									}
+			
+									response.write(state != null ? JSON.stringify(state) : 'Error');
+								}
+							}
+							else
+							{
+								response.write('Error');
+
+								this.logger.log('error', urlParams.id, '', '%config_read_error[1]% ( ' + urlParams.id + ' )');
+							}
+						}
+					}
+					else
 					{
 						response.write('Error');
 
 						this.logger.log('error', urlParams.id, '', '%config_read_error[1]%! ( ' + urlParams.id + ' )');
-					}
-					else
-					{
-						var service = null;
-	
-						if(accessory.service != null)
-						{
-							service = accessory.service[1];
-							
-							if(urlParams.event == null)
-							{
-								for(var j = 0; j < accessory.service.length; j++)
-								{
-									if(accessory.service[j].id != null && accessory.service[j].letters != null)
-									{
-										if((urlParams.type == null || accessory.service[j].letters[0] == this.TypeManager.typeToLetter(urlParams.type)) && (urlParams.counter == null || accessory.service[j].letters[1] == urlParams.counter))
-										{
-											service = accessory.service[j];
-										}
-									}
-								}
-							}
-						}
-						
-						if(service == null && urlParams.remove == null)
-						{
-							response.write('Error');
-
-							this.logger.log('error', urlParams.id, '', '%config_read_error[1]% ( ' + urlParams.id + ' )');
-						}
-						else if(urlParams.value != null)
-						{
-							var state = { value : urlParams.value };
-	
-							if(urlParams.hue != null)
-							{
-								state.hue = urlParams.hue;
-							}
-							
-							if(urlParams.saturation != null)
-							{
-								state.saturation = urlParams.saturation;
-							}
-	
-							if(urlParams.brightness != null)
-							{
-								state.brightness = urlParams.brightness;
-							}
-	
-							if(urlParams.event != null)
-							{
-								state.event = urlParams.event;
-							}
-	
-							if((state = this.TypeManager.validateUpdate(urlParams.id, service.letters, state)) != null)
-							{
-								service.changeHandler(state);
-							}
-							else
-							{
-								this.logger.log('error', urlParams.id, service.letters, '[' + service.name + '] %update_error%! ( ' + urlParams.id + ' )');
-							}
-	
-							response.write(state != null ? 'Success' : 'Error');
-						}
-						else if(urlParams.remove != null)
-						{
-							if(urlParams.remove == 'CONFIRM')
-							{
-								await this.removeAccessory(accessory.homebridgeAccessory != null ? accessory.homebridgeAccessory : accessory, urlParams.id);
-							}
-	
-							response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
-						}
-						else
-						{
-							var state = null;
-							
-							if(accessory.homebridgeAccessory != null
-							&& accessory.homebridgeAccessory.context != null
-							&& accessory.homebridgeAccessory.context.data != null)
-							{
-								if(urlParams.type == null)
-								{
-									state = accessory.homebridgeAccessory.context.data;
-								}
-								else if(service != null && service.letters != null)
-								{
-									state = accessory.homebridgeAccessory.context.data[service.letters];
-								}
-							}
-	
-							response.write(state != null ? JSON.stringify(state) : 'Error');
-						}
 					}
 				}
 				else
@@ -204,40 +179,38 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			this.WebServer.addSocket('/devices', 'setState', (ws, params) => {
 
-				if(params.id != null && params.letters != null && params.name != null && params.value != null)
+				if(params.id != null && params.letters != null && params.value != null)
 				{
-					var state = { value : params.value };
+					var service = this.getService(params.id, this.TypeManager.letterToType(params.letters[0]), params.letters[1]);
+
+					if(service != null)
+					{
+						var state = { value : params.value };
 	
-					if(params.hue != null)
-					{
-						state.hue = params.hue;
-					}
-					
-					if(params.saturation != null)
-					{
-						state.saturation = params.saturation;
-					}
+						if(params.hue != null)
+						{
+							state.hue = params.hue;
+						}
+						
+						if(params.saturation != null)
+						{
+							state.saturation = params.saturation;
+						}
 
-					if(params.brightness != null)
-					{
-						state.brightness = params.brightness;
-					}
+						if(params.brightness != null)
+						{
+							state.brightness = params.brightness;
+						}
 
-					if(params.event != null)
-					{
-						state.event = params.event;
-					}
+						if(params.event != null)
+						{
+							state.event = params.event;
+						}
 
-					if((state = this.TypeManager.validateUpdate(params.id, params.letters, state)) != null)
-					{
-						this.updateAccessoryService(params.id, params.letters, state)
-					}
-					else
-					{
-						this.logger.log('error', params.id, params.letters, '[' + params.name + '] %update_error%! ( ' + params.id + ' )');
-					}
+						state = this.updateAccessoryService(service, state);
 
-					ws.send(state != null ? '{"' + params.letters + '":' + JSON.stringify(state) + '}' : 'Error');
+						ws.send(state != null ? '{"' + params.letters + '":' + JSON.stringify(state) + '}' : 'Error');
+					}
 				}
 			});
 		}
@@ -351,7 +324,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					{
 						this.configJSON.add(obj, (err) => {
 
-							resolve();
+							resolve(err == null);
 							
 							if(err)
 							{
@@ -361,12 +334,12 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					}
 					else
 					{
-						resolve();
+						resolve(true);
 					}
 				}
 				else
 				{
-					resolve();
+					resolve(false);
 				}
 			});
 			
@@ -382,31 +355,71 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		accessory.updateReachability(state);
 	}
 	*/
-	updateAccessoryService(id, letters, state)
+	getService(id, type, counter)
 	{
-		const accessory = this.getAccessory(id);
+		var accessory = this.getAccessory(id);
 
 		if(accessory != null)
 		{
+			var serviceConter = 0;
+
 			for(var i = 0; i < accessory.service.length; i++)
 			{
-				if(accessory.service[i].letters == letters)
+				if(accessory.service[i].letters != null)
 				{
-					accessory.service[i].changeHandler(state);
+					if(type != null)
+					{
+						var letters = this.TypeManager.typeToLetter(type) + (counter || 0);
 
-					return true;
+						if(accessory.service[i].letters == letters)
+						{
+							return accessory.service[i];
+						}
+					}
+					else if(counter != null)
+					{
+						if(serviceConter == counter)
+						{
+							return accessory.service[i];
+						}
+						else 
+						{
+							serviceConter++;
+						}
+					}
+					else
+					{
+						return accessory.service[i];
+					}
 				}
 			}
 		}
 
-		return false;
+		return null;
+	}
+
+	updateAccessoryService(service, state)
+	{
+		if(service != null)
+		{
+			if((state = this.TypeManager.validateUpdate(service.id, service.letters, state)) != null)
+			{
+				service.changeHandler(state);
+
+				return state;
+			}
+			else
+			{
+				this.logger.log('error', service.id, service.letters, '[' + service.name + '] %update_error%! ( ' + service.id + ' )');
+			}
+		}
+		
+		return null;
 	}
 
 	readAccessoryService(id, letters, verbose)
 	{
-		const accessory = this.getAccessory(id);
-
-		var values = null;
+		var accessory = this.getAccessory(id), values = null;
 
 		if(accessory != null)
 		{
