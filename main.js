@@ -222,35 +222,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				this.bridgeName = json.bridge.name;
 			}
 
-			fs.exists(this.baseDirectory, (exist) => {
-
-                if(exist)
-                {
-					try
-					{
-
-						fs.accessSync(this.baseDirectory, fs.constants.W_OK);
-						
-						this.getBridgeID().then((bridgeID) => {
-				
-							if(bridgeID != null)
-							{
-								this.bridgeID = bridgeID;
-							}
-								
-							this.connectBridge();
-						});
-					}
-					catch(e)
-					{
-						this.logger.err(e);
-					}
-				}
-				else
-				{
-					this.logger.log('error', 'bridge', 'Bridge', 'Plugin Config %update_error%');
-				}
-			});
+			this.connectBridge();
 		});
 	}
 
@@ -485,35 +457,41 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	connectBridge()
 	{
-		var url = 'http://syntex.sytes.net:8800/init-bridge?name=' + this.bridgeName + '&plugin=' + pluginName + '&version=' + pluginVersion;
-
-		if(this.bridgeID != null)
+		if(this.baseDirectory != null)
 		{
-			url += '&id=' + this.bridgeID;
-		}
+			this.getBridgeID().then((bridgeID) => {
 
-		axios.get(url).then((data) => {
-		
-			if(data != null && data.data != null)
-			{
-				if(data.data != this.bridgeID)
+				var url = 'http://syntex.sytes.net:8800/init-bridge?name=' + this.bridgeName + '&plugin=' + pluginName + '&version=' + pluginVersion;
+
+				if(bridgeID != null)
 				{
-					this.bridgeID = data.data;
-
-					setTimeout(() => this.setBridgeID(this.bridgeID), 10000);
+					url += '&id=' + bridgeID;
 				}
-			}
-			else
-			{
-				setTimeout(() => this.connectBridge(), 30000);
-			}
 
-		}).catch((e) => {
+				axios.get(url).then((data) => {
+				
+					if(data != null && data.data != null)
+					{
+						if(data.data != bridgeID)
+						{
+							this.bridgeID = data.data;
 
-			this.logger.err(e);
+							setTimeout(() => this.setBridgeID(this.bridgeID), 10000);
+						}
+					}
+					else
+					{
+						setTimeout(() => this.connectBridge(), 30000);
+					}
 
-			setTimeout(() => this.connectBridge(), 30000);
-		});
+				}).catch((e) => {
+
+					this.logger.err(e);
+
+					setTimeout(() => this.connectBridge(), 30000);
+				});
+			});
+		}
 	}
 
 	getBridgeID()
@@ -522,9 +500,9 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			
 			this.files.readFile('config.json').then((data) => {
 				
-				if(data != null)
+				if(data != null && data.bridgeID != null)
 				{
-					resolve(data.bridgeID || null);
+					resolve(data.bridgeID);
 				}
 				else
 				{
