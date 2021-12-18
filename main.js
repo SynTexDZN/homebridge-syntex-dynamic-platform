@@ -151,7 +151,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							{
 								response.write('Error');
 
-								this.logger.log('error', urlParams.id, '', '%config_read_error[3]% ( ' + urlParams.id + ' )');
+								this.logger.log('error', urlParams.id, (urlParams.type != null ? this.TypeManager.typeToLetter(urlParams.type) : 'X') + (urlParams.counter || '0'), '%config_read_error[3]% ( ' + (urlParams.type != null ? this.TypeManager.typeToLetter(urlParams.type) : 'X') + (urlParams.counter || '0') + ' )');
 							}
 						}
 					}
@@ -266,7 +266,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		return new Promise(async (resolve) => {
 
-			this.logger.log('info', 'bridge', 'Bridge', '%accessory_remove% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
+			this.logger.log('info', id, '', '%accessory_remove% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
 			this.configJSON.load('config', (err, obj) => {
 
@@ -300,7 +300,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							
 							if(err)
 							{
-								logger.log('error', 'bridge', 'Bridge', '[' + id + '] %accessory_remove_error%!', err);
+								logger.log('error', id, '', '[' + id + '] %accessory_remove_error%!', err);
 							}
 						});
 					}
