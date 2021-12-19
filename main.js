@@ -151,7 +151,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							{
 								response.write('Error');
 
-								this.logger.log('error', urlParams.id, (urlParams.type != null ? this.TypeManager.typeToLetter(urlParams.type) : 'X') + (urlParams.counter || '0'), '%config_read_error[3]% ( ' + (urlParams.type != null ? this.TypeManager.typeToLetter(urlParams.type) : 'X') + (urlParams.counter || '0') + ' )');
+								this.logger.log('error', urlParams.id, (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0'), '%config_read_error[3]% ( ' + (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0') + ' )');
 							}
 						}
 					}
