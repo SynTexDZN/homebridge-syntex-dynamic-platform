@@ -11,9 +11,9 @@
 	"dependencies": {
 		"axios": "^0.21.1",
 		"json-fs-store": "^1.0.1",
-		"syntex-logger": "1.0.8-b8",
+		"syntex-logger": "1.0.8-b9",
 		"syntex-webserver": "1.1.0-b10",
-		"syntex-automation": "1.1.0-b2",
+		"syntex-automation": "1.1.0-b3",
 		"syntex-filesystem": "1.0.2-b3"
 	},
 	"keywords": [
