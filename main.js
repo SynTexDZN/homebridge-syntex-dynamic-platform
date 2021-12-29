@@ -65,7 +65,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.config = config;
 		this.accessories = new Map();
-		this.configJSON = store(api.user.storagePath());
 
 		if(api)
 		{
@@ -80,6 +79,29 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		{
 			this.WebServer = new WebServer(pluginName, this.logger, this.port, __dirname + '/languages', this.language, config.fileserver);
 
+			this.addWebPages();
+		}
+
+		this.files.readFile(api.user.storagePath() + '/config.json').then((data) => {
+
+			if(data != null)
+			{
+				this.configJSON = data;
+
+				if(data.bridge != null)
+				{
+					this.bridgeName = data.bridge.name;
+				}
+			}
+
+			this.connectBridge();
+		});
+	}
+
+	addWebPages()
+	{
+		if(this.WebServer != null)
+		{
 			this.WebServer.addPage('/devices', async (response, urlParams) => {
 
 				if(urlParams.id != null)
@@ -214,16 +236,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				}
 			});
 		}
-
-		this.configJSON.load('config', (err, json) => {    
-
-			if(json && !err)
-			{
-				this.bridgeName = json.bridge.name;
-			}
-
-			this.connectBridge();
-		});
 	}
 
 	registerPlatformAccessory(platformAccessory)
@@ -268,54 +280,49 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			this.logger.log('info', id, '', '%accessory_remove% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
-			this.configJSON.load('config', (err, obj) => {
+			if(this.configJSON != null && this.configJSON.platforms != null)
+			{
+				var changed = false;
 
-				if(obj != null && err == null)
+				for(const i in this.configJSON.platforms)
 				{
-					var changed = false;
-
-					obj.id = 'config';
-
-					for(const i in obj.platforms)
+					if(this.configJSON.platforms[i].platform == pluginName && this.configJSON.platforms[i].accessories != null)
 					{
-						if(obj.platforms[i].platform == pluginName && obj.platforms[i].accessories != null)
+						for(const j in this.configJSON.platforms[i].accessories)
 						{
-							for(const j in obj.platforms[i].accessories)
+							if(this.configJSON.platforms[i].accessories[j].id == id)
 							{
-								if(obj.platforms[i].accessories[j].id == id)
-								{
-									obj.platforms[i].accessories.splice(j, 1);
+								this.configJSON.platforms[i].accessories.splice(j, 1);
 
-									changed = true;
-								}
+								changed = true;
 							}
 						}
 					}
+				}
 
-					if(changed)
-					{
-						this.configJSON.add(obj, (err) => {
+				if(changed)
+				{
+					this.files.writeFile(this.api.user.storagePath() + '/config.json', this.configJSON).then((success) => {
 
-							resolve(err == null);
-							
-							if(err)
-							{
-								logger.log('error', id, '', '[' + id + '] %accessory_remove_error%!', err);
-							}
-						});
-					}
-					else
-					{
-						resolve(true);
-					}
+						if(!success)
+						{
+							logger.log('error', id, '', '[' + id + '] %accessory_remove_error%!');
+						}
+
+						resolve(success);
+					});
 				}
 				else
 				{
-					resolve(false);
+					resolve(true);
 				}
-			});
+			}
+			else
+			{
+				resolve(false);
+			}
 			
-			this.api.unregisterPlatformAccessories(pluginID, pluginName, [accessory]);
+			this.api.unregisterPlatformAccessories(pluginID, pluginName, [ accessory ]);
 
 			this.accessories.delete(accessory.UUID);
 		});
