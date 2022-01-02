@@ -511,7 +511,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				}
 				else
 				{
-					resolve(null);
+					resolve(this.bridgeID || null);
 				}
 			});
 		});
@@ -521,6 +521,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		return new Promise((resolve) => {
 			
+			this.bridgeID = bridgeID;
+
 			this.files.writeFile('config.json', { bridgeID }).then((response) => {
 				
 				if(!response.success)
