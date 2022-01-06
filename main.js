@@ -499,9 +499,16 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		axios.get(url).then((data) => {
 
-			if(data != null && data.data != null && data.data != bridgeID)
+			if(data != null && data.data != null)
 			{
-				this.setBridgeID(data.data);
+				if(data.data != bridgeID)
+				{
+					this.setBridgeID(data.data);
+				}
+			}
+			else
+			{
+				setTimeout(() => this.connectBridge(bridgeID, initBridge), 30000);
 			}
 
 		}).catch((e) => {
