@@ -311,14 +311,14 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				if(changed)
 				{
-					this.files.writeFile(this.api.user.storagePath() + '/config.json', this.configJSON).then((success) => {
+					this.files.writeFile(this.api.user.storagePath() + '/config.json', this.configJSON).then((response) => {
 
-						if(!success)
+						if(!response.success)
 						{
 							logger.log('error', id, '', '[' + id + '] %accessory_remove_error%!');
 						}
 
-						resolve(success);
+						resolve(response.success);
 					});
 				}
 				else
