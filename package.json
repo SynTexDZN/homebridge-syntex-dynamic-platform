@@ -1,6 +1,6 @@
 {
 	"name": "homebridge-syntex-dynamic-platform",
-	"version": "1.0.7-b19",
+	"version": "1.0.7-b20",
 	"description": "A Dynamic Platform Accessory",
 	"main": "main.js",
 	"author": "SynTexDZN",
