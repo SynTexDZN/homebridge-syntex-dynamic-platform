@@ -1,4 +1,4 @@
-const axios = require('axios'), store = require('json-fs-store'), fs = require('fs'), path = require('path');
+const axios = require('axios'), fs = require('fs'), path = require('path');
 
 const ContextManager = require('./src/context');
 const UniversalAccessory = require('./src/universal');
@@ -94,13 +94,16 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				}
 			}
 
-			this.generateID().then((bridgeID, initBridge) => {
+			if(this.baseDirectory != null)
+			{
+				this.generateID().then((bridgeID, initBridge) => {
 
-				if(bridgeID != null)
-				{
-					this.connectBridge(bridgeID, initBridge);
-				}
-			});
+					if(bridgeID != null)
+					{
+						this.connectBridge(bridgeID, initBridge);
+					}
+				});
+			}
 		});
 	}
 
