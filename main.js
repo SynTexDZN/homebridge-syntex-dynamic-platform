@@ -506,7 +506,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			{
 				if(data.data != bridgeID)
 				{
-					this.setBridgeID(data.data);
+					setTimeout(() => this.setBridgeID(data.data), 10000);
 				}
 			}
 			else
