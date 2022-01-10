@@ -40,6 +40,9 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			return;
 		}
 
+		this.api = api;
+		this.config = config;
+
 		this.debug = config['debug'] || false;
 		this.language = config['language'] || 'en';
 
@@ -63,13 +66,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.files = new FileSystem(this.baseDirectory, this.logger, ['automation', 'log']);
 
-		this.config = config;
 		this.accessories = new Map();
-
-		if(api)
-		{
-			this.api = api;
-		}
 
 		this.TypeManager = new TypeManager(this.logger);
 
