@@ -100,7 +100,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						this.connectBridge(bridgeID, bridgeInit);
 					}
 
-				}), 10000));
+				}), 3000));
 			}
 		});
 	}
