@@ -93,13 +93,14 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			if(this.baseDirectory != null)
 			{
-				this.generateID().then((bridgeID, initBridge) => {
+				this.generateID().then((bridgeInit) => setTimeout(() => this.getBridgeID().then((bridgeID) => {
 
 					if(bridgeID != null)
 					{
-						this.connectBridge(bridgeID, initBridge);
+						this.connectBridge(bridgeID, bridgeInit);
 					}
-				});
+
+				}), 10000));
 			}
 		});
 	}
@@ -476,13 +477,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				if(bridgeID != null)
 				{
-					resolve(bridgeID, false);
+					resolve(false);
 				}
 				else
 				{
-					bridgeID = new Date().getTime().toString(16);
-
-					this.setBridgeID(bridgeID).then((success) => resolve(success ? bridgeID : null, true));
+					this.setBridgeID(new Date().getTime().toString(16)).then((success) => resolve(success));
 				}
 			});
 		});
