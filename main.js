@@ -93,14 +93,17 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			if(this.baseDirectory != null)
 			{
-				this.generateID().then((bridgeInit) => setTimeout(() => this.getBridgeID().then((bridgeID) => {
+				this.generateID().then((bridgeInit) => {
+					
+					setTimeout(() => this.getBridgeID().then((bridgeID) => {
 
-					if(bridgeID != null)
-					{
-						this.connectBridge(bridgeID, bridgeInit);
-					}
+						if(bridgeID != null)
+						{
+							this.connectBridge(bridgeID, bridgeInit);
+						}
 
-				}), 3000));
+					}), bridgeInit ? 3000 : 0);
+				});
 			}
 		});
 	}
