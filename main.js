@@ -43,8 +43,18 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.api = api;
 		this.config = config;
 
-		this.debug = config['debug'] || false;
-		this.language = config['language'] || 'en';
+		this.accessories = new Map();
+
+		this.options = {};
+
+		if(config['options'] != null)
+		{
+			this.options = config['options'];
+		}
+
+		this.port = this.options['port'];
+		this.debug = this.options['debug'] || false;
+		this.language = this.options['language'] || 'en';
 
 		this.logger = new logger(pluginName, this.debug, this.language);
 
@@ -63,14 +73,10 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				this.logger.log('error', 'bridge', 'Bridge', '%directory_permission_error% [' + config['baseDirectory'] + ']', '%visit_github_for_support%: https://github.com/SynTexDZN/' + pluginID + '#troubleshooting', e);
 			}
 		}
-
+		
 		this.files = new FileSystem(this.baseDirectory, this.logger, ['automation', 'log']);
 
-		this.accessories = new Map();
-
 		this.TypeManager = new TypeManager(this.logger);
-
-		this.port = config['port'];
 
 		if(this.port != null)
 		{
