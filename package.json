@@ -10,10 +10,10 @@
 	},
 	"dependencies": {
 		"axios": "^0.21.1",
-		"syntex-logger": "1.0.8-b11",
-		"syntex-webserver": "1.1.0-b10",
 		"syntex-automation": "1.1.0-b6",
-		"syntex-filesystem": "1.0.2-b6"
+		"syntex-filesystem": "1.0.2-b6",
+		"syntex-logger": "1.0.8-b11",
+		"syntex-webserver": "1.1.0-b10"
 	},
 	"keywords": [
 		"syntex",
@@ -38,5 +38,8 @@
 	"license": "ISC",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"devDependencies": {
+		"eslint": "^8.7.0"
 	}
 }
