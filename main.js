@@ -139,7 +139,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							{
 								if(urlParams.value != null)
 								{
-									var state = { value : urlParams.value };
+									let state = { value : urlParams.value };
 			
 									if(urlParams.hue != null)
 									{
@@ -167,7 +167,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 								}
 								else
 								{
-									var state = null;
+									let state = null;
 									
 									if(accessory.homebridgeAccessory != null
 									&& accessory.homebridgeAccessory.context != null
@@ -293,7 +293,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	removeAccessory(accessory, id)
 	{
-		return new Promise(async (resolve) => {
+		return new Promise((resolve) => {
 
 			this.logger.log('info', id, '', '%accessory_remove% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
