@@ -19,19 +19,15 @@ const StatelessSwitchService = require('./src/accessories/statelessswitch');
 const SmokeService = require('./src/accessories/smoke');
 const AirQualityService = require('./src/accessories/airquality');
 
-var pluginID = 'homebridge-syntex-dynamic-platform';
-var pluginName = 'SynTexDynamicPlatform';
-var pluginVersion = '1.0.0';
-
-let logger = require('syntex-logger'), WebServer = require('syntex-webserver'), FileSystem = require('syntex-filesystem'), TypeManager = require('./src/type-manager'), EventManager = require('./src/event-manager');
+let logger = require('syntex-logger'), WebServer = require('syntex-webserver'), FileSystem = require('syntex-filesystem'), AutomationSystem = require('syntex-automation'), TypeManager = require('./src/type-manager'), EventManager = require('./src/event-manager');
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
-	constructor(config, api, pID, pName, pVersion)
+	constructor(config, api, pluginID, pluginName, pVersion)
 	{
-		pluginID = pID;
-		pluginName = pName;
-		pluginVersion = pVersion
+		this.pluginID = pluginID || 'homebridge-syntex-dynamic-platform';
+		this.pluginName = pluginName || 'SynTexDynamicPlatform';
+		this.pluginVersion = pVersion || '1.0.0';
 
 		if(config == null || api == null)
 		{
@@ -56,7 +52,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.debug = this.options['debug'] || false;
 		this.language = this.options['language'] || 'en';
 
-		this.logger = new logger(pluginName, this.debug, this.language);
+		this.logger = new logger(this);
 
 		if(config['baseDirectory'] != null)
 		{
@@ -70,18 +66,19 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			}
 			catch(e)
 			{
-				this.logger.log('error', 'bridge', 'Bridge', '%directory_permission_error% [' + config['baseDirectory'] + ']', '%visit_github_for_support%: https://github.com/SynTexDZN/' + pluginID + '#troubleshooting', e);
+				this.logger.log('error', 'bridge', 'Bridge', '%directory_permission_error% [' + config['baseDirectory'] + ']', '%visit_github_for_support%: https://github.com/SynTexDZN/' + this.pluginID + '#troubleshooting', e);
 			}
 		}
 		
-		this.files = new FileSystem(this.baseDirectory, this.logger, ['automation', 'log']);
+		this.files = new FileSystem(this, { initDirectories : ['automation', 'log'] });
 
+		this.AutomationSystem = new AutomationSystem(this);
 		this.TypeManager = new TypeManager(this.logger);
 		this.EventManager = new EventManager(this.logger);
 
 		if(this.port != null)
 		{
-			this.WebServer = new WebServer(pluginName, this.logger, this.port, __dirname + '/languages', this.language, config.fileserver);
+			this.WebServer = new WebServer(this, { languageDirectory : __dirname + '/languages', filesystem : config.fileserver});
 
 			this.addWebPages();
 		}
@@ -259,7 +256,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		this.logger.debug('%accessory_register% [' + platformAccessory.displayName + ']');
 
-		this.api.registerPlatformAccessories(pluginID, pluginName, [platformAccessory]);
+		this.api.registerPlatformAccessories(this.pluginID, this.pluginName, [platformAccessory]);
 	}
 
 	getPlatformAccessory()
@@ -303,7 +300,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				for(const i in this.configJSON.platforms)
 				{
-					if(this.configJSON.platforms[i].platform == pluginName && this.configJSON.platforms[i].accessories != null)
+					if(this.configJSON.platforms[i].platform == this.pluginName && this.configJSON.platforms[i].accessories != null)
 					{
 						for(const j in this.configJSON.platforms[i].accessories)
 						{
@@ -339,7 +336,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				resolve(false);
 			}
 			
-			this.api.unregisterPlatformAccessories(pluginID, pluginName, [ accessory ]);
+			this.api.unregisterPlatformAccessories(this.pluginID, this.pluginName, [ accessory ]);
 
 			this.accessories.delete(accessory.UUID);
 		});
@@ -499,7 +496,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	connectBridge(bridgeID, initBridge)
 	{
-		var url = 'http://syntex.sytes.net:8800/init-bridge?id=' + bridgeID + '&plugin=' + pluginName + '&version=' + pluginVersion + '&name=' + this.bridgeName;
+		var url = 'http://syntex.sytes.net:8800/init-bridge?id=' + bridgeID + '&plugin=' + this.pluginName + '&version=' + this.pluginVersion + '&name=' + this.bridgeName;
 
 		if(initBridge)
 		{
