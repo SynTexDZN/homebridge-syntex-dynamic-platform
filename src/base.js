@@ -21,7 +21,7 @@ module.exports = class BaseService
 		this.letters = this.TypeManager.typeToLetter(serviceConfig.type) + subtype;
 		this.homebridgeAccessory = homebridgeAccessory;
 
-		this.logger = manager.logger;
+		this.logger = manager.platform.logger;
 		this.ContextManager = manager.ContextManager;
 
 		this.options = {};
@@ -29,9 +29,9 @@ module.exports = class BaseService
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 
-		if(manager.AutomationSystem != null && this.changeHandler != null)
+		if(manager.platform.AutomationSystem != null && this.changeHandler != null)
 		{
-			manager.AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
+			manager.platform.AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
 
 				if(reciever.id == this.id && reciever.letters == this.letters)
 				{

@@ -13,11 +13,11 @@ module.exports = class AccessoryInformationService
 		{
 			service.setCharacteristic(Characteristic.Name, deviceConfig.name);
 
-			manager.logger.debug('%info_service_found%! [' + deviceConfig.name + '] ( ' +  deviceConfig.id + ' )');
+			manager.platform.logger.debug('%info_service_found%! [' + deviceConfig.name + '] ( ' +  deviceConfig.id + ' )');
 		}
 		else
 		{
-			manager.logger.debug('%info_service_create%! [' + deviceConfig.name + '] ( ' +  deviceConfig.id + ' )');
+			manager.platform.logger.debug('%info_service_create%! [' + deviceConfig.name + '] ( ' +  deviceConfig.id + ' )');
 			
 			service = homebridgeAccessory.addService(Service.AccessoryInformation, deviceConfig.name);
 		}

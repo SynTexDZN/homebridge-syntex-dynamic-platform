@@ -23,7 +23,7 @@ module.exports = class UniversalAccessory
 	{
 		this.subtypes = {};
 		this.platform = manager['platform'];
-		this.logger = manager['logger'];
+		this.logger = manager.platform['logger'];
 
 		// TODO: Device Config Reload ( When Config / Version Updated )
 
