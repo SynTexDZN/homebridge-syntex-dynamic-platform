@@ -29,7 +29,7 @@ module.exports = class BaseService
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 
-		if(manager.AutomationSystem != null)
+		if(manager.AutomationSystem != null && this.changeHandler != null)
 		{
 			manager.AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
 

@@ -399,7 +399,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	updateAccessoryService(service, state)
 	{
-		if(service != null)
+		if(service != null && service.changeHandler != null)
 		{
 			if((state = this.TypeManager.validateUpdate(service.id, service.letters, state)) != null)
 			{
