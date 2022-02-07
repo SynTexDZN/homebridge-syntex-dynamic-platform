@@ -23,7 +23,7 @@ var pluginID = 'homebridge-syntex-dynamic-platform';
 var pluginName = 'SynTexDynamicPlatform';
 var pluginVersion = '1.0.0';
 
-let logger = require('syntex-logger'), WebServer = require('syntex-webserver'), FileSystem = require('syntex-filesystem'), TypeManager = require('./type-manager');
+let logger = require('syntex-logger'), WebServer = require('syntex-webserver'), FileSystem = require('syntex-filesystem'), TypeManager = require('./src/type-manager'), EventManager = require('./src/event-manager');
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
@@ -77,6 +77,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.files = new FileSystem(this.baseDirectory, this.logger, ['automation', 'log']);
 
 		this.TypeManager = new TypeManager(this.logger);
+		this.EventManager = new EventManager(this.logger);
 
 		if(this.port != null)
 		{

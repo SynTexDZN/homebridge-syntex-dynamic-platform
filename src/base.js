@@ -1,4 +1,4 @@
-let Characteristic, TypeManager = require('../type-manager');
+let Characteristic, TypeManager = require('./type-manager');
 
 module.exports = class BaseService
 {
