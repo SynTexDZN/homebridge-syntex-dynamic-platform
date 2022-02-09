@@ -21,13 +21,15 @@ module.exports = class UniversalAccessory
 {
 	constructor(homebridgeAccessory, deviceConfig, manager)
 	{
+		this.service = [];
 		this.subtypes = {};
-		this.platform = manager['platform'];
+
+		this.manager = manager;
+		this.platform = manager.platform;
 		this.logger = manager.platform['logger'];
 
 		// TODO: Device Config Reload ( When Config / Version Updated )
 
-		this.service = [];
 		this.id = deviceConfig['id'];
 		this.name = deviceConfig['name'];
 		this.services = deviceConfig['services'];
@@ -35,8 +37,6 @@ module.exports = class UniversalAccessory
 		this.manufacturer = deviceConfig['manufacturer'] || 'SynTex';
 		this.model = deviceConfig['model'] || 'Virtual Accessory';
 		this.version = deviceConfig['version'] || '0.0.0';
-
-		this.manager = manager;
 
 		PlatformAccessory = manager.platform.api.platformAccessory;
 

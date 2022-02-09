@@ -1,14 +1,9 @@
-let Service, Characteristic;
-
 const LightBulbService = require('./lightBulb');
 
 module.exports = class ColoredBulbService extends LightBulbService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		Characteristic = manager.platform.api.hap.Characteristic;
-		Service = manager.platform.api.hap.Service;
-
 		if(!serviceConfig.subtype.includes('-'))
 		{
 			serviceConfig.subtype = 'dimmer-' + serviceConfig.subtype;
@@ -16,22 +11,22 @@ module.exports = class ColoredBulbService extends LightBulbService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
-		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
+		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
 	
 		this.changeHandler = (state) =>
 		{
 			if(state instanceof Object)
 			{
 				var v = [
-					{ type : 'power', Characteristic : Characteristic.On },
-					{ type : 'brightness', Characteristic : Characteristic.Brightness }
+					{ type : 'value', Characteristic : this.Characteristic.On },
+					{ type : 'brightness', Characteristic : this.Characteristic.Brightness }
 				];
 
 				for(const i in v)
 				{
 					if(state[v[i].type] != null)
 					{
-						homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(v[i].Characteristic).updateValue(state[v[i].type]);
+						homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(v[i].Characteristic).updateValue(state[v[i].type]);
 						
 						super.setValue('value', state[v[i].type]);
 					}
@@ -39,7 +34,7 @@ module.exports = class ColoredBulbService extends LightBulbService
 			}
 			else
 			{
-				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
+				homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.On).updateValue(state);
 					
 				super.setValue('value', state);
 			}

@@ -1,14 +1,7 @@
-let Characteristic, TypeManager = require('./type-manager');
-
 module.exports = class BaseService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, serviceType, manager)
 	{
-		Characteristic = manager.platform.api.hap.Characteristic;
-
-		this.id = deviceConfig['id'];
-		this.name = serviceConfig['name'];
-
 		var subtype = serviceConfig.subtype;
 
 		if(subtype.includes('-'))
@@ -16,28 +9,52 @@ module.exports = class BaseService
 			subtype = subtype.split('-')[1];
 		}
 
-		this.TypeManager = new TypeManager(this.logger);
+		this.Service = manager.platform.api.hap.Service;
+		this.Characteristic = manager.platform.api.hap.Characteristic;
 
-		this.letters = this.TypeManager.typeToLetter(serviceConfig.type) + subtype;
 		this.homebridgeAccessory = homebridgeAccessory;
 
 		this.logger = manager.platform.logger;
 		this.ContextManager = manager.ContextManager;
+		this.EventManager = manager.platform.EventManager;
+		this.TypeManager = manager.platform.TypeManager;
+		this.AutomationSystem = manager.platform.AutomationSystem;
+
+		this.id = deviceConfig['id'];
+		this.name = serviceConfig['name'];
+		this.letters = this.TypeManager.typeToLetter(serviceConfig.type) + subtype;
 
 		this.options = {};
 		this.options.requests = serviceConfig.requests || [];
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 
-		if(manager.platform.AutomationSystem != null)
+		if(this.EventManager != null)
 		{
-			manager.platform.AutomationSystem.setInputStream('SynTexAutomation', (reciever, state) => {
+			this.EventManager.setInputStream(manager.platform.pluginName, this, this.id, (state) => {
 
-				if(this.changeHandler != null && reciever.id == this.id && reciever.letters == this.letters)
+				if((state = this.TypeManager.validateUpdate(this.id, this.letters, state)) != null && this.updateState != null)
+				{
+					this.updateState(state);
+				}
+				else
+				{
+					this.logger.log('error', this.id, this.letters, '[' + this.name + '] %update_error%! ( ' + this.id + ' )');
+				}
+			});
+		}
+
+		if(this.AutomationSystem != null)
+		{
+			this.AutomationSystem.setInputStream('SynTexAutomation', this, (state) => {
+
+				if((state = this.TypeManager.validateUpdate(this.id, this.letters, state)) != null && this.changeHandler != null)
 				{
 					this.changeHandler(state);
-	
-					this.logger.debug('<<< SynTexAutomation' + ' ' + JSON.stringify(reciever) + ' ' + JSON.stringify(state));
+				}
+				else
+				{
+					this.logger.log('error', this.id, this.letters, '[' + this.name + '] %update_error%! ( ' + this.id + ' )');
 				}
 			});
 		}
@@ -49,7 +66,7 @@ module.exports = class BaseService
 
 		if(service)
 		{
-			service.setCharacteristic(Characteristic.Name, this.name);
+			service.setCharacteristic(this.Characteristic.Name, this.name);
 
 			this.logger.debug('%service_found%! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
 		}

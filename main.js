@@ -19,16 +19,12 @@ const StatelessSwitchService = require('./src/accessories/statelessswitch');
 const SmokeService = require('./src/accessories/smoke');
 const AirQualityService = require('./src/accessories/airquality');
 
-let logger = require('syntex-logger'), WebServer = require('syntex-webserver'), FileSystem = require('syntex-filesystem'), AutomationSystem = require('syntex-automation'), TypeManager = require('./src/type-manager'), EventManager = require('./src/event-manager');
+let logger = require('syntex-logger'), AutomationSystem = require('syntex-automation'), FileSystem = require('syntex-filesystem'), WebServer = require('syntex-webserver'), EventManager = require('./src/event-manager'), TypeManager = require('./src/type-manager');
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
-	constructor(config, api, pluginID, pluginName, pVersion)
+	constructor(config, api, pluginID, pluginName, pluginVersion)
 	{
-		this.pluginID = pluginID || 'homebridge-syntex-dynamic-platform';
-		this.pluginName = pluginName || 'SynTexDynamicPlatform';
-		this.pluginVersion = pVersion || '1.0.0';
-
 		if(config == null || api == null)
 		{
 			console.log('Keine Config gefunden, das Plugin wird deaktiviert!');
@@ -36,12 +32,18 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			return;
 		}
 
-		this.api = api;
-		this.config = config;
-
 		this.accessories = new Map();
 
 		this.options = {};
+
+		this.api = api;
+		this.config = config;
+
+		this.pluginID = pluginID || 'homebridge-syntex-dynamic-platform';
+		this.pluginName = pluginName || 'SynTexDynamicPlatform';
+		this.pluginVersion = pluginVersion || '1.0.0';
+
+		this.devices = config['accessories'] || [];
 
 		if(config['options'] != null)
 		{

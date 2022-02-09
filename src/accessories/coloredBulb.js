@@ -1,14 +1,9 @@
-let Service, Characteristic;
-
 const DimmedBulbService = require('./dimmedBulb');
 
 module.exports = class ColoredBulbService extends DimmedBulbService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		Characteristic = manager.platform.api.hap.Characteristic;
-		Service = manager.platform.api.hap.Service;
-
 		if(!serviceConfig.subtype.includes('-'))
 		{
 			serviceConfig.subtype = 'rgb-' + serviceConfig.subtype;
@@ -16,25 +11,25 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
-		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
-		homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
+		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
+		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
 	
 		this.changeHandler = (state) =>
 		{
 			if(state instanceof Object)
 			{
 				var v = [
-					{ type : 'power', Characteristic : Characteristic.On },
-					{ type : 'hue', Characteristic : Characteristic.Hue },
-					{ type : 'saturation', Characteristic : Characteristic.Saturation },
-					{ type : 'brightness', Characteristic : Characteristic.Brightness }
+					{ type : 'value', Characteristic : this.Characteristic.On },
+					{ type : 'hue', Characteristic : this.Characteristic.Hue },
+					{ type : 'saturation', Characteristic : this.Characteristic.Saturation },
+					{ type : 'brightness', Characteristic : this.Characteristic.Brightness }
 				];
 
 				for(const i in v)
 				{
 					if(state[v[i].type] != null)
 					{
-						homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(v[i].Characteristic).updateValue(state[v[i].type]);
+						homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(v[i].Characteristic).updateValue(state[v[i].type]);
 						
 						super.setValue('value', state[v[i].type]);
 					}
@@ -42,7 +37,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 			}
 			else
 			{
-				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state);
+				homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.On).updateValue(state);
 					
 				super.setValue('value', state);
 			}

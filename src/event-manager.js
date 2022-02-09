@@ -13,21 +13,21 @@ module.exports = class EventManager extends EventEmitter
 
     setInputStream(stream, sender, receiver, callback)
 	{
-		super.on(stream, (source, destination, value) => {
+		super.on(stream, (source, destination, state) => {
 			
 			if((source == null || source != sender) && destination == receiver)
 			{
-				callback(value);
+				callback(state);
 
-				this.logger.debug('<<< ' + stream + ' [' + receiver + '] ' + JSON.stringify(value));
+				this.logger.debug('<<< ' + stream + ' [' + receiver + '] ' + JSON.stringify(state));
 			}
 		});
 	}
 
-	setOutputStream(stream, sender, receiver, value)
+	setOutputStream(stream, sender, destination, state)
 	{
-		super.emit(stream, sender, receiver, value);
+		super.emit(stream, sender, destination, state);
 
-		this.logger.debug('>>> ' + stream + ' [' + receiver + '] ' + JSON.stringify(value));
+		this.logger.debug('>>> ' + stream + ' [' + destination + '] ' + JSON.stringify(state));
 	}
 }

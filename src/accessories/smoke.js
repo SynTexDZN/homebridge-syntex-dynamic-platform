@@ -1,21 +1,16 @@
-let Service, Characteristic;
-
 const BaseService = require('../base');
 
 module.exports = class SmokeService extends BaseService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		Characteristic = manager.platform.api.hap.Characteristic;
-		Service = manager.platform.api.hap.Service;
+		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.SmokeSensor, manager);
 		
-		super(homebridgeAccessory, deviceConfig, serviceConfig, Service.SmokeSensor, manager);
-		
-		homebridgeAccessory.getServiceById(Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(Characteristic.SmokeDetected).on('get', this.getState.bind(this));
+		homebridgeAccessory.getServiceById(this.Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.SmokeDetected).on('get', this.getState.bind(this));
 	
 		this.changeHandler = (state) =>
 		{
-			homebridgeAccessory.getServiceById(Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(Characteristic.SmokeDetected).updateValue(state);
+			homebridgeAccessory.getServiceById(this.Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.SmokeDetected).updateValue(state);
 
 			super.setValue('value', state);
 		};
