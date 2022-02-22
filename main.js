@@ -118,7 +118,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	{
 		if(this.WebServer != null)
 		{
-			this.WebServer.addPage('/devices', async (response, urlParams) => {
+			this.WebServer.addPage('/devices', async (request, response, urlParams) => {
 
 				if(urlParams.id != null)
 				{
@@ -208,7 +208,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				response.end();
 			});
 
-			this.WebServer.addPage('/reload-automation', async (response) => {
+			this.WebServer.addPage('/reload-automation', async (request, response) => {
 
 				response.end(await this.AutomationSystem.LogikEngine.loadAutomation() ? 'Success' : 'Error');
 			});
