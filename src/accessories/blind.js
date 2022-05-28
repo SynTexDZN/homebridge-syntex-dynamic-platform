@@ -1,6 +1,6 @@
 const BaseService = require('../base');
 
-module.exports = class CoverService extends BaseService
+module.exports = class BlindService extends BaseService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{

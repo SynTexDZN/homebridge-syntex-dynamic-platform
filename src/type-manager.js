@@ -21,7 +21,7 @@ module.exports = class TypeManager
 			D : { type : 'humidity', format : 'number', min : 0, max : 100 },
 			E : { type : 'rain', format : 'boolean' },
 			F : { type : 'light', format : 'number', min : 0.0001, max : 100000 },
-			G : { type : 'cover', format : 'number', min : 0, max : 100 }
+			G : { type : 'blind', format : 'number', min : 0, max : 100 }
 		};
 	}
 

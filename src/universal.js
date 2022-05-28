@@ -16,7 +16,7 @@ const OccupancyService = require('./accessories/occupancy');
 const StatelessSwitchService = require('./accessories/statelessswitch');
 const SmokeService = require('./accessories/smoke');
 const AirQualityService = require('./accessories/airquality');
-const CoverService = require('./accessories/cover');
+const BlindService = require('./accessories/blind');
 
 module.exports = class UniversalAccessory
 {
@@ -188,9 +188,9 @@ module.exports = class UniversalAccessory
 		{
 			service = new AirQualityService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
-		else if(type == 'cover')
+		else if(type == 'blind')
 		{
-			service = new CoverService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+			service = new BlindService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)
