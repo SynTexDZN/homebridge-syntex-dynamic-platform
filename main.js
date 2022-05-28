@@ -161,6 +161,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 										state.event = urlParams.event;
 									}
 
+									if(urlParams.position != null)
+									{
+										state.position = urlParams.position;
+									}
+
 									state = this.updateAccessoryService(service, state);
 			
 									response.write(state != null ? 'Success' : 'Error');
@@ -249,6 +254,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						if(params.event != null)
 						{
 							state.event = params.event;
+						}
+
+						if(params.position != null)
+						{
+							state.position = params.position;
 						}
 
 						state = this.updateAccessoryService(service, state);
