@@ -18,6 +18,7 @@ const OccupancyService = require('./src/accessories/occupancy');
 const StatelessSwitchService = require('./src/accessories/statelessswitch');
 const SmokeService = require('./src/accessories/smoke');
 const AirQualityService = require('./src/accessories/airquality');
+const CoverService = require('./src/accessories/cover');
 
 let logger = require('syntex-logger'), AutomationSystem = require('syntex-automation'), FileSystem = require('syntex-filesystem'), WebServer = require('syntex-webserver'), EventManager = require('./src/event-manager'), TypeManager = require('./src/type-manager');
 
@@ -567,4 +568,4 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	}
 }
 
-module.exports = { DynamicPlatform, ContextManager, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService, StatelessSwitchService, SmokeService, AirQualityService };
+module.exports = { DynamicPlatform, ContextManager, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService, StatelessSwitchService, SmokeService, AirQualityService, CoverService };

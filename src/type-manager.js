@@ -5,12 +5,6 @@ module.exports = class TypeManager
 		this.logger = logger;
 
 		this.data = {
-			A : { type : 'contact', format : 'boolean' },
-			B : { type : 'motion', format : 'boolean' },
-			C : { type : 'temperature', format : 'number', min : -270, max : 100 },
-			D : { type : 'humidity', format : 'number', min : 0, max : 100 },
-			E : { type : 'rain', format : 'boolean' },
-			F : { type : 'light', format : 'number', min : 0.0001, max : 100000 },
 			0 : { type : 'occupancy', format : 'boolean' },
 			1 : { type : 'smoke', format : 'boolean' },
 			2 : { type : 'airquality', format : 'number', min : 0, max : 5 },
@@ -20,7 +14,14 @@ module.exports = class TypeManager
 			6 : { type : 'statelessswitch', format : 'number' },
 			7 : { type : 'outlet', format : 'boolean' },
 			8 : { type : 'led', format : 'boolean' },
-			9 : { type : 'dimmer', format : { value : 'boolean', brightness : 'number' }, min : { brightness : 0 }, max : { brightness : 100 } }
+			9 : { type : 'dimmer', format : { value : 'boolean', brightness : 'number' }, min : { brightness : 0 }, max : { brightness : 100 } },
+			A : { type : 'contact', format : 'boolean' },
+			B : { type : 'motion', format : 'boolean' },
+			C : { type : 'temperature', format : 'number', min : -270, max : 100 },
+			D : { type : 'humidity', format : 'number', min : 0, max : 100 },
+			E : { type : 'rain', format : 'boolean' },
+			F : { type : 'light', format : 'number', min : 0.0001, max : 100000 },
+			G : { type : 'cover', format : 'number', min : 0, max : 100 }
 		};
 	}
 
