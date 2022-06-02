@@ -34,7 +34,20 @@ class ContextManager
 
     addClient(ws, id)
     {
-        this.clients.push({ socket : ws, id });
+        var found = false;
+
+        for(const i in this.clients)
+        {
+            if(this.clients[i].socket == ws)
+            {
+                found = true;
+            }
+        }
+
+        if(!found)
+        {
+            this.clients.push({ socket : ws, id });
+        }
 
         return this.context[id];
     }
