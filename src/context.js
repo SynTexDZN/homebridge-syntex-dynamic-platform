@@ -40,6 +40,8 @@ class ContextManager
         {
             if(this.clients[i].socket == ws)
             {
+                this.clients[i].id = id;
+
                 found = true;
             }
         }
