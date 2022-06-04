@@ -75,9 +75,9 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		
 		this.files = new FileSystem(this, { initDirectories : ['automation', 'log'] });
 
-		this.AutomationSystem = new AutomationSystem(this);
 		this.TypeManager = new TypeManager(this.logger);
 		this.EventManager = new EventManager(this.logger);
+		this.AutomationSystem = new AutomationSystem(this);
 
 		if(this.port != null)
 		{
