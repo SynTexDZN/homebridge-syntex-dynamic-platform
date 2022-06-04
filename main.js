@@ -362,7 +362,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		{
 			var accessory = this.getAccessory(config.id);
 
-			if(accessory != null)
+			if(accessory != null && accessory.service != null)
 			{
 				var serviceConter = 0;
 
