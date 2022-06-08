@@ -5,23 +5,112 @@ module.exports = class TypeManager
 		this.logger = logger;
 
 		this.data = {
-			0 : { type : 'occupancy', format : 'boolean' },
-			1 : { type : 'smoke', format : 'boolean' },
-			2 : { type : 'airquality', format : 'number', min : 0, max : 5 },
-			3 : { type : 'rgb', format : { value : 'boolean', brightness : 'number', saturation : 'number', hue : 'number' }, min : { brightness : 0, saturation : 0, hue : 0 }, max : { brightness : 100, saturation : 100, hue : 360 } },
-			4 : { type : 'switch', format : 'boolean' },
-			5 : { type : 'relais', format : 'boolean' },
-			6 : { type : 'statelessswitch', format : 'number' },
-			7 : { type : 'outlet', format : 'boolean' },
-			8 : { type : 'led', format : 'boolean' },
-			9 : { type : 'dimmer', format : { value : 'boolean', brightness : 'number' }, min : { brightness : 0 }, max : { brightness : 100 } },
-			A : { type : 'contact', format : 'boolean' },
-			B : { type : 'motion', format : 'boolean' },
-			C : { type : 'temperature', format : 'number', min : -270, max : 100 },
-			D : { type : 'humidity', format : 'number', min : 0, max : 100 },
-			E : { type : 'rain', format : 'boolean' },
-			F : { type : 'light', format : 'number', min : 0.0001, max : 100000 },
-			G : { type : 'blind', format : 'number', min : 0, max : 100 }
+			0 : {
+				type : 'occupancy',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			1 : {
+				type : 'smoke',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			2 : {
+				type : 'airquality',
+				characteristics : {
+					value : { format : 'number', min : 0, max : 5 }
+				}
+			},
+			3 : {
+				type : 'rgb',
+				characteristics : {
+					value : { format : 'boolean' },
+					brightness : { format : 'number', min : 0, max : 100 },
+					saturation : { format : 'number', min : 0, max : 100 },
+					hue : { format : 'number', min : 0, max : 360 }
+				}
+			},
+			4 : {
+				type : 'switch',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			5 : {
+				type : 'relais',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			6 : {
+				type : 'statelessswitch',
+				characteristics : {
+					value : { format : 'number' }
+				}
+			},
+			7 : {
+				type : 'outlet',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			8 : {
+				type : 'led',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			9 : {
+				type : 'dimmer',
+				characteristics : {
+					value : { format : 'boolean' },
+					brightness : { format : 'number', min : 0, max : 100 }
+				}
+			},
+			A : {
+				type : 'contact',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			B : {
+				type : 'motion',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			C : {
+				type : 'temperature',
+				characteristics : {
+					value : { format : 'number', min : -270, max : 100 }
+				}
+			},
+			D : {
+				type : 'humidity',
+				characteristics : {
+					value : { format : 'number', min : 0, max : 100 }
+				}
+			},
+			E : {
+				type : 'rain',
+				characteristics : {
+					value : { format : 'boolean' }
+				}
+			},
+			F : {
+				type : 'light',
+				characteristics : {
+					value : { format : 'number', min : 0.0001, max : 100000 }
+				}
+			},
+			G : {
+				type : 'blind',
+				characteristics : {
+					value : { format : 'number', min : 0, max : 100 }
+				}
+			}
 		};
 	}
 
@@ -48,7 +137,7 @@ module.exports = class TypeManager
 		return null;
 	}
 
-	getDataType(options)
+	getCharacteristic(type, options)
 	{
 		var letter = null;
 		
@@ -62,9 +151,9 @@ module.exports = class TypeManager
 			letter = this.typeToLetter(options.type);
 		}
 
-		if(letter != null && this.data[letter] != null)
+		if(letter != null && type != null && this.data[letter] != null && this.data[letter].characteristics[type] != null)
 		{
-			return this.data[letter].format;
+			return this.data[letter].characteristics[type];
 		}
 
 		return null;
@@ -72,57 +161,45 @@ module.exports = class TypeManager
 	
 	validateUpdate(id, letters, state)
 	{
-		if(state != null && state instanceof Object)
+		if(id != null && letters != null && state != null && state instanceof Object)
 		{
-			for(const i in state)
+			for(const c in state)
 			{
-				try
-				{
-					state[i] = JSON.parse(state[i]);
-				}
-				catch(e)
-				{
-					this.logger.log('warn', id, letters, '%conversion_error_parse[0]%: [' + state[i] + '] %conversion_error_parse[1]%! ( ' + id + ' )');
+				var characteristic = this.getCharacteristic(c, { letters });
 
-					return null;
-				}
-				
-				var format = this.data[letters[0].toUpperCase()].format;
-
-				if(format instanceof Object)
+				if(characteristic != null)
 				{
-					format = format[i];
-				}
-
-				if(typeof state[i] != format)
-				{
-					this.logger.log('warn', id, letters, '%conversion_error_format[0]%: [' + state[i] + '] %conversion_error_format[1]% ' + (format == 'boolean' ? '%conversion_error_format[2]%' : format == 'number' ? '%conversion_error_format[3]%' : '%conversion_error_format[4]%') + ' %conversion_error_format[5]%! ( ' + id + ' )');
-
-					return null;
-				}
-				
-				if(format == 'number')
-				{
-					var min = this.data[letters[0].toUpperCase()].min, max = this.data[letters[0].toUpperCase()].max;
-
-					if(min instanceof Object)
+					try
 					{
-						min = min[i];
+						state[c] = JSON.parse(state[c]);
 					}
-
-					if(max instanceof Object)
+					catch(e)
 					{
-						max = max[i];
+						this.logger.log('warn', id, letters, '%conversion_error_parse[0]%: [' + state[c] + '] %conversion_error_parse[1]%! ( ' + id + ' )');
+
+						return null;
 					}
-
-					if(min != null && state[i] < min)
+					
+					if(typeof state[c] != characteristic.format)
 					{
-						state[i] = min;
+						this.logger.log('warn', id, letters, '%conversion_error_format[0]%: [' + state[c] + '] %conversion_error_format[1]% ' + (characteristic.format == 'boolean' ? '%conversion_error_format[2]%' : characteristic.format == 'number' ? '%conversion_error_format[3]%' : '%conversion_error_format[4]%') + ' %conversion_error_format[5]%! ( ' + id + ' )');
+
+						return null;
 					}
-
-					if(max != null && state[i] > max)
+					
+					if(characteristic.format == 'number')
 					{
-						state[i] = max;
+						var min = characteristic.min, max = characteristic.max;
+
+						if(min != null && state[c] < min)
+						{
+							state[c] = min;
+						}
+
+						if(max != null && state[c] > max)
+						{
+							state[c] = max;
+						}
 					}
 				}
 			}
