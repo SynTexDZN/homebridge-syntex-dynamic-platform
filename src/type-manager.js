@@ -48,9 +48,19 @@ module.exports = class TypeManager
 		return null;
 	}
 
-	getDataType(type)
+	getDataType(options)
 	{
-		var letter = this.typeToLetter(type);
+		var letter = null;
+		
+		if(options.letters != null)
+		{
+			letter = options.letters[0].toUpperCase();
+		}
+
+		if(options.type != null)
+		{
+			letter = this.typeToLetter(options.type);
+		}
 
 		if(letter != null && this.data[letter] != null)
 		{
