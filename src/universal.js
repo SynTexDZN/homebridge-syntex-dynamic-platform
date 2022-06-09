@@ -84,7 +84,7 @@ module.exports = class UniversalAccessory
 
 	addAccessory()
 	{
-		if(this.homebridgeAccessory)
+		if(this.homebridgeAccessory != null)
 		{
 			this.homebridgeAccessory.displayName = this.name;
 
