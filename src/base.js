@@ -26,6 +26,8 @@ module.exports = class BaseService
 		this.letters = this.TypeManager.typeToLetter(serviceConfig.type) + subtype;
 
 		this.options = {};
+
+		this.options.virtual = serviceConfig.virtual || false;
 		this.options.requests = serviceConfig.requests || [];
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
