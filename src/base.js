@@ -22,6 +22,7 @@ module.exports = class BaseService
 
 		this.id = deviceConfig['id'];
 		this.name = serviceConfig['name'];
+		
 		this.letters = this.TypeManager.typeToLetter(serviceConfig.type) + subtype;
 
 		this.options = {};
