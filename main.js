@@ -86,16 +86,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			this.addWebPages();
 		}
 
-		this.files.readFile(api.user.storagePath() + '/config.json').then((data) => {
+		this.readConfig().then((data) => {
 
-			if(data != null)
+			if(data != null && data.bridge != null)
 			{
-				this.configJSON = data;
-
-				if(data.bridge != null)
-				{
-					this.bridgeName = data.bridge.name;
-				}
+				this.bridgeName = data.bridge.name;
 			}
 
 			if(this.baseDirectory != null)
@@ -302,51 +297,54 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			this.logger.log('info', id, '', '%accessory_remove% [' + accessory.displayName + '] ( ' + accessory.UUID + ' )');
 
-			if(this.configJSON != null && this.configJSON.platforms != null)
-			{
-				var changed = false;
+			this.readConfig().then((data) => {
 
-				for(const i in this.configJSON.platforms)
+				if(data != null)
 				{
-					if(this.configJSON.platforms[i].platform == this.pluginName && this.configJSON.platforms[i].accessories != null)
-					{
-						for(const j in this.configJSON.platforms[i].accessories)
-						{
-							if(this.configJSON.platforms[i].accessories[j].id == id)
-							{
-								this.configJSON.platforms[i].accessories.splice(j, 1);
+					var changed = false;
 
-								changed = true;
+					for(const i in data.platforms)
+					{
+						if(data.platforms[i].platform == this.pluginName && data.platforms[i].accessories != null)
+						{
+							for(const j in data.platforms[i].accessories)
+							{
+								if(data.platforms[i].accessories[j].id == id)
+								{
+									data.platforms[i].accessories.splice(j, 1);
+
+									changed = true;
+								}
 							}
 						}
 					}
-				}
 
-				if(changed)
-				{
-					this.files.writeFile(this.api.user.storagePath() + '/config.json', this.configJSON).then((response) => {
+					if(changed)
+					{
+						this.writeConfig(data).then((success) => {
 
-						if(!response.success)
-						{
-							logger.log('error', id, '', '[' + id + '] %accessory_remove_error%!');
-						}
+							if(!success)
+							{
+								logger.log('error', id, '', '[' + id + '] %accessory_remove_error%!');
+							}
 
-						resolve(response.success);
-					});
+							resolve(success);
+						});
+					}
+					else
+					{
+						resolve(true);
+					}
+
+					this.api.unregisterPlatformAccessories(this.pluginID, this.pluginName, [ accessory ]);
+
+					this.accessories.delete(accessory.UUID);
 				}
 				else
 				{
-					resolve(true);
+					resolve(false);
 				}
-			}
-			else
-			{
-				resolve(false);
-			}
-			
-			this.api.unregisterPlatformAccessories(this.pluginID, this.pluginName, [ accessory ]);
-
-			this.accessories.delete(accessory.UUID);
+			});
 		});
 	}
 	/*
@@ -561,6 +559,35 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				{
 					this.logger.log('error', 'bridge', 'Bridge', '[bridgeID] %update_error%!');
 				}
+
+				resolve(response.success);
+			});
+		});
+	}
+
+	readConfig()
+	{
+		return new Promise((resolve) => {
+
+			this.files.readFile(this.api.user.storagePath() + '/config.json').then((data) => {
+
+				if(data != null && data.platforms != null)
+				{
+					resolve(data);
+				}
+				else
+				{
+					resolve(null);
+				}
+			});
+		});
+	}
+
+	writeConfig(data)
+	{
+		return new Promise((resolve) => {
+
+			this.files.writeFile(this.api.user.storagePath() + '/config.json', data).then((response) => {
 
 				resolve(response.success);
 			});
