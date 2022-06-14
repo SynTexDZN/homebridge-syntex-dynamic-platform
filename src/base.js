@@ -119,6 +119,11 @@ module.exports = class BaseService
 					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
 				}
 
+				if(this.homebridgeAccessory.context.data[this.letters]['position'] != null)
+				{
+					stateText += ', position: ' + this.homebridgeAccessory.context.data[this.letters]['position'];
+				}
+
 				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
 			}
 
@@ -172,6 +177,11 @@ module.exports = class BaseService
 					if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
 					{
 						stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
+					}
+
+					if(this.homebridgeAccessory.context.data[this.letters]['position'] != null)
+					{
+						stateText += ', position: ' + this.homebridgeAccessory.context.data[this.letters]['position'];
 					}
 
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + stateText + '] ( ' + this.id + ' )');
