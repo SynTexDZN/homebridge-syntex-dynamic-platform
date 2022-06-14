@@ -421,65 +421,18 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	readAccessoryService(id, letters, verbose)
 	{
-		var accessory = this.getAccessory(id), values = null;
+		var service = this.getService({ id, letters }), state = null;
 
-		if(accessory != null)
+		if(service != null)
 		{
-			var name = accessory.name;
-
-			for(var i = 0; i < accessory.service.length; i++)
-			{
-				if(accessory.service[i].letters == letters)
-				{
-					name = accessory.service[i].name;
-				}
-			}
-
-			if(accessory.homebridgeAccessory != null
-			&& accessory.homebridgeAccessory.context != null
-			&& accessory.homebridgeAccessory.context.data != null
-			&& accessory.homebridgeAccessory.context.data[letters] != null)
-			{
-				values = accessory.homebridgeAccessory.context.data[letters];
-	
-				if(verbose)
-				{
-					var stateText = JSON.stringify(values['value']);
-	
-					if(Object.keys(values) > 1)
-					{
-						stateText = 'power: ' + JSON.stringify(values['value']);
-					}
-	
-					if(values['hue'] != null)
-					{
-						stateText += ', hue: ' + values['hue'];
-					}
-	
-					if(values['saturation'] != null)
-					{
-						stateText += ', saturation: ' + values['saturation'];
-					}
-	
-					if(values['brightness'] != null)
-					{
-						stateText += ', brightness: ' + values['brightness'];
-					}
-	
-					this.logger.log('read', accessory.id, letters, '%read_state[0]% [' + name + '] %read_state[1]% [' + stateText + '] ( ' + accessory.id + ' )');
-				}
-			}
-			else
-			{
-				this.logger.log('warn', accessory.id, letters, '[state] %of% [' + name + '] %cache_read_error%! ( ' + accessory.id + ' )');
-			}
+			state = service.getValues(verbose);
 		}
 		else
 		{
 			this.logger.log('warn', id, letters, '[' + id + '] %config_read_error[0]%! ( ' + id + ' )');
 		}
 
-		return values;
+		return state;
 	}
 
 	generateID()

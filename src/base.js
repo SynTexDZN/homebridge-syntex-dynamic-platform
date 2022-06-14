@@ -200,22 +200,54 @@ module.exports = class BaseService
 		}
 	}
 
-	getValues()
+	getValues(verbose)
 	{
-		var values = null;
+		var state = null;
 
 		if(this.homebridgeAccessory != null
 		&& this.homebridgeAccessory.context != null
 		&& this.homebridgeAccessory.context.data != null
 		&& this.homebridgeAccessory.context.data[this.letters] != null)
 		{
-			values = this.homebridgeAccessory.context.data[this.letters];
+			state = this.homebridgeAccessory.context.data[this.letters];
+
+			if(verbose)
+			{
+				var stateText = JSON.stringify(state.value);
+
+				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]).length > 1)
+				{
+					stateText = 'value: ' + JSON.stringify(state.value);
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
+				{
+					stateText += ', hue: ' + this.homebridgeAccessory.context.data[this.letters]['hue'];
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['saturation'] != null)
+				{
+					stateText += ', saturation: ' + this.homebridgeAccessory.context.data[this.letters]['saturation'];
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
+				{
+					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters]['position'] != null)
+				{
+					stateText += ', position: ' + this.homebridgeAccessory.context.data[this.letters]['position'];
+				}
+
+				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
+			}
 		}
 		else
 		{
 			this.logger.log('warn', this.id, this.letters, '[' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
-		return values;
+		return state;
 	}
 }
