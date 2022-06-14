@@ -8,8 +8,10 @@ module.exports = class LeakService extends BaseService
 		
 		homebridgeAccessory.getServiceById(this.Service.LeakSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.LeakDetected).on('get', this.getState.bind(this));
 	
-		this.changeHandler = (state) =>
-		{
+		homebridgeAccessory.getServiceById(this.Service.LeakSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.LeakDetected).updateValue(super.getValue('value', true) || false);
+
+		this.changeHandler = (state) => {
+
 			homebridgeAccessory.getServiceById(this.Service.LeakSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.LeakDetected).updateValue(state);
 
 			super.setValue('value', state);
@@ -18,6 +20,6 @@ module.exports = class LeakService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		callback(super.getValue('value', verbose) || false);
 	}
 }

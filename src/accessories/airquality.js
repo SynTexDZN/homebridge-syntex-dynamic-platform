@@ -7,9 +7,11 @@ module.exports = class AirQualityService extends BaseService
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.AirQualitySensor, manager);
 		
 		homebridgeAccessory.getServiceById(this.Service.AirQualitySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.AirQuality).on('get', this.getState.bind(this));
-	
-		this.changeHandler = (state) =>
-		{
+		
+		homebridgeAccessory.getServiceById(this.Service.AirQualitySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.AirQuality).updateValue(super.getValue('value', true) || 0);
+
+		this.changeHandler = (state) => {
+
 			homebridgeAccessory.getServiceById(this.Service.AirQualitySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.AirQuality).updateValue(state);
 
 			super.setValue('value', state);
@@ -18,6 +20,6 @@ module.exports = class AirQualityService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		callback(super.getValue('value', verbose) || 0);
 	}
 }

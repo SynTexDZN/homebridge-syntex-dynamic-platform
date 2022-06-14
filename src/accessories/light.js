@@ -8,8 +8,10 @@ module.exports = class LightService extends BaseService
 		
 		homebridgeAccessory.getServiceById(this.Service.LightSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentAmbientLightLevel).on('get', this.getState.bind(this));
 	
-		this.changeHandler = (state) =>
-		{
+		homebridgeAccessory.getServiceById(this.Service.LightSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentAmbientLightLevel).updateValue(super.getValue('value', true) || 0.0001);
+
+		this.changeHandler = (state) => {
+
 			homebridgeAccessory.getServiceById(this.Service.LightSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentAmbientLightLevel).updateValue(state);
 
 			super.setValue('value', state);
@@ -18,6 +20,6 @@ module.exports = class LightService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		callback(super.getValue('value', verbose) || 0.0001);
 	}
 }

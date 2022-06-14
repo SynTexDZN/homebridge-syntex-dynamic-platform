@@ -8,8 +8,10 @@ module.exports = class ContactService extends BaseService
 		
 		homebridgeAccessory.getServiceById(this.Service.ContactSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.ContactSensorState).on('get', this.getState.bind(this));
 	
-		this.changeHandler = (state) =>
-		{
+		homebridgeAccessory.getServiceById(this.Service.ContactSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.ContactSensorState).updateValue(super.getValue('value', true) || false);
+
+		this.changeHandler = (state) => {
+
 			homebridgeAccessory.getServiceById(this.Service.ContactSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.ContactSensorState).updateValue(state);
 
 			super.setValue('value', state);
@@ -18,6 +20,6 @@ module.exports = class ContactService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		callback(super.getValue('value', verbose) || false);
 	}
 }

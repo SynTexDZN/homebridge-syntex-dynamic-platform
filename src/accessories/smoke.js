@@ -8,8 +8,10 @@ module.exports = class SmokeService extends BaseService
 		
 		homebridgeAccessory.getServiceById(this.Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.SmokeDetected).on('get', this.getState.bind(this));
 	
-		this.changeHandler = (state) =>
-		{
+		homebridgeAccessory.getServiceById(this.Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.SmokeDetected).updateValue(super.getValue('value', true) || false);
+
+		this.changeHandler = (state) => {
+
 			homebridgeAccessory.getServiceById(this.Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.SmokeDetected).updateValue(state);
 
 			super.setValue('value', state);
@@ -18,6 +20,6 @@ module.exports = class SmokeService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		callback(super.getValue('value', verbose) || false);
 	}
 }

@@ -8,8 +8,10 @@ module.exports = class MotionService extends BaseService
 		
 		homebridgeAccessory.getServiceById(this.Service.MotionSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.MotionDetected).on('get', this.getState.bind(this));
 	
-		this.changeHandler = (state) =>
-		{
+		homebridgeAccessory.getServiceById(this.Service.MotionSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.MotionDetected).updateValue(super.getValue('value', true) || false);
+
+		this.changeHandler = (state) => {
+
 			homebridgeAccessory.getServiceById(this.Service.MotionSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.MotionDetected).updateValue(state);
 
 			super.setValue('value', state);
@@ -18,6 +20,6 @@ module.exports = class MotionService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		callback(super.getValue('value', verbose) || false);
 	}
 }

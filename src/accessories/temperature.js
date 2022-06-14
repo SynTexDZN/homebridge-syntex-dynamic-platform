@@ -9,8 +9,10 @@ module.exports = class TemperatureService extends BaseService
 		homebridgeAccessory.getServiceById(this.Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).on('get', this.getState.bind(this));
 		homebridgeAccessory.getServiceById(this.Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).setProps({ minValue : -100, maxValue : 140 });
 		
-		this.changeHandler = (state) =>
-		{
+		homebridgeAccessory.getServiceById(this.Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(super.getValue('value', true) || 0);
+
+		this.changeHandler = (state) => {
+
 			homebridgeAccessory.getServiceById(this.Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(state);
 
 			super.setValue('value', state);
@@ -19,6 +21,6 @@ module.exports = class TemperatureService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		callback(super.getValue('value', verbose) || 0);
 	}
 }

@@ -8,8 +8,10 @@ module.exports = class HumidityService extends BaseService
 		
 		homebridgeAccessory.getServiceById(this.Service.HumiditySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentRelativeHumidity).on('get', this.getState.bind(this));
 	
-		this.changeHandler = (state) =>
-		{
+		homebridgeAccessory.getServiceById(this.Service.HumiditySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentRelativeHumidity).updateValue(super.getValue('value', true) || 0);
+
+		this.changeHandler = (state) => {
+
 			homebridgeAccessory.getServiceById(this.Service.HumiditySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentRelativeHumidity).updateValue(state);
 
 			super.setValue('value', state);
@@ -18,6 +20,6 @@ module.exports = class HumidityService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		callback(super.getValue('value', verbose) || 0);
 	}
 }

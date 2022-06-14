@@ -19,8 +19,8 @@ module.exports = class StatelessSwitchService extends BaseService
 			}
 		}
 
-		this.changeHandler = (state) =>
-		{
+		this.changeHandler = (state) => {
+			
 			if(state.event != null)
 			{
 				var service = homebridgeAccessory.getServiceById(this.Service.StatelessProgrammableSwitch, state.event.toString());
