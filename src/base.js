@@ -101,7 +101,7 @@ module.exports = class BaseService
 
 				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]).length > 1)
 				{
-					stateText = 'power: ' + JSON.stringify(value);
+					stateText = 'value: ' + JSON.stringify(value);
 				}
 
 				if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
@@ -156,7 +156,7 @@ module.exports = class BaseService
 
 					if(Object.keys(this.homebridgeAccessory.context.data[this.letters]) > 1)
 					{
-						stateText = 'power: ' + JSON.stringify(value);
+						stateText = 'value: ' + JSON.stringify(value);
 					}
 
 					if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
