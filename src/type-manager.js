@@ -8,40 +8,40 @@ module.exports = class TypeManager
 			0 : {
 				type : 'occupancy',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			1 : {
 				type : 'smoke',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			2 : {
 				type : 'airquality',
 				characteristics : {
-					value : { format : 'number', min : 0, max : 5 }
+					value : { format : 'number', default : 0, min : 0, max : 5 }
 				}
 			},
 			3 : {
 				type : 'rgb',
 				characteristics : {
-					value : { format : 'boolean' },
-					brightness : { format : 'number', min : 0, max : 100 },
-					saturation : { format : 'number', min : 0, max : 100 },
-					hue : { format : 'number', min : 0, max : 360 }
+					value : { format : 'boolean', default : false },
+					brightness : { format : 'number', default : 100, min : 0, max : 100 },
+					saturation : { format : 'number', default : 100, min : 0, max : 100 },
+					hue : { format : 'number', default : 0, min : 0, max : 360 }
 				}
 			},
 			4 : {
 				type : 'switch',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			5 : {
 				type : 'relais',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			6 : {
@@ -53,62 +53,62 @@ module.exports = class TypeManager
 			7 : {
 				type : 'outlet',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			8 : {
 				type : 'led',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			9 : {
 				type : 'dimmer',
 				characteristics : {
 					value : { format : 'boolean' },
-					brightness : { format : 'number', min : 0, max : 100 }
+					brightness : { format : 'number', default : 0, min : 0, max : 100 }
 				}
 			},
 			A : {
 				type : 'contact',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			B : {
 				type : 'motion',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			C : {
 				type : 'temperature',
 				characteristics : {
-					value : { format : 'number', min : -270, max : 100 }
+					value : { format : 'number', default : 0, min : -270, max : 100 }
 				}
 			},
 			D : {
 				type : 'humidity',
 				characteristics : {
-					value : { format : 'number', min : 0, max : 100 }
+					value : { format : 'number', default : 0, min : 0, max : 100 }
 				}
 			},
 			E : {
 				type : 'rain',
 				characteristics : {
-					value : { format : 'boolean' }
+					value : { format : 'boolean', default : false }
 				}
 			},
 			F : {
 				type : 'light',
 				characteristics : {
-					value : { format : 'number', min : 0.0001, max : 100000 }
+					value : { format : 'number', default : 0.0001, min : 0.0001, max : 100000 }
 				}
 			},
 			G : {
 				type : 'blind',
 				characteristics : {
-					value : { format : 'number', min : 0, max : 100 }
+					value : { format : 'number', default : 0, min : 0, max : 100 }
 				}
 			}
 		};
