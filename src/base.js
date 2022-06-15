@@ -83,9 +83,28 @@ module.exports = class BaseService
 		return service;
 	}
 
+	hasState(key)
+	{
+		if(this.homebridgeAccessory != null
+		&& this.homebridgeAccessory.context != null
+		&& this.homebridgeAccessory.context.data != null
+		&& this.homebridgeAccessory.context.data[this.letters] != null
+		&& this.homebridgeAccessory.context.data[this.letters][key] != null)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	getValue(key, verbose)
 	{
-		var value = null;
+		var value = null, characteristic = this.TypeManager.getCharacteristic(key, { letters : this.letters });
+
+		if(characteristic != null)
+		{
+			value = characteristic.default;
+		}
 
 		if(this.homebridgeAccessory != null
 		&& this.homebridgeAccessory.context != null
