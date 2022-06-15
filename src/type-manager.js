@@ -65,7 +65,7 @@ module.exports = class TypeManager
 			9 : {
 				type : 'dimmer',
 				characteristics : {
-					value : { format : 'boolean' },
+					value : { format : 'boolean', default : false },
 					brightness : { format : 'number', default : 0, min : 0, max : 100 }
 				}
 			},
