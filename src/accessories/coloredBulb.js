@@ -10,12 +10,15 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		}
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
+
+		this.hue = super.getValue('hue');
+		this.saturation = super.getValue('saturation');
 		
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Hue).updateValue(super.getValue('hue') || 0);
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Saturation).updateValue(super.getValue('saturation') || 100);
+		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
+		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
 
 		this.changeHandler = (state) => {
 			
@@ -49,7 +52,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	getHue(callback, verbose)
 	{
-		callback(super.getValue('hue', verbose) || 0);
+		callback(super.getValue('hue', verbose));
 	}
 
 	setHue(level, callback, verbose)
@@ -61,7 +64,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	getSaturation(callback, verbose)
 	{
-		callback(super.getValue('saturation', verbose) || 100);
+		callback(super.getValue('saturation', verbose));
 	}
 
 	setSaturation(level, callback, verbose)

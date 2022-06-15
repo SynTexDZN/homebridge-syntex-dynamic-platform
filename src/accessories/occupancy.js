@@ -6,9 +6,11 @@ module.exports = class OccupancyService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.OccupancySensor, manager);
 		
+		this.value = super.getValue('value', true);
+
 		homebridgeAccessory.getServiceById(this.Service.OccupancySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.OccupancyDetected).on('get', this.getState.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.OccupancySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.OccupancyDetected).updateValue(super.getValue('value', true) || false);
+		homebridgeAccessory.getServiceById(this.Service.OccupancySensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.OccupancyDetected).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 
@@ -20,6 +22,6 @@ module.exports = class OccupancyService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose) || false);
+		callback(super.getValue('value', verbose));
 	}
 }

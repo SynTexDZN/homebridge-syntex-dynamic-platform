@@ -11,9 +11,11 @@ module.exports = class LightBulbService extends BaseService
 
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.Lightbulb, manager);
 		
+		this.value = super.getValue('value', true);
+
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.On).updateValue(super.getValue('value', true) || false);
+		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.On).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 
@@ -25,7 +27,7 @@ module.exports = class LightBulbService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose) || false);
+		callback(super.getValue('value', verbose));
 	}
 
 	setState(level, callback, verbose)

@@ -6,9 +6,11 @@ module.exports = class LightService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.LightSensor, manager);
 		
+		this.value = super.getValue('value', true);
+
 		homebridgeAccessory.getServiceById(this.Service.LightSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentAmbientLightLevel).on('get', this.getState.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.LightSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentAmbientLightLevel).updateValue(super.getValue('value', true) || 0.0001);
+		homebridgeAccessory.getServiceById(this.Service.LightSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentAmbientLightLevel).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 
@@ -20,6 +22,6 @@ module.exports = class LightService extends BaseService
 
 	getState(callback, verbose)
 	{
-		callback(super.getValue('value', verbose) || 0.0001);
+		callback(super.getValue('value', verbose));
 	}
 }
