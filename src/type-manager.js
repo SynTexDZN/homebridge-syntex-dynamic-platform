@@ -108,7 +108,8 @@ module.exports = class TypeManager
 			G : {
 				type : 'blind',
 				characteristics : {
-					value : { format : 'number', default : 0, min : 0, max : 100 }
+					value : { format : 'number', default : 0, min : 0, max : 100 },
+					position : { format : 'number', default : 0, min : 0, max : 2 }
 				}
 			}
 		};
