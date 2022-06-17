@@ -20,9 +20,4 @@ module.exports = class TemperatureService extends BaseService
 			super.setValue('value', state);
 		};
 	}
-
-	getState(callback, verbose)
-	{
-		callback(super.getValue('value', verbose));
-	}
 }

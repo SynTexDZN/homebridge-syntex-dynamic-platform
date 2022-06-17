@@ -19,16 +19,4 @@ module.exports = class OutletService extends BaseService
 			super.setValue('value', state);
 		};
 	}
-	
-	getState(callback, verbose)
-	{
-		callback(super.getValue('value', verbose));
-	}
-
-	setState(level, callback, verbose)
-	{
-		super.setValue('value', level, verbose);		
-
-		callback();
-	}
 }

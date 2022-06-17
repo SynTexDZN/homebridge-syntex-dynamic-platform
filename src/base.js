@@ -269,4 +269,16 @@ module.exports = class BaseService
 
 		return state;
 	}
+
+	getState(callback, verbose)
+	{
+		callback(this.getValue('value', verbose));
+	}
+
+	setState(level, callback, verbose)
+	{
+		this.setValue('value', level, verbose);		
+
+		callback();
+	}
 }

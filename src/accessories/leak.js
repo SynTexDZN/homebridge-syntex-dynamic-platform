@@ -19,9 +19,4 @@ module.exports = class LeakService extends BaseService
 			super.setValue('value', state);
 		};
 	}
-
-	getState(callback, verbose)
-	{
-		callback(super.getValue('value', verbose));
-	}
 }

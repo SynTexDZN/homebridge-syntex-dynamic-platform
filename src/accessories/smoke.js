@@ -19,9 +19,4 @@ module.exports = class SmokeService extends BaseService
 			super.setValue('value', state);
 		};
 	}
-
-	getState(callback, verbose)
-	{
-		callback(super.getValue('value', verbose));
-	}
 }
