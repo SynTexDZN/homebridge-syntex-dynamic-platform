@@ -126,7 +126,7 @@ module.exports = class UniversalAccessory
 		}
 
 		var service = null;
-		var serviceConfig = { name : name, type : type, subtype : subtype };
+		var serviceConfig = { name, type, subtype };
 
 		if(type == 'switch')
 		{
