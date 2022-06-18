@@ -9,13 +9,15 @@ module.exports = class StatelessSwitchService extends BaseService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.StatelessProgrammableSwitch, manager);
 
+		this.service = [];
+
 		this.options.buttons = serviceConfig.buttons || 1;
 
 		if(this.options.buttons > 1)
 		{
-			for(var i = 1; i < this.options.buttons; i++)
+			for(var i = 0; i < this.options.buttons; i++)
 			{
-				this.createService(this.Service.StatelessProgrammableSwitch, serviceConfig.type, i);
+				this.service.push(this.createService(this.Service.StatelessProgrammableSwitch, serviceConfig.type, i));
 			}
 		}
 
@@ -67,5 +69,7 @@ module.exports = class StatelessSwitchService extends BaseService
 
 			this.homebridgeAccessory.addService(button);
 		}
+
+		return service;
 	}
 }

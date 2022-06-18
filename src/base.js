@@ -30,7 +30,10 @@ module.exports = class BaseService
 		this.options.virtual = serviceConfig.virtual || false;
 		this.options.requests = serviceConfig.requests || [];
 
-		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
+		if(serviceConfig.type != 'statelessswitch')
+		{
+			this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
+		}
 
 		if(this.EventManager != null)
 		{
