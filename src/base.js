@@ -20,7 +20,7 @@ module.exports = class BaseService
 		this.TypeManager = manager.platform.TypeManager;
 		this.AutomationSystem = manager.platform.AutomationSystem;
 
-		this.id = deviceConfig['id'];
+		this.id = serviceConfig['id'] || deviceConfig['id'];
 		this.name = serviceConfig['name'];
 		
 		this.letters = this.TypeManager.typeToLetter(serviceConfig.type) + subtype;
