@@ -122,14 +122,21 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	
 					if(accessory != null)
 					{
+						var service = this.getService({ id : urlParams.id, type : urlParams.type, counter : urlParams.counter });
+
 						if(urlParams.remove != null)
 						{
-							response.write(urlParams.remove == 'CONFIRM' && await this.removeAccessory(accessory.homebridgeAccessory || accessory, urlParams.id) ? 'Success' : 'Error');
+							if(urlParams.type != null)
+							{
+								response.write(urlParams.remove == 'CONFIRM' && await accessory.removeService(accessory, service) ? 'Success' : 'Error');
+							}
+							else
+							{
+								response.write(urlParams.remove == 'CONFIRM' && await this.removeAccessory(accessory.homebridgeAccessory || accessory, urlParams.id) ? 'Success' : 'Error');
+							}
 						}
 						else
 						{
-							var service = this.getService({ id : urlParams.id, type : urlParams.type, counter : urlParams.counter });
-		
 							if(service != null)
 							{
 								if(urlParams.value != null)

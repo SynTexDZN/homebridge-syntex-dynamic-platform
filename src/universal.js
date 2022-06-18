@@ -29,6 +29,8 @@ module.exports = class UniversalAccessory
 		this.platform = manager.platform;
 		this.logger = manager.platform['logger'];
 
+		this.TypeManager = manager.platform.TypeManager;
+
 		// TODO: Device Config Reload ( When Config / Version Updated )
 
 		this.id = deviceConfig['id'];
@@ -199,9 +201,84 @@ module.exports = class UniversalAccessory
 		}
 	}
 
-	removeService(type, subtype = 0)
+	removeService(accessory, service)
 	{
+		return new Promise((resolve) => {
 
+			this.logger.log('info', accessory.id, service.letters, '%service_remove% [' + service.letters + '] ( ' + accessory.id + ' )');
+
+			this.platform.readConfig().then((data) => {
+
+				if(data != null)
+				{
+					var changed = false;
+
+					for(const i in data.platforms)
+					{
+						if(data.platforms[i].platform == this.platform.pluginName && data.platforms[i].accessories != null)
+						{
+							for(const j in data.platforms[i].accessories)
+							{
+								if(data.platforms[i].accessories[j].id == accessory.id)
+								{
+									var type = this.TypeManager.letterToType(service.letters[0]), counter = 0;
+
+									for(const k in data.platforms[i].accessories[j].services)
+									{
+										if(data.platforms[i].accessories[j].services[k].type == type)
+										{
+											if(service.letters[1] == counter)
+											{
+												data.platforms[i].accessories[j].services.splice(k, 1);
+
+												changed = true;
+											}
+											else
+											{
+												counter++;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					if(changed)
+					{
+						this.platform.writeConfig(data).then((success) => {
+
+							if(!success)
+							{
+								this.logger.log('error', accessory.id, service.letters, '[' + service.letters + '] %service_remove_error%! ( ' + accessory.id + ' )');
+							}
+
+							resolve(success);
+						});
+					}
+					else
+					{
+						resolve(true);
+					}
+
+					if(Array.isArray(service.service))
+					{
+						for(const i in service.service)
+						{
+							this.homebridgeAccessory.removeService(service.service[i]);
+						}
+					}
+					else
+					{
+						this.homebridgeAccessory.removeService(service.service);
+					}
+				}
+				else
+				{
+					resolve(false);
+				}
+			});
+		});
 	}
 
 	getID()
