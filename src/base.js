@@ -20,9 +20,11 @@ module.exports = class BaseService
 		this.TypeManager = manager.platform.TypeManager;
 		this.AutomationSystem = manager.platform.AutomationSystem;
 
-		this.id = serviceConfig['id'] || deviceConfig['id'];
+		this.id = deviceConfig['id'];
+
+		this.sid = serviceConfig['id'] || deviceConfig['id'];
 		this.name = serviceConfig['name'];
-		
+
 		this.letters = this.TypeManager.typeToLetter(serviceConfig.type) + subtype;
 
 		this.options = {};
@@ -37,7 +39,7 @@ module.exports = class BaseService
 
 		if(this.EventManager != null)
 		{
-			this.EventManager.setInputStream(manager.platform.pluginName, this, this.id, (state) => {
+			this.EventManager.setInputStream(manager.platform.pluginName, this, this.sid, (state) => {
 
 				if((state = this.TypeManager.validateUpdate(this.id, this.letters, state)) != null && this.updateState != null)
 				{
