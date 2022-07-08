@@ -20,6 +20,8 @@ const SmokeService = require('./src/accessories/smoke');
 const AirQualityService = require('./src/accessories/airquality');
 const BlindService = require('./src/accessories/blind');
 
+const ConnectionCharacteristic = require('./src/characteristics/connection');
+
 let logger = require('syntex-logger'), AutomationSystem = require('syntex-automation'), FileSystem = require('syntex-filesystem'), WebServer = require('syntex-webserver'), EventManager = require('./src/event-manager'), TypeManager = require('./src/type-manager');
 
 let DynamicPlatform = class SynTexDynamicPlatform
@@ -108,6 +110,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				});
 			}
 		});
+
+		if(this.api.hap.Characteristic.Connection == null)
+		{
+			Object.defineProperty(this.api.hap.Characteristic, 'Connection', { value : ConnectionCharacteristic(this.api) });
+		}
 	}
 
 	addWebPages()

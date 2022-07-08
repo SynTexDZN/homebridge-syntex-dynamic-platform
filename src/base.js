@@ -12,6 +12,8 @@ module.exports = class BaseService
 		this.Service = manager.platform.api.hap.Service;
 		this.Characteristic = manager.platform.api.hap.Characteristic;
 
+		this.UUIDGen = manager.platform.api.hap.uuid;
+
 		this.homebridgeAccessory = homebridgeAccessory;
 
 		this.logger = manager.platform.logger;
@@ -32,10 +34,13 @@ module.exports = class BaseService
 		this.options.virtual = serviceConfig.virtual || false;
 		this.options.requests = serviceConfig.requests || [];
 
-		if(serviceConfig.type != 'statelessswitch')
-		{
-			this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
-		}
+		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
+
+		this.connection = this.service.getCharacteristic(this.Characteristic.Connection) || this.service.addCharacteristic(this.Characteristic.Connection);
+
+		this.connection.on('get', this.getConnectionState.bind(this)).on('set', this.setConnectionState.bind(this));
+
+		this.connection.updateValue(this.getValue('connection'));
 
 		if(this.EventManager != null)
 		{
@@ -48,6 +53,11 @@ module.exports = class BaseService
 				else
 				{
 					this.logger.log('error', this.id, this.letters, '[' + this.name + '] %update_error%! ( ' + this.id + ' )');
+				}
+
+				if(state.connection != null)
+				{
+					this.setConnectionState(state.connection, () => {});
 				}
 			});
 		}
@@ -70,7 +80,7 @@ module.exports = class BaseService
 
 	createService(serviceType, type, subtype)
 	{
-		var service = this.homebridgeAccessory.getServiceById(serviceType, subtype);
+		var service = this.homebridgeAccessory.getServiceById(serviceType, subtype.toString());
 
 		if(service)
 		{
@@ -81,8 +91,24 @@ module.exports = class BaseService
 		else
 		{
 			this.logger.debug('%service_create%! [name: ' + this.name + ', type: ' + type + ', letters: ' + this.letters + '] ( ' +  this.id + ' )');
-			
-			service = this.homebridgeAccessory.addService(serviceType, this.name, subtype);
+
+			if(type == 'statelessswitch')
+			{
+				var button = new serviceType(this.UUIDGen.generate(this.id), subtype.toString());
+				var props = {
+					minValue : this.Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+					maxValue : this.Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS
+				};
+
+				button.getCharacteristic(this.Characteristic.ProgrammableSwitchEvent).setProps(props);
+				button.getCharacteristic(this.Characteristic.ServiceLabelIndex).setValue(subtype + 1);
+
+				service = this.homebridgeAccessory.addService(button);
+			}
+			else
+			{
+				service = this.homebridgeAccessory.addService(serviceType, this.name, subtype);
+			}
 		}
 
 		return service;
@@ -111,6 +137,11 @@ module.exports = class BaseService
 			value = characteristic.default;
 		}
 
+		if(key == 'connection')
+		{
+			value = true;
+		}
+
 		if(this.homebridgeAccessory != null
 		&& this.homebridgeAccessory.context != null
 		&& this.homebridgeAccessory.context.data != null
@@ -121,9 +152,14 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				var stateText = JSON.stringify(value);
+				var stateText = JSON.stringify(value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
 
-				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]).length > 1)
+				if(this.homebridgeAccessory.context.data[this.letters]['online'] != null)
+				{
+					characteristics -= 1;
+				}
+
+				if(characteristics > 1)
 				{
 					stateText = 'value: ' + JSON.stringify(value);
 				}
@@ -181,9 +217,14 @@ module.exports = class BaseService
 
 				if(verbose)
 				{
-					var stateText = JSON.stringify(value);
+					var stateText = JSON.stringify(value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
 
-					if(Object.keys(this.homebridgeAccessory.context.data[this.letters]).length > 1)
+					if(this.homebridgeAccessory.context.data[this.letters]['online'] != null)
+					{
+						characteristics -= 1;
+					}
+
+					if(characteristics > 1)
 					{
 						stateText = 'value: ' + JSON.stringify(value);
 					}
@@ -237,7 +278,17 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				var stateText = JSON.stringify(state.value);
+				var stateText = JSON.stringify(state.value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
+
+				if(this.homebridgeAccessory.context.data[this.letters]['online'] != null)
+				{
+					characteristics -= 1;
+				}
+
+				if(characteristics > 1)
+				{
+					stateText = 'value: ' + JSON.stringify(state.value);
+				}
 
 				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]).length > 1)
 				{
@@ -285,5 +336,19 @@ module.exports = class BaseService
 		this.setValue('value', level, verbose);		
 
 		callback();
+	}
+
+	getConnectionState(callback, verbose)
+	{
+		callback(null, this.getValue('connection', verbose));
+	}
+
+	setConnectionState(level, callback, verbose)
+	{
+		this.setValue('connection', level, verbose);
+
+		this.connection.updateValue(level);
+		
+		callback(null);
 	}
 }
