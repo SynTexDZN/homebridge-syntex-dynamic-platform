@@ -154,7 +154,7 @@ module.exports = class BaseService
 			{
 				var stateText = JSON.stringify(value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
 
-				if(this.homebridgeAccessory.context.data[this.letters]['online'] != null)
+				if(this.homebridgeAccessory.context.data[this.letters]['connection'] != null)
 				{
 					characteristics -= 1;
 				}
@@ -219,7 +219,7 @@ module.exports = class BaseService
 				{
 					var stateText = JSON.stringify(value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
 
-					if(this.homebridgeAccessory.context.data[this.letters]['online'] != null)
+					if(this.homebridgeAccessory.context.data[this.letters]['connection'] != null)
 					{
 						characteristics -= 1;
 					}
@@ -280,7 +280,7 @@ module.exports = class BaseService
 			{
 				var stateText = JSON.stringify(state.value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
 
-				if(this.homebridgeAccessory.context.data[this.letters]['online'] != null)
+				if(this.homebridgeAccessory.context.data[this.letters]['connection'] != null)
 				{
 					characteristics -= 1;
 				}
