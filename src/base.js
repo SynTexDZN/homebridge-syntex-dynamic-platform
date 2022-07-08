@@ -57,7 +57,7 @@ module.exports = class BaseService
 
 				if(state.connection != null)
 				{
-					this.setConnectionState(state.connection);
+					this.setConnectionState(state.connection, null, true);
 				}
 			});
 		}
@@ -145,9 +145,6 @@ module.exports = class BaseService
 		{
 			value = this.homebridgeAccessory.context.data[this.letters][key];
 
-			delete this.homebridgeAccessory.context.data[this.letters]['connection'];
-			delete this.homebridgeAccessory.context.data[this.letters]['online'];
-
 			if(verbose)
 			{
 				var stateText = JSON.stringify(value), characteristicCount = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
@@ -207,9 +204,6 @@ module.exports = class BaseService
 				}
 
 				this.homebridgeAccessory.context.data[this.letters][key] = value;
-
-				delete this.homebridgeAccessory.context.data[this.letters]['connection'];
-				delete this.homebridgeAccessory.context.data[this.letters]['online'];
 
 				if(verbose)
 				{
