@@ -40,7 +40,7 @@ module.exports = class BaseService
 
 		this.connection.on('get', this.getConnectionState.bind(this)).on('set', this.setConnectionState.bind(this));
 
-		this.connection.updateValue(this.getValue('connection'));
+		this.connection.updateValue(this.getConnectionState());
 
 		if(this.EventManager != null)
 		{
@@ -57,7 +57,7 @@ module.exports = class BaseService
 
 				if(state.connection != null)
 				{
-					this.setConnectionState(state.connection, () => {});
+					this.setConnectionState(state.connection);
 				}
 			});
 		}
@@ -137,11 +137,6 @@ module.exports = class BaseService
 			value = characteristic.default;
 		}
 
-		if(key == 'connection')
-		{
-			value = true;
-		}
-
 		if(this.homebridgeAccessory != null
 		&& this.homebridgeAccessory.context != null
 		&& this.homebridgeAccessory.context.data != null
@@ -150,16 +145,14 @@ module.exports = class BaseService
 		{
 			value = this.homebridgeAccessory.context.data[this.letters][key];
 
+			delete this.homebridgeAccessory.context.data[this.letters]['connection'];
+			delete this.homebridgeAccessory.context.data[this.letters]['online'];
+
 			if(verbose)
 			{
-				var stateText = JSON.stringify(value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
+				var stateText = JSON.stringify(value), characteristicCount = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
 
-				if(this.homebridgeAccessory.context.data[this.letters]['connection'] != null)
-				{
-					characteristics -= 1;
-				}
-
-				if(characteristics > 1)
+				if(characteristicCount > 1)
 				{
 					stateText = 'value: ' + JSON.stringify(value);
 				}
@@ -215,16 +208,14 @@ module.exports = class BaseService
 
 				this.homebridgeAccessory.context.data[this.letters][key] = value;
 
+				delete this.homebridgeAccessory.context.data[this.letters]['connection'];
+				delete this.homebridgeAccessory.context.data[this.letters]['online'];
+
 				if(verbose)
 				{
-					var stateText = JSON.stringify(value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
+					var stateText = JSON.stringify(value), characteristicCount = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
 
-					if(this.homebridgeAccessory.context.data[this.letters]['connection'] != null)
-					{
-						characteristics -= 1;
-					}
-
-					if(characteristics > 1)
+					if(characteristicCount > 1)
 					{
 						stateText = 'value: ' + JSON.stringify(value);
 					}
@@ -278,14 +269,9 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				var stateText = JSON.stringify(state.value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
+				var stateText = JSON.stringify(state.value), characteristicCount = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
 
-				if(this.homebridgeAccessory.context.data[this.letters]['connection'] != null)
-				{
-					characteristics -= 1;
-				}
-
-				if(characteristics > 1)
+				if(characteristicCount > 1)
 				{
 					stateText = 'value: ' + JSON.stringify(state.value);
 				}
@@ -338,17 +324,55 @@ module.exports = class BaseService
 		callback();
 	}
 
-	getConnectionState(callback, verbose)
+	getConnectionState(callback)
 	{
-		callback(null, this.getValue('connection', verbose));
+		var connection = true;
+
+		if(this.homebridgeAccessory != null
+		&& this.homebridgeAccessory.context != null
+		&& this.homebridgeAccessory.context.connection != null
+		&& this.homebridgeAccessory.context.connection[this.letters] != null)
+		{
+			connection = this.homebridgeAccessory.context.connection[this.letters];
+		}
+
+		if(callback != null)
+		{
+			callback(null, connection);
+		}
+
+		return connection;
 	}
 
 	setConnectionState(level, callback, verbose)
 	{
-		this.setValue('connection', level, verbose);
+		if(level != null && !isNaN(level))
+		{
+			if(this.homebridgeAccessory != null && this.homebridgeAccessory.context != null)
+			{
+				if(this.homebridgeAccessory.context.connection == null)
+				{
+					this.homebridgeAccessory.context.connection = {};
+				}
+
+				if(verbose && this.homebridgeAccessory.context.connection[this.letters] != level)
+				{
+					this.logger.log(level ? 'success' : 'warn', this.id, this.letters, '[' + this.name + '] ' + (level ? '%accessory_connected%' : '%accessory_disconnected%') + '! ( ' + this.id + ' )');
+				}
+
+				this.homebridgeAccessory.context.connection[this.letters] = level;
+			}
+			else
+			{
+				this.logger.log('error', this.id, this.letters, '[connection] %of% [' + this.name + '] %cache_update_error%! ( ' + this.id + ' )');
+			}
+		}
 
 		this.connection.updateValue(level);
-		
-		callback(null);
+
+		if(callback != null)
+		{
+			callback(null);
+		}
 	}
 }
