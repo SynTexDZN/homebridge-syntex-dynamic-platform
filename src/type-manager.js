@@ -117,11 +117,19 @@ module.exports = class TypeManager
 
 	typeToLetter(type)
 	{
-		for(const letter in this.data)
+		if(typeof type == 'string')
 		{
-			if(this.data[letter].type == type.toLowerCase())
+			if(type.startsWith('rgb'))
 			{
-				return letter;
+				type = 'rgb';
+			}
+			
+			for(const letter in this.data)
+			{
+				if(this.data[letter].type == type.toLowerCase())
+				{
+					return letter;
+				}
 			}
 		}
 
@@ -130,7 +138,7 @@ module.exports = class TypeManager
 
 	letterToType(letter)
 	{
-		if(letter != null && this.data[letter.toUpperCase()] != null)
+		if(typeof letter == 'string' && this.data[letter.toUpperCase()] != null)
 		{
 			return this.data[letter.toUpperCase()].type;
 		}
