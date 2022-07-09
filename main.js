@@ -199,7 +199,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							{
 								response.write('Error');
 
-								this.logger.log('error', urlParams.id, (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0'), '%config_read_error[3]% ( ' + (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0') + ' )');
+								this.logger.log('error', urlParams.id, (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0'), '%accessory_not_found[3]% ( ' + (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0') + ' )');
 							}
 						}
 					}
@@ -207,7 +207,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					{
 						response.write('Error');
 
-						this.logger.log('error', urlParams.id, '', '%config_read_error[1]%! ( ' + urlParams.id + ' )');
+						this.logger.log('error', urlParams.id, '', '%accessory_not_found[1]%! ( ' + urlParams.id + ' )');
 					}
 				}
 				else
@@ -443,7 +443,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		}
 		else
 		{
-			this.logger.log('warn', id, letters, '[' + id + '] %config_read_error[0]%! ( ' + id + ' )');
+			this.logger.log('warn', id, letters, '[' + id + '] %accessory_not_found[0]%! ( ' + id + ' )');
 		}
 
 		return state;

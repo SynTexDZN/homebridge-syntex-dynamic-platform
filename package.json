@@ -12,7 +12,7 @@
 		"axios": "^0.21.1",
 		"syntex-automation": "1.1.0-b11",
 		"syntex-filesystem": "1.0.2-b7",
-		"syntex-logger": "1.0.8-b20",
+		"syntex-logger": "1.0.8-b21",
 		"syntex-webserver": "1.1.0-b13"
 	},
 	"keywords": [
