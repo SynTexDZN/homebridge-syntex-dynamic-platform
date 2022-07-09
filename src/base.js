@@ -181,7 +181,7 @@ module.exports = class BaseService
 		}
 		else
 		{
-			this.logger.log('warn', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
+			this.logger.log('info', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
 		return value;
@@ -300,7 +300,7 @@ module.exports = class BaseService
 		}
 		else
 		{
-			this.logger.log('warn', this.id, this.letters, '[' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
+			this.logger.log('info', this.id, this.letters, '[' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
 		return state;
