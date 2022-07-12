@@ -281,6 +281,34 @@ module.exports = class UniversalAccessory
 		});
 	}
 
+	setConnectionState(level, callback, verbose)
+	{
+		var changed = false;
+
+		for(const i in this.service)
+		{
+			if(this.service[i].setConnectionState != null)
+			{
+				if(this.service[i].setConnectionState(level))
+				{
+					changed = true;
+				}
+			}
+		}
+
+		if(verbose && changed)
+		{
+			this.logger.log(level ? 'success' : 'warn', this.id, '', '[' + this.name + '] ' + (level ? '%accessory_connected%' : '%accessory_disconnected%') + '! ( ' + this.id + ' )');
+		}
+
+		if(callback != null)
+		{
+			callback(null);
+		}
+
+		return changed;
+	}
+
 	getID()
 	{
 		return this.id;

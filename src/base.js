@@ -340,6 +340,8 @@ module.exports = class BaseService
 
 	setConnectionState(level, callback, verbose)
 	{
+		var changed = false;
+
 		if(level != null && !isNaN(level))
 		{
 			if(this.homebridgeAccessory != null && this.homebridgeAccessory.context != null)
@@ -349,9 +351,9 @@ module.exports = class BaseService
 					this.homebridgeAccessory.context.connection = {};
 				}
 
-				if(verbose && this.homebridgeAccessory.context.connection[this.letters] != level)
+				if(this.homebridgeAccessory.context.connection[this.letters] != level)
 				{
-					this.logger.log(level ? 'success' : 'warn', this.id, this.letters, '[' + this.name + '] ' + (level ? '%accessory_connected%' : '%accessory_disconnected%') + '! ( ' + this.id + ' )');
+					changed = true;
 				}
 
 				this.homebridgeAccessory.context.connection[this.letters] = level;
@@ -364,9 +366,16 @@ module.exports = class BaseService
 
 		this.connection.updateValue(level);
 
+		if(verbose && changed)
+		{
+			this.logger.log(level ? 'success' : 'warn', this.id, this.letters, '[' + this.name + '] ' + (level ? '%accessory_connected%' : '%accessory_disconnected%') + '! ( ' + this.id + ' )');
+		}
+
 		if(callback != null)
 		{
 			callback(null);
 		}
+
+		return changed;
 	}
 }
