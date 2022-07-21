@@ -17,10 +17,11 @@ module.exports = class BaseService
 		this.homebridgeAccessory = homebridgeAccessory;
 
 		this.logger = manager.platform.logger;
-		this.ContextManager = manager.ContextManager;
+		
+		this.AutomationSystem = manager.platform.AutomationSystem;
+		this.ContextManager = manager.platform.ContextManager;
 		this.EventManager = manager.platform.EventManager;
 		this.TypeManager = manager.platform.TypeManager;
-		this.AutomationSystem = manager.platform.AutomationSystem;
 
 		this.id = deviceConfig['id'];
 

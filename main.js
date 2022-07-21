@@ -67,7 +67,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 				this.baseDirectory = config['baseDirectory'];
 
-				this.logger.setLogDirectory(path.join(this.baseDirectory, 'log'));
+				this.logger.setLogDirectory(path.join(this.baseDirectory, 'log')); 
 			}
 			catch(e)
 			{
@@ -75,11 +75,12 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			}
 		}
 		
-		this.files = new FileSystem(this, { initDirectories : ['automation', 'log'] });
+		this.files = new FileSystem(this, { initDirectories : ['activity', 'automation', 'log'] });
 
 		this.TypeManager = new TypeManager(this.logger);
 		this.EventManager = new EventManager(this.logger);
 		this.AutomationSystem = new AutomationSystem(this);
+		this.ContextManager = new ContextManager(this);
 
 		if(this.port != null)
 		{
@@ -225,7 +226,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			
 			this.WebServer.addSocket('/devices', 'getState', (ws, params) => {
 
-				var state = ContextManager.addClient(ws, params.id);
+				var state = this.ContextManager.addClient(ws, params.id);
 
 				ws.send(JSON.stringify(state || {}));
 			});
@@ -265,6 +266,13 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						ws.send(state != null ? '{"' + params.letters + '":' + JSON.stringify(state) + '}' : 'Error');
 					}
 				}
+			});
+
+			this.WebServer.addSocket('/activity', 'getActivity', (ws, params) => {
+
+				var activity = this.ContextManager.getActivity(ws, params.id, params.letters);
+
+				ws.send(JSON.stringify(activity || []));
 			});
 		}
 	}
@@ -562,4 +570,4 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	}
 }
 
-module.exports = { DynamicPlatform, ContextManager, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService, StatelessSwitchService, SmokeService, AirQualityService, BlindService };
+module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService, StatelessSwitchService, SmokeService, AirQualityService, BlindService };
