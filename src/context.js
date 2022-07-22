@@ -53,6 +53,7 @@ module.exports = class ContextManager
         }
 
         this.nextCycle = this._getNextCycle();
+        this.lastCycle = this._getNextCycle() - 60000;
 
         this.cycleInterval = setInterval(() => {
 
@@ -81,7 +82,7 @@ module.exports = class ContextManager
                         {
                             if(typeof this.cache[id][letters].cycle[this.cache[id][letters].cycle.length - 1][x] == 'boolean')
                             {
-                                state[x] = this.cache[id][letters].cycle[this.cache[id][letters].cycle.length - 1][x];
+                                state[x] = sum[x] > 0;
                             }
                             else if(typeof this.cache[id][letters].cycle[this.cache[id][letters].cycle.length - 1][x] == 'number')
                             {
@@ -93,16 +94,16 @@ module.exports = class ContextManager
                         {
                             if(this._hasHistoryChanged(this.cache[id][letters].history, this.context[id][letters]))
                             {
-                                state = this.context[id][letters];
+                                state = { ...this.context[id][letters] };
                             }
 
-                            this.cache[id][letters].history.push({ time : this.nextCycle, state });
+                            this.cache[id][letters].history.push({ time : this.lastCycle, state });
 
                             for(const i in this.activityClients)
                             {
                                 if(this.activityClients[i].id == id && this.activityClients[i].letters == letters)
                                 {
-                                    this.activityClients[i].socket.send(JSON.stringify([{ time : this.nextCycle, state }]));
+                                    this.activityClients[i].socket.send(JSON.stringify([{ time : this.lastCycle, state }]));
                                 }
                             }
 
@@ -110,11 +111,11 @@ module.exports = class ContextManager
                             {
                                 if(!this.removeExpired)
                                 {
-                                    fs.appendFileSync(this.path, JSON.stringify({ id, letters, time : this.nextCycle / 60000, state }) + '\n', 'utf8');
+                                    fs.appendFileSync(this.path, JSON.stringify({ id, letters, time : this.lastCycle / 60000, state }) + '\n', 'utf8');
                                 }
                                 else
                                 {
-                                    this.query.push(JSON.stringify({ id, letters, time : this.nextCycle / 60000, state }) + '\n');
+                                    this.query.push(JSON.stringify({ id, letters, time : this.lastCycle / 60000, state }) + '\n');
                                 }
                             }
                         }
@@ -124,6 +125,7 @@ module.exports = class ContextManager
                 }
 
                 this.nextCycle = this._getNextCycle();
+                this.lastCycle = this._getNextCycle() - 60000;
             }
 
         }, 1000);
