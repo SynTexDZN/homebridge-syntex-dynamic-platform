@@ -9,8 +9,7 @@ module.exports = class ContextManager
 
         this.query = [];
 
-        this.stateClients = [];
-        this.activityClients = [];
+        this.socketClients = [];
 
         this.files = platform.files;
 
@@ -31,17 +30,16 @@ module.exports = class ContextManager
 
                         for(const i in data)
                         {
-                            if(this.cache[data[i].id] == null)
-                            {
-                                this.cache[data[i].id] = {};
-                            }
+                            this._prepareStructure(data[i].id, data[i].letters);
 
-                            if(this.cache[data[i].id][data[i].letters] == null)
+                            if(data[i].state != null)
                             {
-                                this.cache[data[i].id][data[i].letters] = { cycle : [], history : [] };
+                                this.cache[data[i].id][data[i].letters].history.push({ time : data[i].time * 60000, state : data[i].state });
                             }
-
-                            this.cache[data[i].id][data[i].letters].history.push({ time : data[i].time * 60000, state : data[i].state });
+                            else if(data[i].automation != null)
+                            {
+                                this.cache[data[i].id][data[i].letters].automation.push({ time : data[i].time * 60000, automation : data[i].automation });
+                            }
                         }
                     }
                     catch(e)
@@ -99,11 +97,11 @@ module.exports = class ContextManager
 
                             this.cache[id][letters].history.push({ time : this.lastCycle, state });
 
-                            for(const i in this.activityClients)
+                            for(const i in this.socketClients)
                             {
-                                if(this.activityClients[i].id == id && this.activityClients[i].letters == letters)
+                                if(this.socketClients[i].id == id && this.socketClients[i].letters == letters)
                                 {
-                                    this.activityClients[i].socket.send(JSON.stringify([{ time : this.lastCycle, state }]));
+                                    this.socketClients[i].socket.send(JSON.stringify({ time : this.lastCycle, history : state }));
                                 }
                             }
 
@@ -137,54 +135,65 @@ module.exports = class ContextManager
 
     updateContext(id, letters, state)
     {
-        if(this.context[id] == null)
-        {
-            this.context[id] = {};
-        }
+        state = { ...state };
 
-        if(this.context[id][letters] == null)
-        {
-            this.context[id][letters] = {};
-        }
+        this._prepareStructure(id, letters);
 
-        if(this.cache[id] == null)
-        {
-            this.cache[id] = {};
-        }
-
-        if(this.cache[id][letters] == null)
-        {
-            this.cache[id][letters] = { cycle : [], history : [] };
-        }
-
-        for(const x in state)
-        {
-            this.context[id][letters][x] = state[x];
-        }
+        this.context[id][letters] = state;
 
         if(this._hasCycleChanged(this.cache[id][letters].cycle, state))
         {
-            this.cache[id][letters].cycle.push({ ...state });
-        }
+            this.cache[id][letters].cycle.push(state);
 
-        for(const i in this.stateClients)
-        {
-            if(this.stateClients[i].id == id)
+            for(const i in this.socketClients)
             {
-                this.stateClients[i].socket.send(JSON.stringify(this.context[id]));
+                if(this.socketClients[i].id == id && this.socketClients[i].letters == letters)
+                {
+                    this.socketClients[i].socket.send(JSON.stringify({ time : new Date().getTime(), state }));
+                }
             }
         }
     }
 
-    addClient(ws, id)
+    updateAutomation(id, letters, automation)
     {
-        var found = false;
+        automation = { ...automation };
 
-        for(const i in this.stateClients)
+        this._prepareStructure(id, letters);
+
+        this.cache[id][letters].automation.push({ time : new Date().getTime(), automation : { ...automation }});
+
+        for(const i in this.socketClients)
         {
-            if(this.stateClients[i].socket == ws)
+            if(this.socketClients[i].id == id && this.socketClients[i].letters == letters)
             {
-                this.stateClients[i].id = id;
+                this.socketClients[i].socket.send(JSON.stringify({ time : new Date().getTime(), automation }));
+            }
+        }
+
+        if(this.path != null)
+        {
+            if(!this.removeExpired)
+            {
+                fs.appendFileSync(this.path, JSON.stringify({ id, letters, time : this.lastCycle / 60000, automation }) + '\n', 'utf8');
+            }
+            else
+            {
+                this.query.push(JSON.stringify({ id, letters, time : this.lastCycle / 60000, automation }) + '\n');
+            }
+        }
+    }
+
+    addClient(ws, id, letters)
+    {
+        var response = { state : {}, history : [], automation : [] }, found = false;
+
+        for(const i in this.socketClients)
+        {
+            if(this.socketClients[i].socket == ws)
+            {
+                this.socketClients[i].id = id;
+                this.socketClients[i].letters = letters;
 
                 found = true;
             }
@@ -192,37 +201,21 @@ module.exports = class ContextManager
 
         if(!found)
         {
-            this.stateClients.push({ socket : ws, id });
+            this.socketClients.push({ socket : ws, id, letters });
         }
 
-        return this.context[id];
-    }
-
-    getActivity(ws, id, letters)
-    {
-        var found = false;
-
-        for(const i in this.activityClients)
+        if(this.context[id] != null && this.context[id][letters] != null)
         {
-            if(this.activityClients[i].socket == ws)
-            {
-                this.activityClients[i].id = id;
-
-                found = true;
-            }
-        }
-
-        if(!found)
-        {
-            this.activityClients.push({ socket : ws, id, letters });
+            response.state = this.context[id][letters];
         }
 
         if(this.cache[id] != null && this.cache[id][letters] != null)
         {
-            return this.cache[id][letters].history;
+            response.history = this.cache[id][letters].history;
+            response.automation = this.cache[id][letters].automation;
         }
 
-        return null;
+        return response;
     }
 
     _getNextCycle()
@@ -334,4 +327,27 @@ module.exports = class ContextManager
 
 		this.query = [];
 	}
+
+    _prepareStructure(id, letters)
+    {
+        if(this.context[id] == null)
+        {
+            this.context[id] = {};
+        }
+
+        if(this.context[id][letters] == null)
+        {
+            this.context[id][letters] = {};
+        }
+
+        if(this.cache[id] == null)
+        {
+            this.cache[id] = {};
+        }
+
+        if(this.cache[id][letters] == null)
+        {
+            this.cache[id][letters] = { automation : [], cycle : [], history : [] };
+        }
+    }
 }

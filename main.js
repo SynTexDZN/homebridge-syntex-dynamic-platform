@@ -79,8 +79,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.TypeManager = new TypeManager(this.logger);
 		this.EventManager = new EventManager(this.logger);
-		this.AutomationSystem = new AutomationSystem(this);
 		this.ContextManager = new ContextManager(this);
+		this.AutomationSystem = new AutomationSystem(this);
 
 		if(this.port != null)
 		{
@@ -268,11 +268,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				}
 			});
 
-			this.WebServer.addSocket('/activity', 'getActivity', (ws, params) => {
+			this.WebServer.addSocket('/devices', 'getActivity', (ws, params) => {
 
-				var activity = this.ContextManager.getActivity(ws, params.id, params.letters);
+				var activity = this.ContextManager.addClient(ws, params.id, params.letters);
 
-				ws.send(JSON.stringify(activity || []));
+				ws.send(JSON.stringify(activity));
 			});
 		}
 	}
