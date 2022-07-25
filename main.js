@@ -224,11 +224,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				response.end(await this.AutomationSystem.LogikEngine.loadAutomation() ? 'Success' : 'Error');
 			});
 			
-			this.WebServer.addSocket('/devices', 'getState', (ws, params) => {
+			this.WebServer.addSocket('/devices', 'getActivity', (ws, params) => {
 
-				var state = this.ContextManager.addClient(ws, params.id);
+				var activity = this.ContextManager.addClient(ws, params.id, params.letters);
 
-				ws.send(JSON.stringify(state || {}));
+				ws.send(JSON.stringify(activity));
 			});
 
 			this.WebServer.addSocket('/devices', 'setState', (ws, params) => {
@@ -266,13 +266,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						ws.send(state != null ? '{"' + params.letters + '":' + JSON.stringify(state) + '}' : 'Error');
 					}
 				}
-			});
-
-			this.WebServer.addSocket('/devices', 'getActivity', (ws, params) => {
-
-				var activity = this.ContextManager.addClient(ws, params.id, params.letters);
-
-				ws.send(JSON.stringify(activity));
 			});
 		}
 	}
