@@ -7,9 +7,9 @@ module.exports = class ContextManager
         this.context = {};
         this.cache = {};
 
-        this.query = [];
-
         this.socketClients = [];
+
+        this.query = [];
 
         this.files = platform.files;
 
@@ -88,34 +88,18 @@ module.exports = class ContextManager
                             }
                         }
 
-                        if((Object.keys(state).length > 0 && this._hasHistoryChanged(this.cache[id][letters].history, state)) || this._hasHistoryChanged(this.cache[id][letters].history, this.context[id][letters]))
+                        if((Object.keys(state).length > 0 && this._hasHistoryChanged(this.cache[id][letters].history, state)) || (Object.keys(this.context[id][letters].state).length > 0 && this._hasHistoryChanged(this.cache[id][letters].history, this.context[id][letters].state)))
                         {
-                            if(this._hasHistoryChanged(this.cache[id][letters].history, this.context[id][letters]))
+                            if(this._hasHistoryChanged(this.cache[id][letters].history, this.context[id][letters].state))
                             {
-                                state = { ...this.context[id][letters] };
+                                state = { ...this.context[id][letters].state };
                             }
 
                             this.cache[id][letters].history.push({ time : this.lastCycle, state });
 
-                            for(const i in this.socketClients)
-                            {
-                                if(this.socketClients[i].id == id && this.socketClients[i].letters == letters)
-                                {
-                                    this.socketClients[i].socket.send(JSON.stringify({ time : this.lastCycle, history : state }));
-                                }
-                            }
+                            this._sendSocketMessage(id, letters, { time : this.lastCycle, history : state });
 
-                            if(this.path != null)
-                            {
-                                if(!this.removeExpired)
-                                {
-                                    fs.appendFileSync(this.path, JSON.stringify({ id, letters, time : this.lastCycle / 60000, state }) + '\n', 'utf8');
-                                }
-                                else
-                                {
-                                    this.query.push(JSON.stringify({ id, letters, time : this.lastCycle / 60000, state }) + '\n');
-                                }
-                            }
+                            this._saveHistory(id, letters, this.lastCycle / 60000, { state });
                         }
 
                         this.cache[id][letters].cycle = [];
@@ -139,19 +123,16 @@ module.exports = class ContextManager
 
         this._prepareStructure(id, letters);
 
-        this.context[id][letters] = state;
+        if(this._hasStateChanged(this.context[id][letters], state))
+        {
+            this.context[id][letters] = { time : new Date().getTime(), state };
+
+            this._sendSocketMessage(id, letters, { time : new Date().getTime(), state });
+        }
 
         if(this._hasCycleChanged(this.cache[id][letters].cycle, state))
         {
             this.cache[id][letters].cycle.push(state);
-
-            for(const i in this.socketClients)
-            {
-                if(this.socketClients[i].id == id && this.socketClients[i].letters == letters)
-                {
-                    this.socketClients[i].socket.send(JSON.stringify({ time : new Date().getTime(), state }));
-                }
-            }
         }
     }
 
@@ -161,36 +142,20 @@ module.exports = class ContextManager
 
         this._prepareStructure(id, letters);
 
-        this.cache[id][letters].automation.push({ time : new Date().getTime(), automation : { ...automation }});
+        this.cache[id][letters].automation.push({ time : new Date().getTime(), automation });
 
-        for(const i in this.socketClients)
-        {
-            if(this.socketClients[i].id == id && this.socketClients[i].letters == letters)
-            {
-                this.socketClients[i].socket.send(JSON.stringify({ time : new Date().getTime(), automation }));
-            }
-        }
+        this._sendSocketMessage(id, letters, { time : new Date().getTime(), automation });
 
-        if(this.path != null)
-        {
-            if(!this.removeExpired)
-            {
-                fs.appendFileSync(this.path, JSON.stringify({ id, letters, time : this.lastCycle / 60000, automation }) + '\n', 'utf8');
-            }
-            else
-            {
-                this.query.push(JSON.stringify({ id, letters, time : this.lastCycle / 60000, automation }) + '\n');
-            }
-        }
+        this._saveHistory(id, letters, new Date().getTime(), { automation });
     }
 
-    addClient(ws, id, letters)
+    addClient(socket, id, letters)
     {
         var response = { state : {}, history : [], automation : [] }, found = false;
 
         for(const i in this.socketClients)
         {
-            if(this.socketClients[i].socket == ws)
+            if(this.socketClients[i].socket == socket)
             {
                 this.socketClients[i].id = id;
                 this.socketClients[i].letters = letters;
@@ -201,10 +166,10 @@ module.exports = class ContextManager
 
         if(!found)
         {
-            this.socketClients.push({ socket : ws, id, letters });
+            this.socketClients.push({ socket, id, letters });
         }
 
-        if(this.context[id] != null && this.context[id][letters] != null)
+        if(this.context[id] != null && this.context[id][letters] != null && this.context[id][letters].time != null)
         {
             response.state = this.context[id][letters];
         }
@@ -226,6 +191,24 @@ module.exports = class ContextManager
         date.setMilliseconds(0);
 
         return date.getTime();
+    }
+
+    _hasStateChanged(object, state)
+    {
+        if(object.state == null)
+        {
+            return true;
+        }
+
+        for(const x in state)
+        {
+            if(object.state[x] != state[x])
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     _hasCycleChanged(array, state)
@@ -337,7 +320,7 @@ module.exports = class ContextManager
 
         if(this.context[id][letters] == null)
         {
-            this.context[id][letters] = {};
+            this.context[id][letters] = { state : {} };
         }
 
         if(this.cache[id] == null)
@@ -348,6 +331,39 @@ module.exports = class ContextManager
         if(this.cache[id][letters] == null)
         {
             this.cache[id][letters] = { automation : [], cycle : [], history : [] };
+        }
+    }
+
+    _saveHistory(id, letters, time, message)
+    {
+        var obj = { id, letters, time };
+
+        for(const x in message)
+        {
+            obj[x] = message[x];
+        }
+
+        if(this.path != null)
+        {
+            if(!this.removeExpired)
+            {
+                fs.appendFileSync(this.path, JSON.stringify(obj) + '\n', 'utf8');
+            }
+            else
+            {
+                this.query.push(JSON.stringify(obj) + '\n');
+            }
+        }
+    }
+
+    _sendSocketMessage(id, letters, message)
+    {
+        for(const i in this.socketClients)
+        {
+            if(this.socketClients[i].id == id && this.socketClients[i].letters == letters)
+            {
+                this.socketClients[i].socket.send(JSON.stringify(message));
+            }
         }
     }
 }
