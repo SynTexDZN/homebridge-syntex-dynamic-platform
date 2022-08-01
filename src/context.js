@@ -12,6 +12,7 @@ module.exports = class ContextManager
         this.query = [];
 
         this.files = platform.files;
+        this.logger = platform.logger;
 
         if(platform.baseDirectory != null)
         {
