@@ -258,39 +258,48 @@ module.exports = class ContextManager
 
 				if(data != null)
 				{
-					var newData = '';
-		
-					data = data.toString();
-                    data = data.slice(0, -1);
-                    data = data.replace(/(?:\r\n|\r|\n)/g, ',');
-                    data = JSON.parse('[' + data + ']');
-		
-					for(const i in data)
-					{
-                        var time = new Date(data[i].time * 60000).getTime();
-    
-                        if(new Date().getTime() - time < 86400000)
+                    try
+                    {
+                        var newData = '';
+            
+                        data = data.toString();
+                        data = data.slice(0, -1);
+                        data = data.replace(/(?:\r\n|\r|\n)/g, ',');
+                        data = JSON.parse('[' + data + ']');
+            
+                        for(const i in data)
                         {
-                            newData += JSON.stringify(data[i]) + '\n';
+                            var time = new Date(data[i].time * 60000).getTime();
+        
+                            if(new Date().getTime() - time < 86400000)
+                            {
+                                newData += JSON.stringify(data[i]) + '\n';
+                            }
                         }
-					}
 
-					if(newData != '')
-					{
-						this.files.writeFile(this.path, newData).then((response) => {
+                        if(newData != '')
+                        {
+                            this.files.writeFile(this.path, newData).then((response) => {
 
-							if(!response.success)
-							{
-								this.logger.log('error', 'bridge', 'Bridge', this.path + ' %update_error%');
-							}
+                                if(!response.success)
+                                {
+                                    this.logger.log('error', 'bridge', 'Bridge', this.path + ' %update_error%');
+                                }
 
-							this._clearQuery();
-						});
-					}
-					else
-					{
-						this._clearQuery();
-					}
+                                this._clearQuery();
+                            });
+                        }
+                        else
+                        {
+                            this._clearQuery();
+                        }
+                    }
+                    catch(e)
+                    {
+                        this.logger.err(e);
+
+                        this._clearQuery();
+                    }
 				}
 				else
 				{
