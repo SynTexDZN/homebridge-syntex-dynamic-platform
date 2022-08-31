@@ -346,7 +346,7 @@ module.exports = class ContextManager
 
     _saveHistory(id, letters, time, message)
     {
-        var obj = { id, letters, time : time / 60000 };
+        var obj = { id, letters, time : Math.round(time / 60000) };
 
         for(const x in message)
         {
