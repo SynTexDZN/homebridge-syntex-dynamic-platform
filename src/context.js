@@ -100,7 +100,7 @@ module.exports = class ContextManager
 
                             this._sendSocketMessage(id, letters, { time : this.lastCycle, history : state });
 
-                            this._saveHistory(id, letters, this.lastCycle / 60000, { state });
+                            this._saveHistory(id, letters, this.lastCycle, { state });
                         }
 
                         this.cache[id][letters].cycle = [];
@@ -346,7 +346,7 @@ module.exports = class ContextManager
 
     _saveHistory(id, letters, time, message)
     {
-        var obj = { id, letters, time };
+        var obj = { id, letters, time : time / 60000 };
 
         for(const x in message)
         {
