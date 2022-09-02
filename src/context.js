@@ -24,7 +24,6 @@ module.exports = class ContextManager
                 {
                     try
                     {
-                        data = data.toString();
                         data = data.slice(0, -1);
                         data = data.replace(/(?:\r\n|\r|\n)/g, ',');
                         data = JSON.parse('[' + data + ']');
@@ -262,7 +261,6 @@ module.exports = class ContextManager
                     {
                         var newData = '';
             
-                        data = data.toString();
                         data = data.slice(0, -1);
                         data = data.replace(/(?:\r\n|\r|\n)/g, ',');
                         data = JSON.parse('[' + data + ']');
