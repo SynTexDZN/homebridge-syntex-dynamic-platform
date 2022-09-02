@@ -513,7 +513,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				{
 					resolve(null);
 				}
-			});
+
+			}).catch(() => resolve(null));
 		});
 	}
 
@@ -547,7 +548,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				{
 					resolve(null);
 				}
-			});
+				
+			}).catch(() => resolve(null));
 		});
 	}
 

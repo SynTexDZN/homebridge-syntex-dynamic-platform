@@ -47,7 +47,8 @@ module.exports = class ContextManager
                         this.logger.err(e);
                     }
                 }
-            });
+
+            }).catch(() => {});
         }
 
         this.nextCycle = this._getNextCycle();
@@ -303,7 +304,8 @@ module.exports = class ContextManager
 				{
 					this._clearQuery();
 				}
-			});
+
+			}).catch(() => {});
 		}
 	}
 
