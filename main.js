@@ -80,7 +80,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.TypeManager = new TypeManager(this.logger);
 		this.EventManager = new EventManager(this.logger);
 		this.ContextManager = new ContextManager(this);
-		this.AutomationSystem = new AutomationSystem(this);
 
 		if(this.port != null)
 		{
@@ -88,6 +87,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 			this.addWebPages();
 		}
+
+		this.AutomationSystem = new AutomationSystem(this);
 
 		this.readConfig().then((data) => {
 
