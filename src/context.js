@@ -305,7 +305,7 @@ module.exports = class ContextManager
 					this._clearQuery();
 				}
 
-			}).catch(() => {});
+			}).catch(() => this._clearQuery());
 		}
 	}
 
