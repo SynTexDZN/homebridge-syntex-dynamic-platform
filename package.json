@@ -13,7 +13,7 @@
 		"syntex-automation": "1.2.0-b18",
 		"syntex-filesystem": "1.0.2-b10",
 		"syntex-logger": "1.0.8-b23",
-		"syntex-webserver": "1.1.0-b19"
+		"syntex-webserver": "1.1.0-b20"
 	},
 	"keywords": [
 		"syntex",
