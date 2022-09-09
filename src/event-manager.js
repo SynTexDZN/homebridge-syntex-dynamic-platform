@@ -19,7 +19,7 @@ module.exports = class EventManager
 				{
 					callback(message);
 
-					this.logger.debug('<<< ' + stream + ' [' + filter.pluginName + '] ' + JSON.stringify(message));
+					this.logger.debug('<<< [' + filter.pluginName + '] ' + stream + (filter.receiver != null ? ' [' + filter.receiver + '] ' : ' ') + JSON.stringify(message));
 				}
 			}
 		});
@@ -27,7 +27,7 @@ module.exports = class EventManager
 
 	setOutputStream(stream, options, message)
 	{
-        this.logger.debug('>>> ' + stream + ' [' + this.pluginName + '] ' + JSON.stringify(message));
+        this.logger.debug('>>> [' + this.pluginName + '] ' + stream + (options.receiver != null ? ' [' + options.receiver + '] ' : ' ') + JSON.stringify(message));
 
 		process.emit(stream, { ...options, pluginName : this.pluginName }, message);
 	}
