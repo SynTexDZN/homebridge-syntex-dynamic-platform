@@ -10,8 +10,8 @@
 	},
 	"dependencies": {
 		"axios": "^0.21.1",
-		"syntex-automation": "1.2.0-b20",
-		"syntex-filesystem": "1.0.2-b11",
+		"syntex-automation": "1.2.0-b21",
+		"syntex-filesystem": "1.0.2-b12",
 		"syntex-logger": "1.0.8-b23",
 		"syntex-webserver": "1.1.0-b21"
 	},

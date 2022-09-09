@@ -18,9 +18,9 @@ module.exports = class EventManager
 				if((filter.sender == null || filter.sender != options.source)
 				&& (filter.receiver == null || filter.receiver == options.destination))
 				{
-					callback(message);
-
 					this.logger.debug('<<< [' + filter.pluginName + '] ' + stream + (filter.receiver != null ? ' [' + filter.receiver + '] ' : ' ') + JSON.stringify(message));
+					
+					callback(message);
 				}
 			}
 		});
