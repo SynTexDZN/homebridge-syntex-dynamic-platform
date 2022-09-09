@@ -2,9 +2,10 @@ module.exports = class EventManager
 {
 	constructor(platform)
 	{
+		this.pluginName = platform.pluginName;
         this.logger = platform.logger;
         
-        this.pluginName = platform.pluginName;
+		process.setMaxListeners(512);
     }
 
     setInputStream(stream, options, callback)
