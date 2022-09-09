@@ -43,9 +43,9 @@ module.exports = class BaseService
 
 		this.connection.updateValue(this.getConnectionState());
 
-		if(this.EventManager != null)
+		if(this.EventManager != null && deviceConfig.disableEvents == null)
 		{
-			this.EventManager.setInputStream(manager.platform.pluginName, this, this.sid, (state) => {
+			this.EventManager.setInputStream('updateState', { source : this, destination : this.sid }, (state) => {
 
 				if((state = this.TypeManager.validateUpdate(this.id, this.letters, state)) != null && this.updateState != null)
 				{

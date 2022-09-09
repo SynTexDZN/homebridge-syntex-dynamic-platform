@@ -1,33 +1,34 @@
-const EventEmitter = require('events');
-
-module.exports = class EventManager extends EventEmitter
+module.exports = class EventManager
 {
-	constructor(logger)
+	constructor(platform)
 	{
-		super();
-
-		super.setMaxListeners(512);
-    
-        this.logger = logger;
+        this.logger = platform.logger;
+        
+        this.pluginName = platform.pluginName;
     }
 
-    setInputStream(stream, sender, receiver, callback)
+    setInputStream(stream, options, callback)
 	{
-		super.on(stream, (source, destination, state) => {
+		process.on(stream, (filter, message) => {
 			
-			if((source == null || source != sender) && destination == receiver)
+			if(options.external == true && this.pluginName != filter.pluginName
+			|| options.external != true && this.pluginName == filter.pluginName)
 			{
-				callback(state);
+				if((filter.sender == null || filter.sender != options.source)
+				&& (filter.receiver == null || filter.receiver == options.destination))
+				{
+					callback(message);
 
-				this.logger.debug('<<< ' + stream + ' [' + receiver + '] ' + JSON.stringify(state));
+					this.logger.debug('<<< ' + stream + ' [' + filter.pluginName + '] ' + JSON.stringify(message));
+				}
 			}
 		});
 	}
 
-	setOutputStream(stream, sender, destination, state)
+	setOutputStream(stream, options, message)
 	{
-		super.emit(stream, sender, destination, state);
+        this.logger.debug('>>> ' + stream + ' [' + this.pluginName + '] ' + JSON.stringify(message));
 
-		this.logger.debug('>>> ' + stream + ' [' + destination + '] ' + JSON.stringify(state));
+		process.emit(stream, { ...options, pluginName : this.pluginName }, message);
 	}
 }
