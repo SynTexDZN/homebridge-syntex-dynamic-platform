@@ -12,13 +12,15 @@ module.exports = class EventManager
 	{
 		process.on(stream, (filter, message) => {
 			
-			if(options.external == true && this.pluginName != filter.pluginName
-			|| options.external != true && this.pluginName == filter.pluginName)
+			var receiver = filter.receiver != null ? JSON.stringify(filter.receiver) : null,
+				destination = options.destination != null ? JSON.stringify(options.destination) : null;
+
+			if(options.external == true || this.pluginName == filter.pluginName)
 			{
 				if((filter.sender == null || filter.sender != options.source)
-				&& (filter.receiver == null || filter.receiver == options.destination))
+				&& (receiver == null || receiver == destination))
 				{
-					this.logger.debug('<<< [' + filter.pluginName + '] ' + stream + (filter.receiver != null ? ' [' + filter.receiver + '] ' : ' ') + JSON.stringify(message));
+					this.logger.debug('<<< [' + filter.pluginName + '] ' + stream + (receiver != null ? ' [' + receiver + '] ' : ' ') + JSON.stringify(message));
 					
 					callback(message);
 				}
@@ -28,7 +30,9 @@ module.exports = class EventManager
 
 	setOutputStream(stream, options, message)
 	{
-        this.logger.debug('>>> [' + this.pluginName + '] ' + stream + (options.receiver != null ? ' [' + options.receiver + '] ' : ' ') + JSON.stringify(message));
+		var receiver = options.receiver != null ? JSON.stringify(options.receiver) : null;
+
+        this.logger.debug('>>> [' + this.pluginName + '] ' + stream + (receiver != null ? ' [' + receiver + '] ' : ' ') + JSON.stringify(message));
 
 		process.emit(stream, { ...options, pluginName : this.pluginName }, message);
 	}

@@ -43,29 +43,29 @@ module.exports = class BaseService
 
 		this.connection.updateValue(this.getConnectionState());
 
-		if(this.EventManager != null && deviceConfig.disableEvents == null)
+		if(this.EventManager != null)
 		{
-			this.EventManager.setInputStream('updateState', { source : this, destination : this.sid }, (state) => {
+			if(deviceConfig.disableEvents == null)
+			{
+				this.EventManager.setInputStream('updateState', { source : this, destination : this.sid }, (state) => {
 
-				if((state = this.TypeManager.validateUpdate(this.id, this.letters, state)) != null && this.updateState != null)
-				{
-					this.updateState(state);
-				}
-				else
-				{
-					this.logger.log('error', this.id, this.letters, '[' + this.name + '] %update_error%! ( ' + this.id + ' )');
-				}
-
-				if(state.connection != null)
-				{
-					this.setConnectionState(state.connection, null, true);
-				}
-			});
-		}
-
-		if(this.AutomationSystem != null)
-		{
-			this.AutomationSystem.setInputStream('SynTexAutomation', this, (state) => {
+					if((state = this.TypeManager.validateUpdate(this.id, this.letters, state)) != null && this.updateState != null)
+					{
+						this.updateState(state);
+					}
+					else
+					{
+						this.logger.log('error', this.id, this.letters, '[' + this.name + '] %update_error%! ( ' + this.id + ' )');
+					}
+	
+					if(state.connection != null)
+					{
+						this.setConnectionState(state.connection, null, true);
+					}
+				});
+			}
+			
+			this.EventManager.setInputStream('changeHandler', { destination : { id : this.id, letters : this.letters }, external : true }, (state) => {
 
 				if((state = this.TypeManager.validateUpdate(this.id, this.letters, state)) != null && this.changeHandler != null)
 				{
