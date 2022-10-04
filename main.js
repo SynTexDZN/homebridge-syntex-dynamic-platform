@@ -220,11 +220,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				response.end();
 			});
 
-			this.WebServer.addPage('/reload-automation', async (request, response) => {
-
-				response.end(await this.AutomationSystem.LogikEngine.loadAutomation() ? 'Success' : 'Error');
-			});
-			
 			this.WebServer.addSocket('/devices', 'getActivity', (ws, params) => {
 
 				var activity = this.ContextManager.addClient(ws, params.id, params.letters);
