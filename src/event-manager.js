@@ -3,12 +3,12 @@ module.exports = class EventManager
 	constructor(platform)
 	{
 		this.pluginName = platform.pluginName;
-        this.logger = platform.logger;
-        
+		this.logger = platform.logger;
+		
 		process.setMaxListeners(512);
-    }
+	}
 
-    setInputStream(stream, options, callback)
+	setInputStream(stream, options, callback)
 	{
 		process.on(stream, (filter, message) => {
 			
@@ -32,7 +32,7 @@ module.exports = class EventManager
 	{
 		var receiver = options.receiver != null ? JSON.stringify(options.receiver) : null;
 
-        this.logger.debug('>>> [' + this.pluginName + '] ' + stream + (receiver != null ? ' [' + receiver + '] ' : ' ') + JSON.stringify(message));
+		this.logger.debug('>>> [' + this.pluginName + '] ' + stream + (receiver != null ? ' [' + receiver + '] ' : ' ') + JSON.stringify(message));
 
 		process.emit(stream, { ...options, pluginName : this.pluginName }, message);
 	}
