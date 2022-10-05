@@ -137,11 +137,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 						{
 							if(urlParams.type != null)
 							{
-								response.write(urlParams.remove == 'CONFIRM' && await accessory.removeService(accessory, service) ? 'Success' : 'Error');
+								response.end(urlParams.remove == 'CONFIRM' && await accessory.removeService(accessory, service) ? 'Success' : 'Error');
 							}
 							else
 							{
-								response.write(urlParams.remove == 'CONFIRM' && await this.removeAccessory(accessory.homebridgeAccessory || accessory, urlParams.id) ? 'Success' : 'Error');
+								response.end(urlParams.remove == 'CONFIRM' && await this.removeAccessory(accessory.homebridgeAccessory || accessory, urlParams.id) ? 'Success' : 'Error');
 							}
 						}
 						else
@@ -174,7 +174,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 									state = this.updateAccessoryService(service, state);
 			
-									response.write(state != null ? 'Success' : 'Error');
+									response.end(state != null ? 'Success' : 'Error');
 								}
 								else
 								{
@@ -194,12 +194,12 @@ let DynamicPlatform = class SynTexDynamicPlatform
 										}
 									}
 			
-									response.write(state != null ? JSON.stringify(state) : 'Error');
+									response.end(state != null ? JSON.stringify(state) : 'Error');
 								}
 							}
 							else
 							{
-								response.write('Error');
+								response.end('Error');
 
 								this.logger.log('error', urlParams.id, (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0'), '%accessory_not_found[3]% ( ' + (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0') + ' )');
 							}
@@ -207,17 +207,15 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					}
 					else
 					{
-						response.write('Error');
+						response.end('Error');
 
 						this.logger.log('error', urlParams.id, '', '%accessory_not_found[1]%! ( ' + urlParams.id + ' )');
 					}
 				}
 				else
 				{
-					response.write('Error');
+					response.end('Error');
 				}
-	
-				response.end();
 			});
 
 			this.WebServer.addSocket('/devices', 'getActivity', (ws, params) => {
