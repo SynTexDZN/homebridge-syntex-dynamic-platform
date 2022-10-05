@@ -213,23 +213,23 @@ module.exports = class UniversalAccessory
 				{
 					var changed = false;
 
-					for(const i in data.platforms)
+					for(const platform of data.platforms)
 					{
-						if(data.platforms[i].platform == this.platform.pluginName && data.platforms[i].accessories != null)
+						if(this.platform.pluginName == platform.platform && platform.accessories != null)
 						{
-							for(const j in data.platforms[i].accessories)
+							for(const i in platform.accessories)
 							{
-								if(data.platforms[i].accessories[j].id == accessory.id)
+								if(platform.accessories[i].id == accessory.id)
 								{
 									var type = this.TypeManager.letterToType(service.letters[0]), counter = 0;
 
-									for(const k in data.platforms[i].accessories[j].services)
+									for(const j in platform.accessories[i].services)
 									{
-										if(data.platforms[i].accessories[j].services[k].type == type)
+										if(platform.accessories[i].services[j].type == type)
 										{
 											if(service.letters[1] == counter)
 											{
-												data.platforms[i].accessories[j].services.splice(k, 1);
+												platform.accessories[i].services.splice(j, 1);
 
 												changed = true;
 											}
@@ -285,11 +285,11 @@ module.exports = class UniversalAccessory
 	{
 		var changed = false;
 
-		for(const i in this.service)
+		for(const service of this.service)
 		{
-			if(this.service[i].setConnectionState != null)
+			if(service.setConnectionState != null)
 			{
-				if(this.service[i].setConnectionState(level))
+				if(service.setConnectionState(level))
 				{
 					changed = true;
 				}

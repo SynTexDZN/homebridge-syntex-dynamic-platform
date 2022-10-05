@@ -28,17 +28,17 @@ module.exports = class ContextManager
                         data = data.replace(/(?:\r\n|\r|\n)/g, ',');
                         data = JSON.parse('[' + data + ']');
 
-                        for(const i in data)
+                        for(const entry of data)
                         {
-                            this._prepareStructure(data[i].id, data[i].letters);
+                            this._prepareStructure(entry.id, entry.letters);
 
-                            if(data[i].state != null)
+                            if(entry.state != null)
                             {
-                                this.cache[data[i].id][data[i].letters].history.push({ time : data[i].time * 60000, state : data[i].state });
+                                this.cache[entry.id][entry.letters].history.push({ time : entry.time * 60000, state : entry.state });
                             }
-                            else if(data[i].automation != null)
+                            else if(entry.automation != null)
                             {
-                                this.cache[data[i].id][data[i].letters].automation.push({ time : data[i].time * 60000, automation : data[i].automation });
+                                this.cache[entry.id][entry.letters].automation.push({ time : entry.time * 60000, automation : entry.automation });
                             }
                         }
                     }
@@ -64,28 +64,28 @@ module.exports = class ContextManager
                     {
                         var state = {}, sum = {};
 
-                        for(const i in this.cache[id][letters].cycle)
+                        for(const cycle of this.cache[id][letters].cycle)
                         {
-                            for(const x in this.cache[id][letters].cycle[i])
+                            for(const i in cycle)
                             {
-                                if(sum[x] == null)
+                                if(sum[i] == null)
                                 {
-                                    sum[x] = 0;
+                                    sum[i] = 0;
                                 }
 
-                                sum[x] += this.cache[id][letters].cycle[i][x];
+                                sum[i] += cycle[i];
                             }
                         }
 
-                        for(const x in sum)
+                        for(const i in sum)
                         {
-                            if(typeof this.cache[id][letters].cycle[this.cache[id][letters].cycle.length - 1][x] == 'boolean')
+                            if(typeof this.cache[id][letters].cycle[this.cache[id][letters].cycle.length - 1][i] == 'boolean')
                             {
-                                state[x] = sum[x] > 0;
+                                state[i] = sum[i] > 0;
                             }
-                            else if(typeof this.cache[id][letters].cycle[this.cache[id][letters].cycle.length - 1][x] == 'number')
+                            else if(typeof this.cache[id][letters].cycle[this.cache[id][letters].cycle.length - 1][i] == 'number')
                             {
-                                state[x] = sum[x] / this.cache[id][letters].cycle.length;
+                                state[i] = sum[i] / this.cache[id][letters].cycle.length;
                             }
                         }
 
@@ -154,12 +154,12 @@ module.exports = class ContextManager
     {
         var response = { state : {}, history : [], automation : [] }, found = false;
 
-        for(const i in this.socketClients)
+        for(const client of this.socketClients)
         {
-            if(this.socketClients[i].socket == socket)
+            if(client.socket == socket)
             {
-                this.socketClients[i].id = id;
-                this.socketClients[i].letters = letters;
+                client.id = id;
+                client.letters = letters;
 
                 found = true;
             }
@@ -266,13 +266,13 @@ module.exports = class ContextManager
                         data = data.replace(/(?:\r\n|\r|\n)/g, ',');
                         data = JSON.parse('[' + data + ']');
             
-                        for(const i in data)
+                        for(const entry of data)
                         {
-                            var time = new Date(data[i].time * 60000).getTime();
+                            var time = new Date(entry.time * 60000).getTime();
         
                             if(new Date().getTime() - time < 86400000)
                             {
-                                newData += JSON.stringify(data[i]) + '\n';
+                                newData += JSON.stringify(entry) + '\n';
                             }
                         }
 
@@ -313,9 +313,9 @@ module.exports = class ContextManager
 	{
 		this.removeExpired = false;
 
-		for(const i in this.query)
+		for(const query of this.query)
 		{
-            fs.appendFileSync(this.path, this.query[i], 'utf8');
+            fs.appendFileSync(this.path, query, 'utf8');
 		}
 
 		this.query = [];
@@ -368,11 +368,11 @@ module.exports = class ContextManager
 
     _sendSocketMessage(id, letters, message)
     {
-        for(const i in this.socketClients)
+        for(const client of this.socketClients)
         {
-            if(this.socketClients[i].id == id && this.socketClients[i].letters == letters)
+            if(client.id == id && client.letters == letters)
             {
-                this.socketClients[i].socket.send(JSON.stringify(message));
+                client.socket.send(JSON.stringify(message));
             }
         }
     }

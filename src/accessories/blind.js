@@ -26,13 +26,13 @@ module.exports = class BlindService extends BaseService
 					{ type : 'value', Characteristic : this.Characteristic.CurrentPosition }
 				];
 
-				for(const i in v)
+				for(const c of v)
 				{
-					if(state[v[i].type] != null)
+					if(state[c.type] != null)
 					{
-						homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(v[i].Characteristic).updateValue(state[v[i].type]);
+						homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(c.Characteristic).updateValue(state[c.type]);
 						
-						super.setValue('value', state[v[i].type]);
+						super.setValue('value', state[c.type]);
 					}
 				}
 			}

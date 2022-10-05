@@ -312,15 +312,15 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				{
 					var changed = false;
 
-					for(const i in data.platforms)
+					for(const platform of data.platforms)
 					{
-						if(data.platforms[i].platform == this.pluginName && data.platforms[i].accessories != null)
+						if(this.pluginName == platform.platform && platform.accessories != null)
 						{
-							for(const j in data.platforms[i].accessories)
+							for(const i in platform.accessories)
 							{
-								if(data.platforms[i].accessories[j].id == id)
+								if(platform.accessories[i].id == id)
 								{
-									data.platforms[i].accessories.splice(j, 1);
+									platform.accessories.splice(i, 1);
 
 									changed = true;
 								}

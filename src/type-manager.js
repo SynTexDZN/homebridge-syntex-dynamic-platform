@@ -172,26 +172,26 @@ module.exports = class TypeManager
 	{
 		if(id != null && letters != null && state != null && state instanceof Object)
 		{
-			for(const c in state)
+			for(const x in state)
 			{
-				var characteristic = this.getCharacteristic(c, { letters });
+				var characteristic = this.getCharacteristic(x, { letters });
 
 				if(characteristic != null)
 				{
 					try
 					{
-						state[c] = JSON.parse(state[c]);
+						state[x] = JSON.parse(state[x]);
 					}
 					catch(e)
 					{
-						this.logger.log('warn', id, letters, '%conversion_error_parse[0]%: [' + state[c] + '] %conversion_error_parse[1]%! ( ' + id + ' )');
+						this.logger.log('warn', id, letters, '%conversion_error_parse[0]%: [' + state[x] + '] %conversion_error_parse[1]%! ( ' + id + ' )');
 
 						return null;
 					}
 					
-					if(typeof state[c] != characteristic.format)
+					if(typeof state[x] != characteristic.format)
 					{
-						this.logger.log('warn', id, letters, '%conversion_error_format[0]%: [' + state[c] + '] %conversion_error_format[1]% ' + (characteristic.format == 'boolean' ? '%conversion_error_format[2]%' : characteristic.format == 'number' ? '%conversion_error_format[3]%' : '%conversion_error_format[4]%') + ' %conversion_error_format[5]%! ( ' + id + ' )');
+						this.logger.log('warn', id, letters, '%conversion_error_format[0]%: [' + state[x] + '] %conversion_error_format[1]% ' + (characteristic.format == 'boolean' ? '%conversion_error_format[2]%' : characteristic.format == 'number' ? '%conversion_error_format[3]%' : '%conversion_error_format[4]%') + ' %conversion_error_format[5]%! ( ' + id + ' )');
 
 						return null;
 					}
@@ -200,14 +200,14 @@ module.exports = class TypeManager
 					{
 						var min = characteristic.min, max = characteristic.max;
 
-						if(min != null && state[c] < min)
+						if(min != null && state[x] < min)
 						{
-							state[c] = min;
+							state[x] = min;
 						}
 
-						if(max != null && state[c] > max)
+						if(max != null && state[x] > max)
 						{
-							state[c] = max;
+							state[x] = max;
 						}
 					}
 				}
