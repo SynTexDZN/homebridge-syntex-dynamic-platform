@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"axios": "^0.21.1",
-		"syntex-automation": "1.2.0-b28",
+		"syntex-automation": "1.2.0-b29",
 		"syntex-filesystem": "1.0.2-b13",
 		"syntex-logger": "1.0.8-b24",
 		"syntex-webserver": "1.1.0-b22"
