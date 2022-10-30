@@ -178,7 +178,7 @@ module.exports = class BaseService
 				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
 			}
 
-			this.ContextManager.updateContext(this.id, this.letters, this.homebridgeAccessory.context.data[this.letters]);
+			this.ContextManager.updateContext(this.id, this.letters, this.homebridgeAccessory.context.data[this.letters], true);
 		}
 		else
 		{

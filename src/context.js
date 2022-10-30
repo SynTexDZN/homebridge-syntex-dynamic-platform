@@ -34,6 +34,12 @@ module.exports = class ContextManager
 
 							if(entry.state != null)
 							{
+								if(this.context[entry.id][entry.letters].time == null
+								|| this.context[entry.id][entry.letters].time < entry.time * 60000)
+								{
+									this.context[entry.id][entry.letters] = { time : entry.time * 60000, state : entry.state };
+								}
+
 								this.cache[entry.id][entry.letters].history.push({ time : entry.time * 60000, state : entry.state });
 							}
 							else if(entry.automation != null)
@@ -118,7 +124,7 @@ module.exports = class ContextManager
 		this.expiredInterval = setInterval(() => this._removeExpired(), 3600 * 1000);
 	}
 
-	updateContext(id, letters, state)
+	updateContext(id, letters, state, readOnly)
 	{
 		state = { ...state };
 
@@ -126,9 +132,20 @@ module.exports = class ContextManager
 
 		if(this._hasStateChanged(this.context[id][letters], state))
 		{
-			this.context[id][letters] = { time : new Date().getTime(), state };
+			var time = new Date().getTime();
 
-			this._sendSocketMessage(id, letters, { time : new Date().getTime(), state });
+			if(readOnly)
+			{
+				time = this.context[id][letters].time;
+
+				this.context[id][letters].state = state;
+			}
+			else
+			{
+				this.context[id][letters] = { time, state };
+			}
+			
+			this._sendSocketMessage(id, letters, { time, state });
 		}
 
 		if(this._hasCycleChanged(this.cache[id][letters].cycle, state))
