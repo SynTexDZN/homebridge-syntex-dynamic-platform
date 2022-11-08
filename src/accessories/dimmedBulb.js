@@ -1,6 +1,6 @@
 const LightBulbService = require('./lightBulb');
 
-module.exports = class ColoredBulbService extends LightBulbService
+module.exports = class DimmedBulbService extends LightBulbService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
