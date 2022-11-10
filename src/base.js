@@ -131,11 +131,11 @@ module.exports = class BaseService
 
 	getValue(key, verbose)
 	{
-		var value = null, characteristic = this.TypeManager.getCharacteristic(key, { letters : this.letters });
+		var state = {}, characteristic = this.TypeManager.getCharacteristic(key, { letters : this.letters });
 
 		if(characteristic != null)
 		{
-			value = characteristic.default;
+			state[key] = characteristic.default;
 		}
 
 		if(this.homebridgeAccessory != null
@@ -144,48 +144,48 @@ module.exports = class BaseService
 		&& this.homebridgeAccessory.context.data[this.letters] != null
 		&& this.homebridgeAccessory.context.data[this.letters][key] != null)
 		{
-			value = this.homebridgeAccessory.context.data[this.letters][key];
+			state[key] = this.homebridgeAccessory.context.data[this.letters][key];
 
 			if(verbose)
 			{
-				var stateText = JSON.stringify(value), characteristicCount = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
+				var stateText = JSON.stringify(state[key]), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]);
 
-				if(characteristicCount > 1)
+				if(characteristics.length > 1)
 				{
-					stateText = 'value: ' + JSON.stringify(value);
+					stateText = 'value: ' + stateText;
 				}
 
-				if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
+				if(characteristics.hue != null)
 				{
-					stateText += ', hue: ' + this.homebridgeAccessory.context.data[this.letters]['hue'];
+					stateText += ', hue: ' + characteristics.hue;
 				}
 
-				if(this.homebridgeAccessory.context.data[this.letters]['saturation'] != null)
+				if(characteristics.saturation != null)
 				{
-					stateText += ', saturation: ' + this.homebridgeAccessory.context.data[this.letters]['saturation'];
+					stateText += ', saturation: ' + characteristics.saturation;
 				}
 
-				if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
+				if(characteristics.brightness != null)
 				{
-					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
+					stateText += ', brightness: ' + characteristics.brightness;
 				}
 
-				if(this.homebridgeAccessory.context.data[this.letters]['position'] != null)
+				if(characteristics.position != null)
 				{
-					stateText += ', position: ' + this.homebridgeAccessory.context.data[this.letters]['position'];
+					stateText += ', position: ' + characteristics.position;
 				}
 
 				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
 			}
-
-			this.ContextManager.updateContext(this.id, this.letters, this.homebridgeAccessory.context.data[this.letters], true);
 		}
 		else
 		{
 			this.logger.log('info', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
-		return value;
+		this.ContextManager.updateContext(this.id, this.letters, state, true);
+
+		return state[key];
 	}
 
 	setValue(key, value, verbose)
@@ -208,31 +208,31 @@ module.exports = class BaseService
 
 				if(verbose)
 				{
-					var stateText = JSON.stringify(value), characteristicCount = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
+					var stateText = JSON.stringify(value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]);
 
-					if(characteristicCount > 1)
+					if(characteristics.length > 1)
 					{
-						stateText = 'value: ' + JSON.stringify(value);
+						stateText = 'value: ' + stateText;
 					}
 
-					if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
+					if(characteristics.hue != null)
 					{
-						stateText += ', hue: ' + this.homebridgeAccessory.context.data[this.letters]['hue'];
+						stateText += ', hue: ' + characteristics.hue;
 					}
 
-					if(this.homebridgeAccessory.context.data[this.letters]['saturation'] != null)
+					if(characteristics.saturation != null)
 					{
-						stateText += ', saturation: ' + this.homebridgeAccessory.context.data[this.letters]['saturation'];
+						stateText += ', saturation: ' + characteristics.saturation;
 					}
 
-					if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
+					if(characteristics.brightness != null)
 					{
-						stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
+						stateText += ', brightness: ' + characteristics.brightness;
 					}
 
-					if(this.homebridgeAccessory.context.data[this.letters]['position'] != null)
+					if(characteristics.position != null)
 					{
-						stateText += ', position: ' + this.homebridgeAccessory.context.data[this.letters]['position'];
+						stateText += ', position: ' + characteristics.position;
 					}
 
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + stateText + '] ( ' + this.id + ' )');
@@ -253,47 +253,55 @@ module.exports = class BaseService
 
 	getValues(verbose)
 	{
-		var state = null;
+		var state = {};
 
 		if(this.homebridgeAccessory != null
 		&& this.homebridgeAccessory.context != null
 		&& this.homebridgeAccessory.context.data != null
 		&& this.homebridgeAccessory.context.data[this.letters] != null)
 		{
-			state = this.homebridgeAccessory.context.data[this.letters];
+			for(const key in this.homebridgeAccessory.context.data[this.letters])
+			{
+				var characteristic = this.TypeManager.getCharacteristic(key, { letters : this.letters });
+
+				if(characteristic != null)
+				{
+					state[key] = characteristic.default;
+				}
+
+				if(this.homebridgeAccessory.context.data[this.letters][key] != null)
+				{
+					state[key] = this.homebridgeAccessory.context.data[this.letters][key];
+				}
+			}
 
 			if(verbose)
 			{
-				var stateText = JSON.stringify(state.value), characteristicCount = Object.keys(this.homebridgeAccessory.context.data[this.letters]).length;
+				var stateText = JSON.stringify(state.value), characteristics = Object.keys(state);
 
-				if(characteristicCount > 1)
+				if(characteristics.length > 1)
 				{
-					stateText = 'value: ' + JSON.stringify(state.value);
+					stateText = 'value: ' + stateText;
 				}
 
-				if(Object.keys(this.homebridgeAccessory.context.data[this.letters]).length > 1)
+				if(characteristics.hue != null)
 				{
-					stateText = 'value: ' + JSON.stringify(state.value);
+					stateText += ', hue: ' + characteristics.hue;
 				}
 
-				if(this.homebridgeAccessory.context.data[this.letters]['hue'] != null)
+				if(characteristics.saturation != null)
 				{
-					stateText += ', hue: ' + this.homebridgeAccessory.context.data[this.letters]['hue'];
+					stateText += ', saturation: ' + characteristics.saturation;
 				}
 
-				if(this.homebridgeAccessory.context.data[this.letters]['saturation'] != null)
+				if(characteristics.brightness != null)
 				{
-					stateText += ', saturation: ' + this.homebridgeAccessory.context.data[this.letters]['saturation'];
+					stateText += ', brightness: ' + characteristics.brightness;
 				}
 
-				if(this.homebridgeAccessory.context.data[this.letters]['brightness'] != null)
+				if(characteristics.position != null)
 				{
-					stateText += ', brightness: ' + this.homebridgeAccessory.context.data[this.letters]['brightness'];
-				}
-
-				if(this.homebridgeAccessory.context.data[this.letters]['position'] != null)
-				{
-					stateText += ', position: ' + this.homebridgeAccessory.context.data[this.letters]['position'];
+					stateText += ', position: ' + characteristics.position;
 				}
 
 				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');

@@ -132,20 +132,17 @@ module.exports = class ContextManager
 
 		if(this._hasStateChanged(this.context[id][letters], state))
 		{
-			var time = new Date().getTime();
-
-			if(readOnly)
+			if(!readOnly)
 			{
-				time = this.context[id][letters].time;
-
-				this.context[id][letters].state = state;
-			}
-			else
-			{
-				this.context[id][letters] = { time, state };
+				this.context[id][letters].time = new Date().getTime();
 			}
 			
-			this._sendSocketMessage(id, letters, { time, state });
+			for(const x in state)
+			{
+				this.context[id][letters].state[x] = state[x];
+			}
+			
+			this._sendSocketMessage(id, letters, this.context[id][letters]);
 		}
 
 		if(this._hasCycleChanged(this.cache[id][letters].cycle, state))
@@ -187,7 +184,7 @@ module.exports = class ContextManager
 			this.socketClients.push({ socket, id, letters });
 		}
 
-		if(this.context[id] != null && this.context[id][letters] != null && this.context[id][letters].time != null)
+		if(this.context[id] != null && this.context[id][letters] != null)
 		{
 			response.state = this.context[id][letters];
 		}
