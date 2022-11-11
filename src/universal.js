@@ -74,6 +74,11 @@ module.exports = class UniversalAccessory
 			type = config.type;
 		}
 
+		if(type.startsWith('rgb'))
+		{
+			type = 'rgb';
+		}
+
 		if(!this.subtypes[type])
 		{
 			this.subtypes[type] = 0;
