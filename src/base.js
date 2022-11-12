@@ -183,7 +183,7 @@ module.exports = class BaseService
 			this.logger.log('info', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
-		this.ContextManager.updateContext(this.id, this.letters, state, true);
+		this.ContextManager.updateContext(this.id, this.letters, this.getValues(), true);
 
 		return state[key];
 	}
@@ -238,7 +238,7 @@ module.exports = class BaseService
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + stateText + '] ( ' + this.id + ' )');
 				}
 
-				this.ContextManager.updateContext(this.id, this.letters, this.homebridgeAccessory.context.data[this.letters]);
+				this.ContextManager.updateContext(this.id, this.letters, this.getValues());
 
 				return true;
 			}
