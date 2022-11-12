@@ -95,7 +95,8 @@ module.exports = class ContextManager
 							}
 						}
 
-						if((Object.keys(state).length > 0 && this._hasHistoryChanged(this.cache[id][letters].history, state)) || (Object.keys(this.context[id][letters].state).length > 0 && this._hasHistoryChanged(this.cache[id][letters].history, this.context[id][letters].state)))
+						if((Object.keys(state).length > 0 && this._hasHistoryChanged(this.cache[id][letters].history, state))
+						|| (Object.keys(this.context[id][letters].state).length > 0 && this._hasHistoryChanged(this.cache[id][letters].history, this.context[id][letters].state)))
 						{
 							if(this._hasHistoryChanged(this.cache[id][letters].history, this.context[id][letters].state))
 							{
@@ -360,7 +361,7 @@ module.exports = class ContextManager
 
 	_saveHistory(id, letters, time, message)
 	{
-		var obj = { id, letters, time : Math.round(time / 60000) };
+		var obj = { id, letters, time : Math.floor(time / 60000) };
 
 		for(const x in message)
 		{
