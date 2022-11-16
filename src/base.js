@@ -183,7 +183,7 @@ module.exports = class BaseService
 			this.logger.log('info', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
-		this.ContextManager.updateContext(this.id, this.letters, this.getValues(), true);
+		this.ContextManager.updateContext(this.id, this.letters, state, true);
 
 		return state[key];
 	}
