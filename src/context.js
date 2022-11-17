@@ -146,9 +146,9 @@ module.exports = class ContextManager
 			this._sendSocketMessage(id, letters, this.context[id][letters]);
 		}
 
-		if(this._hasCycleChanged(this.cache[id][letters].cycle, state))
+		if(this._hasCycleChanged(this.cache[id][letters].cycle, this.context[id][letters].state))
 		{
-			this.cache[id][letters].cycle.push(state);
+			this.cache[id][letters].cycle.push(this.context[id][letters].state);
 		}
 	}
 
