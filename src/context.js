@@ -127,8 +127,6 @@ module.exports = class ContextManager
 
 	updateContext(id, letters, state, readOnly)
 	{
-		state = { ...state };
-
 		this._prepareStructure(id, letters);
 
 		if(this._hasStateChanged(this.context[id][letters], state))
@@ -148,7 +146,7 @@ module.exports = class ContextManager
 
 		if(this._hasCycleChanged(this.cache[id][letters].cycle, this.context[id][letters].state))
 		{
-			this.cache[id][letters].cycle.push(this.context[id][letters].state);
+			this.cache[id][letters].cycle.push({ ...this.context[id][letters].state });
 		}
 	}
 
