@@ -283,7 +283,7 @@ module.exports = class ContextManager
 						{
 							var time = new Date(entry.time * 60000).getTime();
 		
-							if(new Date().getTime() - time < 86400000)
+							if(new Date().getTime() - time < 86400000 * 2)
 							{
 								newData += JSON.stringify(entry) + '\n';
 							}
