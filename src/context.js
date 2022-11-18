@@ -37,10 +37,10 @@ module.exports = class ContextManager
 								if(this.context[entry.id][entry.letters].time == null
 								|| this.context[entry.id][entry.letters].time < entry.time * 60000)
 								{
-									this.context[entry.id][entry.letters] = { time : entry.time * 60000, state : entry.state };
+									this.context[entry.id][entry.letters] = { time : entry.time * 60000, state : { ...entry.state } };
 								}
 
-								this.cache[entry.id][entry.letters].history.push({ time : entry.time * 60000, state : entry.state });
+								this.cache[entry.id][entry.letters].history.push({ time : entry.time * 60000, state : { ...entry.state } });
 							}
 							else if(entry.automation != null)
 							{
