@@ -73,4 +73,74 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 		callback();
 	}
+
+	setToCurrentColor(state, powerCallback, brightnessCallback, unchangedCallback)
+	{
+		if(state.value != null && (!super.hasState('value') || this.value != state.value))
+		{
+			this.value = state.value;
+
+			this.changedPower = true;
+		}
+
+		if(state.hue != null && (!super.hasState('hue') || this.hue != state.hue))
+		{
+			this.hue = state.hue;
+
+			this.changedColor = true;
+		}
+
+		if(state.saturation != null && (!super.hasState('saturation') || this.saturation != state.saturation))
+		{
+			this.saturation = state.saturation;
+
+			this.changedColor = true;
+		}
+
+		if(state.brightness != null && (!super.hasState('brightness') || this.brightness != state.brightness))
+		{
+			this.brightness = state.brightness;
+
+			this.changedColor = true;
+		}
+
+		setTimeout(() => {
+
+			if(!this.running)
+			{
+				this.running = true;
+
+				if(this.changedPower)
+				{
+					powerCallback(() => {
+
+						this.changedPower = false;
+
+						this.running = false;
+					});
+				}
+				else if(this.changedColor)
+				{
+					colorCallback(() => {
+
+						this.changedColor = false;
+
+						this.running = false;
+					});
+				}
+				else
+				{
+					unchangedCallback(() => {
+
+						this.running = false;
+					});
+				}
+			}
+			else
+			{
+				unchangedCallback(() => {});
+			}
+
+		}, 10);
+	}
 }
