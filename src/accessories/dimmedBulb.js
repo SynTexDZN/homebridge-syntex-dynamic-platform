@@ -56,4 +56,67 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 		callback();
 	}
+
+	setToCurrentBrightness(state, powerCallback, brightnessCallback, unchangedCallback)
+	{
+		if(state.value != null && (!super.hasState('value') || this.value != state.value))
+		{
+			this.value = state.value;
+
+			this.changedPower = true;
+		}
+
+		if(state.brightness != null && (!super.hasState('brightness') || this.brightness != state.brightness))
+		{
+			this.brightness = state.brightness;
+
+			this.changedBrightness = true;
+		}
+
+		if(this.changedPower || this.changedBrightness)
+		{
+			setTimeout(() => {
+
+				if(!this.running)
+				{
+					this.running = true;
+
+					if(this.changedPower)
+					{
+						powerCallback(() => {
+
+							this.changedPower = false;
+
+							this.running = false;
+						});
+					}
+					else if(this.changedBrightness)
+					{
+						brightnessCallback(() => {
+
+							this.changedBrightness = false;
+
+							this.running = false;
+						});
+					}
+					else
+					{
+						unchangedCallback(() => {
+
+							this.running = false;
+						});
+					}
+				}
+				else
+				{
+					unchangedCallback(() => {});
+				}
+
+			}, 100);
+		}
+		else
+		{
+			unchangedCallback(() => {});
+		}
+	}
 }
