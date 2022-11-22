@@ -74,7 +74,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		callback();
 	}
 
-	setToCurrentColor(state, powerCallback, brightnessCallback, unchangedCallback)
+	setToCurrentColor(state, powerCallback, colorCallback, unchangedCallback)
 	{
 		if(state.value != null && (!super.hasState('value') || this.value != state.value))
 		{
