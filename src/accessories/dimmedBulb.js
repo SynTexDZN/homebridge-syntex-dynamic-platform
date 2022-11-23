@@ -13,6 +13,11 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 		this.brightness = super.getValue('brightness');
 
+		this.tempState = {
+			value : this.value,
+			brightness : this.brightness
+		};
+
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
 	
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
@@ -59,16 +64,16 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 	setToCurrentBrightness(state, powerCallback, brightnessCallback, unchangedCallback)
 	{
-		if(state.value != null && (!super.hasState('value') || this.value != state.value))
+		if(state.value != null && (!super.hasState('value') || this.tempState.value != state.value))
 		{
-			this.value = state.value;
+			this.tempState.value = state.value;
 
 			this.changedPower = true;
 		}
 
-		if(state.brightness != null && (!super.hasState('brightness') || this.brightness != state.brightness))
+		if(state.brightness != null && (!super.hasState('brightness') || this.tempState.brightness != state.brightness))
 		{
-			this.brightness = state.brightness;
+			this.tempState.brightness = state.brightness;
 
 			this.changedBrightness = true;
 		}

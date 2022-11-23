@@ -13,6 +13,13 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 		this.hue = super.getValue('hue');
 		this.saturation = super.getValue('saturation');
+
+		this.tempState = {
+			value : this.value,
+			hue : this.hue,
+			saturation : this.saturation,
+			brightness : this.brightness
+		};
 		
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
@@ -76,30 +83,30 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	setToCurrentColor(state, powerCallback, colorCallback, unchangedCallback)
 	{
-		if(state.value != null && (!super.hasState('value') || this.value != state.value))
+		if(state.value != null && (!super.hasState('value') || this.tempState.value != state.value))
 		{
-			this.value = state.value;
+			this.tempState.value = state.value;
 
 			this.changedPower = true;
 		}
 
-		if(state.hue != null && (!super.hasState('hue') || this.hue != state.hue))
+		if(state.hue != null && (!super.hasState('hue') || this.tempState.hue != state.hue))
 		{
-			this.hue = state.hue;
+			this.tempState.hue = state.hue;
 
 			this.changedColor = true;
 		}
 
-		if(state.saturation != null && (!super.hasState('saturation') || this.saturation != state.saturation))
+		if(state.saturation != null && (!super.hasState('saturation') || this.tempState.saturation != state.saturation))
 		{
-			this.saturation = state.saturation;
+			this.tempState.saturation = state.saturation;
 
 			this.changedColor = true;
 		}
 
-		if(state.brightness != null && (!super.hasState('brightness') || this.brightness != state.brightness))
+		if(state.brightness != null && (!super.hasState('brightness') || this.tempState.brightness != state.brightness))
 		{
-			this.brightness = state.brightness;
+			this.tempState.brightness = state.brightness;
 
 			this.changedColor = true;
 		}
