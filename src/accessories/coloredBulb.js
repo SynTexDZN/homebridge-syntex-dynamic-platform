@@ -111,11 +111,11 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 			this.changedColor = true;
 		}
 
-		setTimeout(() => {
+		if(!this.running)
+		{
+			this.running = true;
 
-			if(!this.running)
-			{
-				this.running = true;
+			setTimeout(() => {
 
 				if(this.changedPower)
 				{
@@ -142,12 +142,12 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 						this.running = false;
 					});
 				}
-			}
-			else
-			{
-				unchangedCallback(() => {});
-			}
 
-		}, 10);
+			}, 10);
+		}
+		else
+		{
+			unchangedCallback(() => {});
+		}
 	}
 }

@@ -78,11 +78,11 @@ module.exports = class DimmedBulbService extends LightBulbService
 			this.changedBrightness = true;
 		}
 
-		setTimeout(() => {
+		if(!this.running)
+		{
+			this.running = true;
 
-			if(!this.running)
-			{
-				this.running = true;
+			setTimeout(() => {
 
 				if(this.changedPower)
 				{
@@ -109,12 +109,12 @@ module.exports = class DimmedBulbService extends LightBulbService
 						this.running = false;
 					});
 				}
-			}
-			else
-			{
-				unchangedCallback(() => {});
-			}
 
-		}, 10);
+			}, 10);
+		}
+		else
+		{
+			unchangedCallback(() => {});
+		}
 	}
 }
