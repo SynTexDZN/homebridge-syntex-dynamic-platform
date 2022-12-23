@@ -37,8 +37,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.accessories = new Map();
 
-		this.options = {};
-
 		this.api = api;
 		this.config = config;
 
@@ -48,16 +46,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.devices = config['accessories'] || [];
 
-		if(config['options'] != null)
-		{
-			this.options = config['options'];
-		}
+		this.options = config['options'] || {};
 
 		this.port = this.options['port'];
-		this.debug = this.options['debug'] || false;
-		this.language = this.options['language'] || 'en';
 
-		this.logger = new logger(this);
+		this.logger = new logger(this, { language : this.options['language'] || 'en', levels : this.config['log'] });
 
 		if(config['baseDirectory'] != null)
 		{
