@@ -136,11 +136,11 @@ module.exports = class TypeManager
 		return null;
 	}
 
-	letterToType(letter)
+	letterToType(letters)
 	{
-		if(typeof letter == 'string' && this.data[letter.toUpperCase()] != null)
+		if(typeof letters == 'string' && this.data[letters[0].toUpperCase()] != null)
 		{
-			return this.data[letter.toUpperCase()].type;
+			return this.data[this.letters[0].toUpperCase()].type;
 		}
 
 		return null;
