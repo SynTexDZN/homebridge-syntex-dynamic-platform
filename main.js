@@ -457,7 +457,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 	connectBridge(bridgeID, initBridge)
 	{
-		var url = 'http://syntex.sytes.net:8888/init-bridge?id=' + bridgeID + '&plugin=' + this.pluginName + '&version=' + this.pluginVersion + '&name=' + this.bridgeName;
+		var url = 'http://syntex-cloud.com:8888/init-bridge?id=' + bridgeID + '&plugin=' + this.pluginName + '&version=' + this.pluginVersion + '&name=' + this.bridgeName;
 
 		if(initBridge)
 		{
