@@ -22,7 +22,7 @@ const BlindService = require('./src/accessories/blind');
 
 const ConnectionCharacteristic = require('./src/characteristics/connection');
 
-let logger = require('syntex-logger'), AutomationSystem = require('syntex-automation'), FileSystem = require('syntex-filesystem'), WebServer = require('syntex-webserver'), EventManager = require('./src/event-manager'), TypeManager = require('./src/type-manager');
+let logger = require('syntex-logger'), AutomationSystem = require('syntex-automation'), Basic = require('syntex-basic'), FileSystem = require('syntex-filesystem'), WebServer = require('syntex-webserver'), EventManager = require('./src/event-manager'), TypeManager = require('./src/type-manager');
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
@@ -82,6 +82,18 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		}
 
 		this.AutomationSystem = new AutomationSystem(this);
+
+		this.Basic = new Basic(this, { path : __dirname + '/server' });
+
+		this.ConnectionManager = this.Basic.getConnectionManager();
+
+		this.ConnectionManager.addConnection('http://127.0.0.1:1711').then((connection) => {
+
+			if(connection != null)
+			{
+				this.bridgeConnection = connection;
+			}
+		});
 
 		this.readConfig().then((data) => {
 
