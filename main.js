@@ -22,7 +22,7 @@ const BlindService = require('./src/accessories/blind');
 
 const ConnectionCharacteristic = require('./src/characteristics/connection');
 
-let logger = require('syntex-logger'), AutomationSystem = require('syntex-automation'), Basic = require('syntex-basic'), FileSystem = require('syntex-filesystem'), WebServer = require('syntex-webserver'), EventManager = require('./src/event-manager'), TypeManager = require('./src/type-manager');
+let logger = require('syntex-logger'), AutomationSystem = require('syntex-automation'), Basic = require('syntex-basic'), FileManager = require('syntex-filesystem'), WebServer = require('syntex-webserver'), EventManager = require('./src/event-manager'), TypeManager = require('./src/type-manager');
 
 let DynamicPlatform = class SynTexDynamicPlatform
 {
@@ -67,8 +67,12 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				this.logger.log('error', 'bridge', 'Bridge', '%directory_permission_error% [' + config['baseDirectory'] + ']', '%visit_github_for_support%: https://github.com/SynTexDZN/' + this.pluginID + '#troubleshooting', e);
 			}
 		}
+		else
+		{
+			this.logger.log('error', 'bridge', 'Bridge', '%no_base_path%!');
+		}
 		
-		this.files = new FileSystem(this, { initDirectories : ['activity', 'automation', 'log'] });
+		this.files = new FileManager(this, { initDirectories : ['activity', 'automation', 'log'] });
 
 		this.TypeManager = new TypeManager(this.logger);
 		this.EventManager = new EventManager(this);
