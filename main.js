@@ -87,7 +87,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.AutomationSystem = new AutomationSystem(this);
 
-		this.Basic = new Basic({ ...this, loggerSpecial : this.logger }, { path : __dirname });
+		this.Basic = new Basic({ ...this, loggerSpecial : this.logger });
 
 		this.ConnectionManager = this.Basic.getConnectionManager();
 
