@@ -18,6 +18,8 @@ module.exports = class DimmedBulbService extends LightBulbService
 			brightness : this.brightness
 		};
 
+		this.running = false;
+
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
 	
 		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
