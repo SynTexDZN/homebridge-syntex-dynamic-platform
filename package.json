@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"syntex-automation": "1.2.1-b8",
-		"syntex-basic": "1.0.0-b11",
+		"syntex-basic": "1.0.0-b12",
 		"syntex-filesystem": "1.0.3-b8",
 		"syntex-logger": "1.0.9-b2",
 		"syntex-webserver": "1.1.1-b4"
