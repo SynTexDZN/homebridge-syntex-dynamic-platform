@@ -1,4 +1,4 @@
-const axios = require('axios'), fs = require('fs'), path = require('path');
+const fs = require('fs'), path = require('path');
 
 const ContextManager = require('./src/context');
 const UniversalAccessory = require('./src/universal');
@@ -90,6 +90,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		this.Basic = new Basic({ ...this, loggerSpecial : this.logger });
 
 		this.ConnectionManager = this.Basic.getConnectionManager();
+		this.RequestManager = this.Basic.getRequestManager();
 
 		this.ConnectionManager.addConnection('http://127.0.0.1:1711').then((connection) => {
 
@@ -480,7 +481,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			url += '&init=true';
 		}
 
-		axios.get(url).then((data) => {
+		this.RequestManager.fetch(url).then((data) => {
 
 			if(data != null && data.data != null)
 			{
@@ -493,10 +494,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			{
 				setTimeout(() => this.connectBridge(bridgeID, initBridge), 30000);
 			}
-
-		}).catch(() => {
-
-			setTimeout(() => this.connectBridge(bridgeID, initBridge), 30000);
 		});
 	}
 
