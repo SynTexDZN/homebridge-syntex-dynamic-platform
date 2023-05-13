@@ -85,8 +85,6 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			this.addWebPages();
 		}
 
-		this.AutomationSystem = new AutomationSystem(this);
-
 		this.Basic = new Basic({ ...this, loggerSpecial : this.logger });
 
 		this.ConnectionManager = this.Basic.getConnectionManager();
@@ -99,6 +97,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				this.bridgeConnection = connection;
 			}
 		});
+
+		this.AutomationSystem = new AutomationSystem(this);
 
 		this.readConfig().then((data) => {
 
