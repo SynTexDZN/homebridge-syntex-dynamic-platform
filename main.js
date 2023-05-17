@@ -481,13 +481,13 @@ let DynamicPlatform = class SynTexDynamicPlatform
 			url += '&init=true';
 		}
 
-		this.RequestManager.fetch(url).then((data) => {
+		this.RequestManager.fetch(url).then((response) => {
 
-			if(data != null)
+			if(response.data != null)
 			{
-				if(data != bridgeID)
+				if(response.data != bridgeID)
 				{
-					setTimeout(() => this.setBridgeID(data), 10000);
+					setTimeout(() => this.setBridgeID(response.data), 10000);
 				}
 			}
 			else
