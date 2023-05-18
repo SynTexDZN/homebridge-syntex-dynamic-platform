@@ -13,7 +13,7 @@
 		"syntex-basic": "1.0.0-b16",
 		"syntex-filesystem": "1.0.3-b8",
 		"syntex-logger": "1.0.9-b2",
-		"syntex-webserver": "1.1.1-b4"
+		"syntex-webserver": "1.1.1-b14"
 	},
 	"keywords": [
 		"syntex",
