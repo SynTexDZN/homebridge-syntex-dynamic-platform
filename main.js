@@ -86,17 +86,8 @@ let DynamicPlatform = class SynTexDynamicPlatform
 
 		this.Basic = new Basic({ ...this, loggerSpecial : this.logger });
 
-		this.ConnectionManager = this.Basic.getConnectionManager();
 		this.EventManager = this.Basic.getEventManager();
 		this.RequestManager = this.Basic.getRequestManager();
-
-		this.ConnectionManager.addConnection('http://127.0.0.1:1711').then((connection) => {
-
-			if(connection != null)
-			{
-				this.bridgeConnection = connection;
-			}
-		});
 
 		this.AutomationSystem = new AutomationSystem(this);
 
