@@ -46,7 +46,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 					{
 						homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(c.Characteristic).updateValue(state[c.type]);
 						
-						super.setValue('value', state[c.type]);
+						super.setValue(c.type, state[c.type]);
 					}
 				}
 			}

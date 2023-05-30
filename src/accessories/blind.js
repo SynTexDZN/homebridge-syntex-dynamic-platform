@@ -32,7 +32,7 @@ module.exports = class BlindService extends BaseService
 					{
 						homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(c.Characteristic).updateValue(state[c.type]);
 						
-						super.setValue('value', state[c.type]);
+						super.setValue(c.type, state[c.type]);
 					}
 				}
 			}
