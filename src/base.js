@@ -148,11 +148,11 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				var stateText = JSON.stringify(state[key]), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]);
+				var stateText = JSON.stringify(state[key]), characteristics = this.homebridgeAccessory.context.data[this.letters];
 
-				if(characteristics.length > 1)
+				if(Object.keys(characteristics).length > 1)
 				{
-					stateText = 'value: ' + stateText;
+					stateText = 'value: ' + characteristics.value;
 				}
 
 				if(characteristics.hue != null)
@@ -208,11 +208,11 @@ module.exports = class BaseService
 
 				if(verbose)
 				{
-					var stateText = JSON.stringify(value), characteristics = Object.keys(this.homebridgeAccessory.context.data[this.letters]);
+					var stateText = JSON.stringify(value), characteristics = this.homebridgeAccessory.context.data[this.letters];
 
-					if(characteristics.length > 1)
+					if(Object.keys(characteristics).length > 1)
 					{
-						stateText = 'value: ' + stateText;
+						stateText = 'value: ' + characteristics.value;
 					}
 
 					if(characteristics.hue != null)
@@ -277,31 +277,31 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				var stateText = JSON.stringify(state.value), characteristics = Object.keys(state);
+				var stateText = JSON.stringify(state.value);
 
-				if(characteristics.length > 1)
+				if(Object.keys(state).length > 1)
 				{
-					stateText = 'value: ' + stateText;
+					stateText = 'value: ' + state.value;
 				}
 
-				if(characteristics.hue != null)
+				if(state.hue != null)
 				{
-					stateText += ', hue: ' + characteristics.hue;
+					stateText += ', hue: ' + state.hue;
 				}
 
-				if(characteristics.saturation != null)
+				if(state.saturation != null)
 				{
-					stateText += ', saturation: ' + characteristics.saturation;
+					stateText += ', saturation: ' + state.saturation;
 				}
 
-				if(characteristics.brightness != null)
+				if(state.brightness != null)
 				{
-					stateText += ', brightness: ' + characteristics.brightness;
+					stateText += ', brightness: ' + state.brightness;
 				}
 
-				if(characteristics.position != null)
+				if(state.position != null)
 				{
-					stateText += ', position: ' + characteristics.position;
+					stateText += ', position: ' + state.position;
 				}
 
 				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
