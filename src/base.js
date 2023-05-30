@@ -170,9 +170,9 @@ module.exports = class BaseService
 					stateText += ', brightness: ' + characteristics.brightness;
 				}
 
-				if(characteristics.position != null)
+				if(characteristics.mode != null)
 				{
-					stateText += ', position: ' + characteristics.position;
+					stateText += ', mode: ' + characteristics.mode;
 				}
 
 				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
@@ -230,9 +230,9 @@ module.exports = class BaseService
 						stateText += ', brightness: ' + characteristics.brightness;
 					}
 
-					if(characteristics.position != null)
+					if(characteristics.mode != null)
 					{
-						stateText += ', position: ' + characteristics.position;
+						stateText += ', mode: ' + characteristics.mode;
 					}
 
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + stateText + '] ( ' + this.id + ' )');
@@ -299,9 +299,9 @@ module.exports = class BaseService
 					stateText += ', brightness: ' + state.brightness;
 				}
 
-				if(state.position != null)
+				if(state.mode != null)
 				{
-					stateText += ', position: ' + state.position;
+					stateText += ', mode: ' + state.mode;
 				}
 
 				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
