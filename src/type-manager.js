@@ -111,6 +111,14 @@ module.exports = class TypeManager
 					value : { format : 'number', default : 0, min : 0, max : 100 },
 					mode : { format : 'number', default : 0, min : 0, max : 2 }
 				}
+			},
+			H : {
+				type : 'thermostat',
+				characteristics : {
+					value : { format : 'number', default : 0, min : -270, max : 100 },
+					target : { format : 'number', default : 4, min : 4, max : 36 },
+					mode : { format : 'number', default : 0, min : 0, max : 3 }
+				}
 			}
 		};
 	}

@@ -170,6 +170,11 @@ module.exports = class BaseService
 					stateText += ', brightness: ' + characteristics.brightness;
 				}
 
+				if(characteristics.target != null)
+				{
+					stateText += ', target: ' + characteristics.target;
+				}
+
 				if(characteristics.mode != null)
 				{
 					stateText += ', mode: ' + characteristics.mode;
@@ -230,6 +235,11 @@ module.exports = class BaseService
 						stateText += ', brightness: ' + characteristics.brightness;
 					}
 
+					if(characteristics.target != null)
+					{
+						stateText += ', target: ' + characteristics.target;
+					}
+					
 					if(characteristics.mode != null)
 					{
 						stateText += ', mode: ' + characteristics.mode;
@@ -297,6 +307,11 @@ module.exports = class BaseService
 				if(state.brightness != null)
 				{
 					stateText += ', brightness: ' + state.brightness;
+				}
+
+				if(state.target != null)
+				{
+					stateText += ', target: ' + state.target;
 				}
 
 				if(state.mode != null)
