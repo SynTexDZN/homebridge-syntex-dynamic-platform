@@ -175,6 +175,11 @@ module.exports = class BaseService
 					stateText += ', target: ' + characteristics.target;
 				}
 
+				if(characteristics.state != null)
+				{
+					stateText += ', state: ' + characteristics.state;
+				}
+
 				if(characteristics.mode != null)
 				{
 					stateText += ', mode: ' + characteristics.mode;
@@ -238,6 +243,11 @@ module.exports = class BaseService
 					if(characteristics.target != null)
 					{
 						stateText += ', target: ' + characteristics.target;
+					}
+
+					if(characteristics.state != null)
+					{
+						stateText += ', state: ' + characteristics.state;
 					}
 					
 					if(characteristics.mode != null)
@@ -312,6 +322,11 @@ module.exports = class BaseService
 				if(state.target != null)
 				{
 					stateText += ', target: ' + state.target;
+				}
+
+				if(state.state != null)
+				{
+					stateText += ', state: ' + state.state;
 				}
 
 				if(state.mode != null)
