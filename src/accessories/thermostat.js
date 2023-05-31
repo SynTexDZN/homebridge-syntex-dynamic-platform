@@ -7,20 +7,20 @@ module.exports = class ThermostatService extends BaseService
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.Thermostat, manager);
 		
 		this.value = super.getValue('value', true);
-        this.target = super.getValue('target');
-        this.mode = super.getValue('mode');
+		this.target = super.getValue('target');
+		this.mode = super.getValue('mode');
 
 		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).on('get', this.getState.bind(this));
-        homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetTemperature).on('get', this.getTargetTemperature.bind(this)).on('set', this.setTargetTemperature.bind(this));
-        homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetHeatingCoolingState).on('get', this.getTargetHeatingCoolingState.bind(this)).on('set', this.setTargetHeatingCoolingState.bind(this));
+		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetTemperature).on('get', this.getTargetTemperature.bind(this)).on('set', this.setTargetTemperature.bind(this));
+		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetHeatingCoolingState).on('get', this.getTargetHeatingCoolingState.bind(this)).on('set', this.setTargetHeatingCoolingState.bind(this));
 		
-        homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).setProps({ minValue : -270, maxValue : 100 });
-        homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetTemperature).setProps({ minValue : 4, maxValue : 36 });
-        homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetHeatingCoolingState).setProps({ validValues : [0, 1, 2, 3] });
+		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).setProps({ minValue : -270, maxValue : 100 });
+		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetTemperature).setProps({ minValue : 4, maxValue : 36 });
+		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetHeatingCoolingState).setProps({ validValues : [0, 1, 2, 3] });
 
 		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(this.value);
-        homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetTemperature).updateValue(this.target);
-        homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetHeatingCoolingState).updateValue(this.mode);
+		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetTemperature).updateValue(this.target);
+		homebridgeAccessory.getServiceById(this.Service.Thermostat, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetHeatingCoolingState).updateValue(this.mode);
 
 		this.changeHandler = (state) => {
 
@@ -29,7 +29,7 @@ module.exports = class ThermostatService extends BaseService
 				var v = [
 					{ type : 'value', Characteristic : this.Characteristic.CurrentTemperature },
 					{ type : 'target', Characteristic : this.Characteristic.TargetTemperature },
-                    { type : 'mode', Characteristic : this.Characteristic.TargetHeatingCoolingState }
+					{ type : 'mode', Characteristic : this.Characteristic.TargetHeatingCoolingState }
 				];
 
 				for(const c of v)
@@ -51,7 +51,7 @@ module.exports = class ThermostatService extends BaseService
 		};
 	}
 
-    getTargetTemperature(callback, verbose)
+	getTargetTemperature(callback, verbose)
 	{
 		callback(super.getValue('target', verbose));
 	}
@@ -63,12 +63,12 @@ module.exports = class ThermostatService extends BaseService
 		callback();
 	}
 
-    getTargetHeatingCoolingState(callback, verbose)
-    {
-        callback(super.getValue('mode', verbose));
-    }
+	getTargetHeatingCoolingState(callback, verbose)
+	{
+		callback(super.getValue('mode', verbose));
+	}
 
-    setTargetHeatingCoolingState(level, callback, verbose)
+	setTargetHeatingCoolingState(level, callback, verbose)
 	{
 		super.setValue('mode', level, verbose);		
 
