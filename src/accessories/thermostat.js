@@ -63,7 +63,7 @@ module.exports = class ThermostatService extends BaseService
 
 	setTargetTemperature(level, callback, verbose)
 	{
-		super.setValue('target', level, verbose);		
+		super.setValue('target', level, verbose);
 
 		callback();
 	}
