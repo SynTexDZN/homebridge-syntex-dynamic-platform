@@ -118,7 +118,8 @@ module.exports = class TypeManager
 					value : { format : 'number', default : 0, min : -270, max : 100 },
 					target : { format : 'number', default : 4, min : 4, max : 36 },
 					state : { format : 'number', default : 0, min : 0, max : 2 },
-					mode : { format : 'number', default : 3, min : 1, max : 3 }
+					mode : { format : 'number', default : 3, min : 1, max : 3 },
+					offset : { format : 'number', default : 0, min : -127, max : 128 }
 				}
 			}
 		};
