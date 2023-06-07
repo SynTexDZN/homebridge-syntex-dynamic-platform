@@ -49,7 +49,7 @@ module.exports = class DimmedBulbService extends LightBulbService
 		};
 	}
 
-	getBrightness(callback, verbose)
+	getBrightness(callback, verbose = false)
 	{
 		this.brightness = this.getValue('brightness', verbose);
 		
@@ -59,7 +59,7 @@ module.exports = class DimmedBulbService extends LightBulbService
 		}
 	}
 
-	setBrightness(brightness, callback, verbose)
+	setBrightness(brightness, callback, verbose = false)
 	{
 		this.brightness = brightness;
 

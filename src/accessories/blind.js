@@ -64,7 +64,7 @@ module.exports = class BlindService extends BaseService
 		};
 	}
 
-	getTargetPosition(callback, verbose)
+	getTargetPosition(callback, verbose = false)
 	{
 		this.target = this.getValue('target', verbose);
 		
@@ -74,7 +74,7 @@ module.exports = class BlindService extends BaseService
 		}
 	}
 
-	setTargetPosition(target, callback, verbose)
+	setTargetPosition(target, callback, verbose = false)
 	{
 		this.target = target;
 
@@ -86,7 +86,7 @@ module.exports = class BlindService extends BaseService
 		}
 	}
 
-	getPositionState(callback, verbose)
+	getPositionState(callback, verbose = false)
 	{
 		this.state = this.getValue('state', verbose);
 		
@@ -96,7 +96,7 @@ module.exports = class BlindService extends BaseService
 		}
 	}
 
-	setPositionState(state, callback, verbose)
+	setPositionState(state, callback, verbose = false)
 	{
 		this.state = state;
 

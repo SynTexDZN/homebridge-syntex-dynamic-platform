@@ -60,7 +60,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		};
 	}
 
-	getHue(callback, verbose)
+	getHue(callback, verbose = false)
 	{
 		this.hue = this.getValue('hue', verbose);
 		
@@ -70,7 +70,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		}
 	}
 
-	setHue(hue, callback, verbose)
+	setHue(hue, callback, verbose = false)
 	{
 		this.hue = hue;
 
@@ -82,7 +82,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		}
 	}
 
-	getSaturation(callback, verbose)
+	getSaturation(callback, verbose = false)
 	{
 		this.saturation = this.getValue('saturation', verbose);
 		
@@ -92,7 +92,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		}
 	}
 
-	setSaturation(saturation, callback, verbose)
+	setSaturation(saturation, callback, verbose = false)
 	{
 		this.saturation = saturation;
 
