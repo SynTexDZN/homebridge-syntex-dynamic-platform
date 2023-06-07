@@ -135,76 +135,85 @@ let DynamicPlatform = class SynTexDynamicPlatform
 					{
 						var service = this.getService({ id : urlParams.id, type : urlParams.type, counter : urlParams.counter });
 
-						if(urlParams.remove != null)
+						if(service != null)
 						{
-							if(urlParams.type != null)
+							if(urlParams.remove != null)
 							{
-								response.end(urlParams.remove == 'CONFIRM' && await accessory.removeService(accessory, service) ? 'Success' : 'Error');
+								if(urlParams.type != null)
+								{
+									response.end(urlParams.remove == 'CONFIRM' && await accessory.removeService(accessory, service) ? 'Success' : 'Error');
+								}
+								else
+								{
+									response.end(urlParams.remove == 'CONFIRM' && await this.removeAccessory(accessory.homebridgeAccessory || accessory, urlParams.id) ? 'Success' : 'Error');
+								}
 							}
 							else
 							{
-								response.end(urlParams.remove == 'CONFIRM' && await this.removeAccessory(accessory.homebridgeAccessory || accessory, urlParams.id) ? 'Success' : 'Error');
+								if(service != null)
+								{
+									if(urlParams.value != null)
+									{
+										let state = { value : urlParams.value };
+				
+										if(urlParams.hue != null)
+										{
+											state.hue = urlParams.hue;
+										}
+										
+										if(urlParams.saturation != null)
+										{
+											state.saturation = urlParams.saturation;
+										}
+				
+										if(urlParams.brightness != null)
+										{
+											state.brightness = urlParams.brightness;
+										}
+				
+										if(urlParams.event != null)
+										{
+											state.event = urlParams.event;
+										}
+
+										state = this.updateAccessoryService(service, state);
+				
+										response.end(state != null ? 'Success' : 'Error');
+									}
+									else
+									{
+										let state = null;
+										
+										if(accessory.homebridgeAccessory != null
+										&& accessory.homebridgeAccessory.context != null
+										&& accessory.homebridgeAccessory.context.data != null)
+										{
+											if(urlParams.type == null && urlParams.counter == null)
+											{
+												state = accessory.homebridgeAccessory.context.data;
+											}
+											else if(service != null && service.letters != null)
+											{
+												state = accessory.homebridgeAccessory.context.data[service.letters];
+											}
+										}
+				
+										response.end(state != null ? JSON.stringify(state) : 'Error');
+									}
+								}
+								else
+								{
+									response.end('Error');
+
+									this.logger.log('error', urlParams.id, (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0'), '%accessory_not_found[3]% ( ' + (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0') + ' )');
+								}
 							}
 						}
 						else
 						{
-							if(service != null)
-							{
-								if(urlParams.value != null)
-								{
-									let state = { value : urlParams.value };
-			
-									if(urlParams.hue != null)
-									{
-										state.hue = urlParams.hue;
-									}
-									
-									if(urlParams.saturation != null)
-									{
-										state.saturation = urlParams.saturation;
-									}
-			
-									if(urlParams.brightness != null)
-									{
-										state.brightness = urlParams.brightness;
-									}
-			
-									if(urlParams.event != null)
-									{
-										state.event = urlParams.event;
-									}
+							response.end('Error');
 
-									state = this.updateAccessoryService(service, state);
-			
-									response.end(state != null ? 'Success' : 'Error');
-								}
-								else
-								{
-									let state = null;
-									
-									if(accessory.homebridgeAccessory != null
-									&& accessory.homebridgeAccessory.context != null
-									&& accessory.homebridgeAccessory.context.data != null)
-									{
-										if(urlParams.type == null && urlParams.counter == null)
-										{
-											state = accessory.homebridgeAccessory.context.data;
-										}
-										else if(service != null && service.letters != null)
-										{
-											state = accessory.homebridgeAccessory.context.data[service.letters];
-										}
-									}
-			
-									response.end(state != null ? JSON.stringify(state) : 'Error');
-								}
-							}
-							else
-							{
-								response.end('Error');
-
-								this.logger.log('error', urlParams.id, (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0'), '%accessory_not_found[3]% ( ' + (urlParams.type != null ? (this.TypeManager.typeToLetter(urlParams.type) || urlParams.type) : 'X') + (urlParams.counter || '0') + ' )');
-							}
+							this.logger.log('error', urlParams.id, '', '%accessory_not_found[2]%! ( ' + urlParams.id + ' )');
 						}
 					}
 					else
