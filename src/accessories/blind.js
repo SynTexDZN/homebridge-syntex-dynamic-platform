@@ -7,6 +7,7 @@ module.exports = class BlindService extends BaseService
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.WindowCovering, manager);
 
 		this.value = super.getValue('value');
+		this.target = super.getValue('target', false);
 		this.state = super.getValue('state', false);
 
 		this.service.getCharacteristic(this.Characteristic.CurrentPosition).on('get', this.getState.bind(this));
@@ -14,7 +15,7 @@ module.exports = class BlindService extends BaseService
 		this.service.getCharacteristic(this.Characteristic.PositionState).on('get', this.getPositionState.bind(this));
 	
 		this.service.getCharacteristic(this.Characteristic.CurrentPosition).updateValue(this.value);
-		this.service.getCharacteristic(this.Characteristic.TargetPosition).updateValue(this.value);
+		this.service.getCharacteristic(this.Characteristic.TargetPosition).updateValue(this.target);
 		this.service.getCharacteristic(this.Characteristic.PositionState).updateValue(this.state);
 
 		this.changeHandler = (state) => {
@@ -30,9 +31,17 @@ module.exports = class BlindService extends BaseService
 
 				this.setState(state.value, 
 					() => this.service.getCharacteristic(this.Characteristic.CurrentPosition).updateValue(state.value), false);
+			}
 
-				this.setTargetPosition(state.value, 
-					() => this.service.getCharacteristic(this.Characteristic.TargetPosition).updateValue(state.value), false);
+			if(state.target != null)
+			{
+				if(!super.hasState('target') || this.target != state.target)
+				{
+					changed = true;
+				}
+
+				this.setTargetPosition(state.target, 
+					() => this.service.getCharacteristic(this.Characteristic.TargetPosition).updateValue(state.target), false);
 			}
 
 			if(state.state != null)
@@ -59,19 +68,19 @@ module.exports = class BlindService extends BaseService
 
 	getTargetPosition(callback, verbose)
 	{
-		this.value = this.getValue('value', verbose);
+		this.target = this.getValue('target', verbose);
 		
 		if(callback != null)
 		{
-			callback(null, this.value);
+			callback(null, this.target);
 		}
 	}
 
-	setTargetPosition(value, callback, verbose)
+	setTargetPosition(target, callback, verbose)
 	{
-		this.value = value;
+		this.target = target;
 
-		this.setValue('value', value, verbose);		
+		this.setValue('target', target, verbose);		
 
 		if(callback != null)
 		{
