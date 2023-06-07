@@ -11,18 +11,18 @@ module.exports = class DimmedBulbService extends LightBulbService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
-		this.brightness = super.getValue('brightness');
+		this.running = false;
+
+		this.brightness = super.getValue('brightness', false);
 
 		this.tempState = {
 			value : this.value,
 			brightness : this.brightness
 		};
 
-		this.running = false;
-
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
+		this.service.getCharacteristic(this.Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
+		this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
 
 		this.changeHandler = (state) => {
 
@@ -54,14 +54,24 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 	getBrightness(callback, verbose)
 	{
-		callback(super.getValue('brightness', verbose));
+		this.brightness = this.getValue('brightness', verbose);
+		
+		if(callback != null)
+		{
+			callback(null, this.brightness);
+		}
 	}
 
-	setBrightness(level, callback, verbose)
+	setBrightness(brightness, callback, verbose)
 	{
-		super.setValue('brightness', level, verbose);		
+		this.brightness = brightness;
 
-		callback();
+		this.setValue('brightness', brightness, verbose);		
+
+		if(callback != null)
+		{
+			callback();
+		}
 	}
 
 	setToCurrentBrightness(state, powerCallback, brightnessCallback, unchangedCallback)

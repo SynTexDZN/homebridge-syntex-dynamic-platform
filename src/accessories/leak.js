@@ -6,17 +6,21 @@ module.exports = class LeakService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.LeakSensor, manager);
 		
-		this.value = super.getValue('value', true);
+		this.value = super.getValue('value');
 
-		homebridgeAccessory.getServiceById(this.Service.LeakSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.LeakDetected).on('get', this.getState.bind(this));
+		this.service.getCharacteristic(this.Characteristic.LeakDetected).on('get', this.getState.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.LeakSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.LeakDetected).updateValue(this.value);
+		this.service.getCharacteristic(this.Characteristic.LeakDetected).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 
-			homebridgeAccessory.getServiceById(this.Service.LeakSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.LeakDetected).updateValue(state);
+			if(state.value != null)
+			{
+				super.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.LeakDetected).updateValue(state.value));
+			}
 
-			super.setValue('value', state);
+			this.AutomationSystem.LogikEngine.runAutomation(this, state);
 		};
 	}
 }

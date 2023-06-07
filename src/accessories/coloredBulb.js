@@ -11,8 +11,10 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
-		this.hue = super.getValue('hue');
-		this.saturation = super.getValue('saturation');
+		this.running = false;
+
+		this.hue = super.getValue('hue', false);
+		this.saturation = super.getValue('saturation', false);
 
 		this.tempState = {
 			value : this.value,
@@ -21,13 +23,11 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 			brightness : this.brightness
 		};
 
-		this.running = false;
-		
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
+		this.service.getCharacteristic(this.Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
+		this.service.getCharacteristic(this.Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
-		homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
+		this.service.getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
+		this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
 
 		this.changeHandler = (state) => {
 			
@@ -61,26 +61,46 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	getHue(callback, verbose)
 	{
-		callback(super.getValue('hue', verbose));
+		this.hue = this.getValue('hue', verbose);
+		
+		if(callback != null)
+		{
+			callback(null, this.hue);
+		}
 	}
 
-	setHue(level, callback, verbose)
+	setHue(hue, callback, verbose)
 	{
-		super.setValue('hue', level, verbose);		
+		this.hue = hue;
 
-		callback();
+		this.setValue('hue', hue, verbose);		
+
+		if(callback != null)
+		{
+			callback();
+		}
 	}
 
 	getSaturation(callback, verbose)
 	{
-		callback(super.getValue('saturation', verbose));
+		this.saturation = this.getValue('saturation', verbose);
+		
+		if(callback != null)
+		{
+			callback(null, this.saturation);
+		}
 	}
 
-	setSaturation(level, callback, verbose)
+	setSaturation(saturation, callback, verbose)
 	{
-		super.setValue('saturation', level, verbose);		
+		this.saturation = saturation;
 
-		callback();
+		this.setValue('saturation', saturation, verbose);		
+
+		if(callback != null)
+		{
+			callback();
+		}
 	}
 
 	setToCurrentColor(state, powerCallback, colorCallback, unchangedCallback)

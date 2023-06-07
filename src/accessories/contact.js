@@ -6,17 +6,21 @@ module.exports = class ContactService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.ContactSensor, manager);
 		
-		this.value = super.getValue('value', true);
+		this.value = super.getValue('value');
 
-		homebridgeAccessory.getServiceById(this.Service.ContactSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.ContactSensorState).on('get', this.getState.bind(this));
+		this.service.getCharacteristic(this.Characteristic.ContactSensorState).on('get', this.getState.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.ContactSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.ContactSensorState).updateValue(this.value);
+		this.service.getCharacteristic(this.Characteristic.ContactSensorState).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 
-			homebridgeAccessory.getServiceById(this.Service.ContactSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.ContactSensorState).updateValue(state);
+			if(state.value != null)
+			{
+				super.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.ContactSensorState).updateValue(state.value));
+			}
 
-			super.setValue('value', state);
+			this.AutomationSystem.LogikEngine.runAutomation(this, state);
 		};
 	}
 }

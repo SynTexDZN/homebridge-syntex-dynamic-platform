@@ -6,16 +6,16 @@ module.exports = class BlindService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.WindowCovering, manager);
 
-		this.value = super.getValue('value', true);
-		this.state = super.getValue('state');
+		this.value = super.getValue('value');
+		this.state = super.getValue('state', false);
 
-		homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetPosition).on('get', this.getTargetPosition.bind(this)).on('set', this.setTargetPosition.bind(this));
-		homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentPosition).on('get', this.getCurrentPosition.bind(this));
-		homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(this.Characteristic.PositionState).on('get', this.getPositionState.bind(this));
+		this.service.getCharacteristic(this.Characteristic.CurrentPosition).on('get', this.getState.bind(this));
+		this.service.getCharacteristic(this.Characteristic.TargetPosition).on('get', this.getTargetPosition.bind(this)).on('set', this.setTargetPosition.bind(this));
+		this.service.getCharacteristic(this.Characteristic.PositionState).on('get', this.getPositionState.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetPosition).updateValue(this.value);
-		homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentPosition).updateValue(this.value);
-		homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(this.Characteristic.PositionState).updateValue(this.state);
+		this.service.getCharacteristic(this.Characteristic.CurrentPosition).updateValue(this.value);
+		this.service.getCharacteristic(this.Characteristic.TargetPosition).updateValue(this.value);
+		this.service.getCharacteristic(this.Characteristic.PositionState).updateValue(this.state);
 
 		this.changeHandler = (state) => {
 
@@ -51,27 +51,37 @@ module.exports = class BlindService extends BaseService
 		callback(super.getValue('value', verbose));
 	}
 
-	setTargetPosition(level, callback, verbose)
+	setTargetPosition(value, callback, verbose)
 	{
-		super.setValue('value', level, verbose);		
+		this.value = value;
 
-		callback();
-	}
+		this.setValue('value', value, verbose);		
 
-	getCurrentPosition(callback, verbose)
-	{
-		callback(super.getValue('value', verbose));
+		if(callback != null)
+		{
+			callback();
+		}
 	}
 
 	getPositionState(callback, verbose)
 	{
-		callback(super.getValue('state', verbose));
+		this.state = this.getValue('state', verbose);
+		
+		if(callback != null)
+		{
+			callback(null, this.state);
+		}
 	}
 
-	setPositionState(level, callback, verbose)
+	setPositionState(state, callback, verbose)
 	{
-		super.setValue('state', level, verbose);		
+		this.state = state;
 
-		callback();
+		this.setValue('state', state, verbose);		
+
+		if(callback != null)
+		{
+			callback();
+		}
 	}
 }

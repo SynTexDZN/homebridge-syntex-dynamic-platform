@@ -129,7 +129,7 @@ module.exports = class BaseService
 		return false;
 	}
 
-	getValue(key, verbose)
+	getValue(key, verbose = true)
 	{
 		var state = {}, characteristic = this.TypeManager.getCharacteristic(key, { letters : this.letters });
 
@@ -198,7 +198,7 @@ module.exports = class BaseService
 		return state[key];
 	}
 
-	setValue(key, value, verbose)
+	setValue(key, value, verbose = true)
 	{
 		if(key != null && value != null && !isNaN(value))
 		{

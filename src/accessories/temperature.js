@@ -6,18 +6,22 @@ module.exports = class TemperatureService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.TemperatureSensor, manager);
 		
-		this.value = super.getValue('value', true);
+		this.value = super.getValue('value');
 
-		homebridgeAccessory.getServiceById(this.Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).on('get', this.getState.bind(this));
-		homebridgeAccessory.getServiceById(this.Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).setProps({ minValue : -100, maxValue : 140 });
+		this.service.getCharacteristic(this.Characteristic.CurrentTemperature).on('get', this.getState.bind(this));
+		this.service.getCharacteristic(this.Characteristic.CurrentTemperature).setProps({ minValue : -100, maxValue : 140 });
 		
-		homebridgeAccessory.getServiceById(this.Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(this.value);
+		this.service.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 
-			homebridgeAccessory.getServiceById(this.Service.TemperatureSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(state);
+			if(state.value != null)
+			{
+				super.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(state.value));
+			}
 
-			super.setValue('value', state);
+			this.AutomationSystem.LogikEngine.runAutomation(this, state);
 		};
 	}
 }

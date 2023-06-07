@@ -6,17 +6,21 @@ module.exports = class SmokeService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.SmokeSensor, manager);
 		
-		this.value = super.getValue('value', true);
+		this.value = super.getValue('value');
 
-		homebridgeAccessory.getServiceById(this.Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.SmokeDetected).on('get', this.getState.bind(this));
+		this.service.getCharacteristic(this.Characteristic.SmokeDetected).on('get', this.getState.bind(this));
 	
-		homebridgeAccessory.getServiceById(this.Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.SmokeDetected).updateValue(this.value);
+		this.service.getCharacteristic(this.Characteristic.SmokeDetected).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 
-			homebridgeAccessory.getServiceById(this.Service.SmokeSensor, serviceConfig.subtype).getCharacteristic(this.Characteristic.SmokeDetected).updateValue(state);
+			if(state.value != null)
+			{
+				super.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.SmokeDetected).updateValue(state.value));
+			}
 
-			super.setValue('value', state);
+			this.AutomationSystem.LogikEngine.runAutomation(this, state);
 		};
 	}
 }
