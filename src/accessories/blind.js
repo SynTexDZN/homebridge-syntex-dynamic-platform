@@ -59,7 +59,12 @@ module.exports = class BlindService extends BaseService
 
 	getTargetPosition(callback, verbose)
 	{
-		callback(super.getValue('value', verbose));
+		this.value = this.getValue('value', verbose);
+		
+		if(callback != null)
+		{
+			callback(null, this.value);
+		}
 	}
 
 	setTargetPosition(value, callback, verbose)
