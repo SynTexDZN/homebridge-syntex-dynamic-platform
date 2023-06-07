@@ -45,7 +45,7 @@ module.exports = class DimmedBulbService extends LightBulbService
 				resolve();
 			});
 
-			this.AutomationSystem.LogikEngine.runAutomation(this, state);
+			this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, brightness : this.brightness });
 		};
 	}
 

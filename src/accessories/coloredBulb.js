@@ -56,7 +56,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 				resolve();
 			});
 
-			this.AutomationSystem.LogikEngine.runAutomation(this, state);
+			this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
 		};
 	}
 
