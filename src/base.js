@@ -148,9 +148,7 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				var stateText = this.getStateText(this.letters);
-
-				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
+				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
 			}
 		}
 		else
@@ -183,9 +181,7 @@ module.exports = class BaseService
 
 				if(verbose)
 				{
-					var stateText = this.getStateText(this.letters);
-
-					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + stateText + '] ( ' + this.id + ' )');
+					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
 				}
 
 				this.ContextManager.updateContext(this.id, this.letters, this.getValues());
@@ -227,9 +223,7 @@ module.exports = class BaseService
 
 			if(verbose)
 			{
-				var stateText = this.getStateText(this.letters);
-
-				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
+				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
 			}
 		}
 		else
@@ -323,9 +317,9 @@ module.exports = class BaseService
 		return changed;
 	}
 
-	getStateText(letters)
+	getStateText()
 	{
-		var characteristics = this.TypeManager.getCharacteristics({ letters }), array = [];
+		var characteristics = this.TypeManager.getCharacteristics({ letters : this.letters }), array = [];
 
 		for(const type in characteristics)
 		{
@@ -334,10 +328,10 @@ module.exports = class BaseService
 			if(this.homebridgeAccessory != null
 			&& this.homebridgeAccessory.context != null
 			&& this.homebridgeAccessory.context.data != null
-			&& this.homebridgeAccessory.context.data[letters] != null
-			&& this.homebridgeAccessory.context.data[letters][type] != null)
+			&& this.homebridgeAccessory.context.data[this.letters] != null
+			&& this.homebridgeAccessory.context.data[this.letters][type] != null)
 			{
-				value = this.homebridgeAccessory.context.data[letters][type];
+				value = this.homebridgeAccessory.context.data[this.letters][type];
 			}
 
 			if(Object.keys(characteristics).length > 1)

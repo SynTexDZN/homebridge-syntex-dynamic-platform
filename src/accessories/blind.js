@@ -57,9 +57,7 @@ module.exports = class BlindService extends BaseService
 
 			if(changed)
 			{
-				var stateText = this.getStateText(this.letters);
-
-				this.logger.log('update', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
+				this.logger.log('update', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
 			}
 
 			this.AutomationSystem.LogikEngine.runAutomation(this, state);
