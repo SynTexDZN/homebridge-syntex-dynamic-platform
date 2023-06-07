@@ -240,16 +240,26 @@ module.exports = class BaseService
 		return state;
 	}
 
-	getState(callback, verbose)
+	getState(callback, verbose = true)
 	{
-		callback(this.getValue('value', verbose));
+		this.value = this.getValue('value', verbose);
+		
+		if(callback != null)
+		{
+			callback(null, this.value);
+		}
 	}
 
-	setState(level, callback, verbose)
+	setState(value, callback, verbose = true)
 	{
-		this.setValue('value', level, verbose);		
+		this.value = value;
 
-		callback();
+		this.setValue('value', value, verbose);		
+
+		if(callback != null)
+		{
+			callback();
+		}
 	}
 
 	getConnectionState(callback)
