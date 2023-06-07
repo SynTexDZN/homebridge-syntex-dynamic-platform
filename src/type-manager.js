@@ -170,9 +170,31 @@ module.exports = class TypeManager
 			letter = this.typeToLetter(options.type);
 		}
 
-		if(letter != null && type != null && this.data[letter] != null && this.data[letter].characteristics[type] != null)
+		if(letter != null && type != null && this.data[letter] != null && this.data[letter].characteristics != null && this.data[letter].characteristics[type] != null)
 		{
 			return this.data[letter].characteristics[type];
+		}
+
+		return null;
+	}
+
+	getCharacteristics(options)
+	{
+		var letter = null;
+		
+		if(options.letters != null)
+		{
+			letter = options.letters[0].toUpperCase();
+		}
+
+		if(options.type != null)
+		{
+			letter = this.typeToLetter(options.type);
+		}
+
+		if(letter != null && this.data[letter] != null && this.data[letter].characteristics != null)
+		{
+			return this.data[letter].characteristics;
 		}
 
 		return null;
