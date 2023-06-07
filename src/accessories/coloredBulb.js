@@ -31,31 +31,32 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 		this.changeHandler = (state) => {
 			
-			if(state instanceof Object)
-			{
-				var v = [
-					{ type : 'value', Characteristic : this.Characteristic.On },
-					{ type : 'hue', Characteristic : this.Characteristic.Hue },
-					{ type : 'saturation', Characteristic : this.Characteristic.Saturation },
-					{ type : 'brightness', Characteristic : this.Characteristic.Brightness }
-				];
+			this.setToCurrentColor(state, (resolve) => {
 
-				for(const c of v)
-				{
-					if(state[c.type] != null)
-					{
-						homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(c.Characteristic).updateValue(state[c.type]);
-						
-						super.setValue(c.type, state[c.type]);
-					}
-				}
-			}
-			else
-			{
-				homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.On).updateValue(state);
-					
-				super.setValue('value', state);
-			}
+				this.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
+
+				resolve();
+	
+			}, (resolve) => {
+	
+				this.setHue(state.hue,
+					() => this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue), false);
+
+				this.setSaturation(state.saturation,
+					() => this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation), false);
+
+				this.setBrightness(state.brightness,
+					() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness));
+
+				resolve();
+	
+			}, (resolve) => {
+	
+				resolve();
+			});
+
+			this.AutomationSystem.LogikEngine.runAutomation(this, state);
 		};
 	}
 

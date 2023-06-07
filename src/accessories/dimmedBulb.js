@@ -26,29 +26,26 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 		this.changeHandler = (state) => {
 
-			if(state instanceof Object)
-			{
-				var v = [
-					{ type : 'value', Characteristic : this.Characteristic.On },
-					{ type : 'brightness', Characteristic : this.Characteristic.Brightness }
-				];
+			this.setToCurrentBrightness(state, (resolve) => {
 
-				for(const c of v)
-				{
-					if(state[c.type] != null)
-					{
-						homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(c.Characteristic).updateValue(state[c.type]);
-						
-						super.setValue(c.type, state[c.type]);
-					}
-				}
-			}
-			else
-			{
-				homebridgeAccessory.getServiceById(this.Service.Lightbulb, serviceConfig.subtype).getCharacteristic(this.Characteristic.On).updateValue(state);
-					
-				super.setValue('value', state);
-			}
+				this.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
+
+				resolve();
+	
+			}, (resolve) => {
+	
+				this.setBrightness(state.brightness,
+					() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness));
+
+				resolve();
+	
+			}, (resolve) => {
+	
+				resolve();
+			});
+
+			this.AutomationSystem.LogikEngine.runAutomation(this, state);
 		};
 	}
 

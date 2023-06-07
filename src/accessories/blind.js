@@ -19,30 +19,41 @@ module.exports = class BlindService extends BaseService
 
 		this.changeHandler = (state) => {
 
-			if(state instanceof Object)
-			{
-				var v = [
-					{ type : 'value', Characteristic : this.Characteristic.TargetPosition },
-					{ type : 'value', Characteristic : this.Characteristic.CurrentPosition }
-				];
+			var changed = false;
 
-				for(const c of v)
-				{
-					if(state[c.type] != null)
-					{
-						homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(c.Characteristic).updateValue(state[c.type]);
-						
-						super.setValue(c.type, state[c.type]);
-					}
-				}
-			}
-			else
+			if(state.value != null)
 			{
-				homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(this.Characteristic.TargetPosition).updateValue(state);
-				homebridgeAccessory.getServiceById(this.Service.WindowCovering, serviceConfig.subtype).getCharacteristic(this.Characteristic.CurrentPosition).updateValue(state);
-					
-				super.setValue('value', state);
+				if(!super.hasState('value') || this.value != state.value)
+				{
+					changed = true;
+				}
+
+				this.setState(state.value, 
+					() => this.service.getCharacteristic(this.Characteristic.CurrentPosition).updateValue(state.value), false);
+
+				this.setTargetPosition(state.value, 
+					() => this.service.getCharacteristic(this.Characteristic.TargetPosition).updateValue(state.value), false);
 			}
+
+			if(state.state != null)
+			{
+				if(!super.hasState('state') || this.state != state.state)
+				{
+					changed = true;
+				}
+
+				this.setPositionState(state.state, 
+					() => this.service.getCharacteristic(this.Characteristic.PositionState).updateValue(state.state), false);
+			}
+
+			if(changed)
+			{
+				var stateText = this.getStateText(this.letters);
+
+				this.logger.log('update', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + stateText + '] ( ' + this.id + ' )');
+			}
+
+			this.AutomationSystem.LogikEngine.runAutomation(this, state);
 		};
 	}
 
