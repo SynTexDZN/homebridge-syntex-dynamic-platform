@@ -109,6 +109,7 @@ module.exports = class TypeManager
 				type : 'blind',
 				characteristics : {
 					value : { format : 'number', default : 0, min : 0, max : 100 },
+					target : { format : 'number', default : 0, min : 0, max : 100 },
 					state : { format : 'number', default : 0, min : 0, max : 2 }
 				}
 			},
