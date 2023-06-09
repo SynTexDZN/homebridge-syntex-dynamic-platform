@@ -110,7 +110,7 @@ module.exports = class TypeManager
 				characteristics : {
 					value : { format : 'number', default : 0, min : 0, max : 100 },
 					target : { format : 'number', default : 0, min : 0, max : 100 },
-					state : { format : 'number', default : 0, min : 0, max : 2 }
+					state : { format : 'number', default : 2, min : 0, max : 2 }
 				}
 			},
 			H : {
