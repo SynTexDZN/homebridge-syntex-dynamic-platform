@@ -16,7 +16,7 @@ module.exports = class OccupancyService extends BaseService
 
 			if(state.value != null)
 			{
-				super.setState(state.value,
+				this.setState(state.value,
 					() => this.service.getCharacteristic(this.Characteristic.OccupancyDetected).updateValue(state.value));
 			}
 

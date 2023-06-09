@@ -16,7 +16,7 @@ module.exports = class SwitchService extends BaseService
 
 			if(state.value != null)
 			{
-				super.setState(state.value,
+				this.setState(state.value,
 					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
 			}
 

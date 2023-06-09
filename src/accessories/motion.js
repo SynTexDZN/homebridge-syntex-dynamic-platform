@@ -16,7 +16,7 @@ module.exports = class MotionService extends BaseService
 
 			if(state.value != null)
 			{
-				super.setState(state.value,
+				this.setState(state.value,
 					() => this.service.getCharacteristic(this.Characteristic.MotionDetected).updateValue(state.value));
 			}
 
