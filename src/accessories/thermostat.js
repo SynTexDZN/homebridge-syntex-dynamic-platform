@@ -148,4 +148,36 @@ module.exports = class ThermostatService extends BaseService
 			callback();
 		}
 	}
+
+	setToCurrentState(state, targetCallback, modeCallback, unchangedCallback)
+	{
+		if(state.target != null && (!super.hasState('target') || this.target != state.target))
+		{
+			this.changedTarget = true;
+		}
+
+		if(state.mode != null && (!super.hasState('mode') || this.mode != state.mode))
+		{
+			this.changedMode = true;
+		}
+
+		if(this.changedTarget)
+		{
+			targetCallback(() => {
+
+				this.changedTarget = false;
+			});
+		}
+		else if(this.changedMode)
+		{
+			modeCallback(() => {
+
+				this.changedMode = false;
+			});
+		}
+		else
+		{
+			unchangedCallback(() => {});
+		}
+	}
 }
