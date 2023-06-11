@@ -6,10 +6,19 @@ module.exports = class ThermostatService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.Thermostat, manager);
 		
+		this.running = false;
+
 		this.value = super.getValue('value');
 		this.target = super.getValue('target', false);
 		this.state = super.getValue('state', false);
 		this.mode = super.getValue('mode', false);
+
+		this.tempState = {
+			value : this.value,
+			target : this.target,
+			state : this.state,
+			mode : this.mode
+		};
 
 		this.service.getCharacteristic(this.Characteristic.CurrentTemperature).on('get', this.getState.bind(this));
 		this.service.getCharacteristic(this.Characteristic.TargetTemperature).on('get', this.getTargetTemperature.bind(this)).on('set', this.setTargetTemperature.bind(this));
@@ -151,29 +160,76 @@ module.exports = class ThermostatService extends BaseService
 
 	setToCurrentState(state, targetCallback, modeCallback, unchangedCallback)
 	{
-		if(state.target != null && (!super.hasState('target') || this.target != state.target))
+		if(state.value != null && (!super.hasState('value') || this.tempState.value != state.value))
 		{
+			this.tempState.value = state.value;
+
+			this.changedValue = true;
+		}
+
+		if(state.target != null && (!super.hasState('target') || this.tempState.target != state.target))
+		{
+			this.tempState.target = state.target;
+
 			this.changedTarget = true;
 		}
 
-		if(state.mode != null && (!super.hasState('mode') || this.mode != state.mode))
+		if(state.state != null && (!super.hasState('state') || this.tempState.state != state.state))
 		{
+			this.tempState.state = state.state;
+
+			this.changedState = true;
+		}
+
+		if(state.mode != null && (!super.hasState('mode') || this.tempState.mode != state.mode))
+		{
+			this.tempState.mode = state.mode;
+
 			this.changedMode = true;
 		}
 
-		if(this.changedTarget)
+		if(!this.running)
 		{
-			targetCallback(() => {
+			this.running = true;
 
-				this.changedTarget = false;
-			});
-		}
-		else if(this.changedMode)
-		{
-			modeCallback(() => {
+			setTimeout(() => {
 
-				this.changedMode = false;
-			});
+				if(this.changedTarget)
+				{
+					targetCallback(() => {
+
+						this.changedTarget = false;
+
+						this.changedValue = false;
+						this.changedState = false;
+
+						this.running = false;
+					});
+				}
+				else if(this.changedMode)
+				{
+					modeCallback(() => {
+
+						this.changedMode = false;
+
+						this.changedValue = false;
+						this.changedState = false;
+
+						this.running = false;
+					});
+				}
+				else
+				{
+					unchangedCallback(() => {
+
+						this.changedValue = false;
+						this.changedState = false;
+
+						this.running = false;
+					});
+				}
+
+			}, 10);
 		}
 		else
 		{
