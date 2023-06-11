@@ -72,7 +72,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	setHue(hue, callback, verbose = false)
 	{
-		this.hue = hue;
+		this.hue = this.tempState.hue = hue;
 
 		this.setValue('hue', hue, verbose);		
 
@@ -94,7 +94,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	setSaturation(saturation, callback, verbose = false)
 	{
-		this.saturation = saturation;
+		this.saturation = this.tempState.saturation = saturation;
 
 		this.setValue('saturation', saturation, verbose);		
 

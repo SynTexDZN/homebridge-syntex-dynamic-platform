@@ -92,6 +92,13 @@ module.exports = class ThermostatService extends BaseService
 		};
 	}
 
+	setState(value, callback, verbose)
+	{
+		this.tempState.value = value;
+
+		super.setState(value, callback, verbose);
+	}
+
 	getTargetTemperature(callback, verbose = false)
 	{
 		this.target = this.getValue('target', verbose);
@@ -104,7 +111,7 @@ module.exports = class ThermostatService extends BaseService
 
 	setTargetTemperature(target, callback, verbose = false)
 	{
-		this.target = target;
+		this.target = this.tempState.target = target;
 
 		this.setValue('target', target, verbose);		
 
@@ -126,7 +133,7 @@ module.exports = class ThermostatService extends BaseService
 
 	setCurrentHeatingCoolingState(state, callback, verbose = false)
 	{
-		this.state = state;
+		this.state = this.tempState.state = state;
 
 		this.setValue('state', state, verbose);		
 
@@ -148,7 +155,7 @@ module.exports = class ThermostatService extends BaseService
 
 	setTargetHeatingCoolingState(mode, callback, verbose = false)
 	{
-		this.mode = mode;
+		this.mode = this.tempState.mode = mode;
 
 		this.setValue('mode', mode, verbose);		
 
