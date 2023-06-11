@@ -152,23 +152,14 @@ let DynamicPlatform = class SynTexDynamicPlatform
 							{
 								if(service != null)
 								{
-									if(urlParams.value != null)
-									{
-										let state = { value : urlParams.value };
+									var characteristics = this.TypeManager.getCharacteristics({ letters : service.letters }), state = {};
 				
-										if(urlParams.hue != null)
+									for(const type in characteristics)
 										{
-											state.hue = urlParams.hue;
+										if(urlParams[type] != null)
+										{
+											state[type] = urlParams[type];
 										}
-										
-										if(urlParams.saturation != null)
-										{
-											state.saturation = urlParams.saturation;
-										}
-				
-										if(urlParams.brightness != null)
-										{
-											state.brightness = urlParams.brightness;
 										}
 				
 										if(urlParams.event != null)
@@ -176,14 +167,12 @@ let DynamicPlatform = class SynTexDynamicPlatform
 											state.event = urlParams.event;
 										}
 
-										state = this.updateAccessoryService(service, state);
-				
-										response.end(state != null ? 'Success' : 'Error');
+									if(Object.keys(state).length > 0)
+									{
+										response.end(this.updateAccessoryService(service, state) != null ? 'Success' : 'Error');
 									}
 									else
 									{
-										let state = null;
-										
 										if(accessory.homebridgeAccessory != null
 										&& accessory.homebridgeAccessory.context != null
 										&& accessory.homebridgeAccessory.context.data != null)
@@ -198,7 +187,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 											}
 										}
 				
-										response.end(state != null ? JSON.stringify(state) : 'Error');
+										response.end(Object.keys(state).length > 0 ? JSON.stringify(state) : 'Error');
 									}
 								}
 								else
