@@ -77,7 +77,7 @@ module.exports = class DimmedBulbService extends LightBulbService
 		{
 			this.tempState.value = state.value;
 
-			this.changedPower = true;
+			this.changedValue = true;
 		}
 
 		if(state.brightness != null && (!super.hasState('brightness') || this.tempState.brightness != state.brightness))
@@ -93,11 +93,11 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 			setTimeout(() => {
 
-				if(this.changedPower)
+				if(this.changedValue)
 				{
 					powerCallback(() => {
 
-						this.changedPower = false;
+						this.changedValue = false;
 
 						this.running = false;
 					});

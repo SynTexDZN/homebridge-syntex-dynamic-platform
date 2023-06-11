@@ -110,7 +110,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		{
 			this.tempState.value = state.value;
 
-			this.changedPower = true;
+			this.changedValue = true;
 		}
 
 		if(state.hue != null && (!super.hasState('hue') || this.tempState.hue != state.hue))
@@ -140,11 +140,11 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 			setTimeout(() => {
 
-				if(this.changedPower)
+				if(this.changedValue)
 				{
 					powerCallback(() => {
 
-						this.changedPower = false;
+						this.changedValue = false;
 
 						this.running = false;
 					});
