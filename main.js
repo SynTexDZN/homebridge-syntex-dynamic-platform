@@ -153,19 +153,19 @@ let DynamicPlatform = class SynTexDynamicPlatform
 								if(service != null)
 								{
 									var characteristics = this.TypeManager.getCharacteristics({ letters : service.letters }), state = {};
-				
+
 									for(const type in characteristics)
-										{
+									{
 										if(urlParams[type] != null)
 										{
 											state[type] = urlParams[type];
 										}
-										}
-				
-										if(urlParams.event != null)
-										{
-											state.event = urlParams.event;
-										}
+									}
+
+									if(urlParams.event != null)
+									{
+										state.event = urlParams.event;
+									}
 
 									if(Object.keys(state).length > 0)
 									{
