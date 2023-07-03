@@ -79,7 +79,7 @@ module.exports = class FanService extends BaseService
 		super.setState(value, callback, verbose);
 	}
 
-	getRotationDirection(callback, verbose)
+	getRotationDirection(callback, verbose = false)
 	{
 		this.direction = this.getValue('direction', verbose);
 		
@@ -89,7 +89,7 @@ module.exports = class FanService extends BaseService
 		}
 	}
 
-	setRotationDirection(direction, callback, verbose)
+	setRotationDirection(direction, callback, verbose = false)
 	{
 		this.direction = this.tempState.direction = direction;
 
@@ -101,7 +101,7 @@ module.exports = class FanService extends BaseService
 		}
 	}
 
-	getRotationSpeed(callback, verbose)
+	getRotationSpeed(callback, verbose = false)
 	{
 		this.speed = this.getValue('speed', verbose);
 		
@@ -111,7 +111,7 @@ module.exports = class FanService extends BaseService
 		}
 	}
 
-	setRotationSpeed(speed, callback, verbose)
+	setRotationSpeed(speed, callback, verbose = false)
 	{
 		this.speed = this.tempState.speed = speed;
 
