@@ -184,7 +184,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 											{
 												state = accessory.homebridgeAccessory.context.data;
 											}
-											else if(service != null && service.letters != null)
+											else if(service != null && service.letters != null && accessory.homebridgeAccessory.context.data[service.letters] != null)
 											{
 												state = accessory.homebridgeAccessory.context.data[service.letters];
 											}
