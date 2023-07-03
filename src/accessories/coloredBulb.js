@@ -31,23 +31,38 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 		this.changeHandler = (state) => {
 			
+			const setState = () => {
+
+				if(this.changedValue)
+				{
+					this.setState(state.value,
+						() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), false);
+				}
+
+				if(this.changedColor)
+				{
+					this.setHue(state.hue,
+						() => this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue), false);
+	
+					this.setSaturation(state.saturation,
+						() => this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation), false);
+	
+					this.setBrightness(state.brightness,
+						() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness), false);
+				}
+
+				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
+			};
+
 			this.setToCurrentColor(state, (resolve) => {
 
-				this.setState(state.value,
-					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
+				setState();
 
 				resolve();
 	
 			}, (resolve) => {
 	
-				this.setHue(state.hue,
-					() => this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue), false);
-
-				this.setSaturation(state.saturation,
-					() => this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation), false);
-
-				this.setBrightness(state.brightness,
-					() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness));
+				setState();
 
 				resolve();
 	

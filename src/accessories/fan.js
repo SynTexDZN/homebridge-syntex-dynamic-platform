@@ -5,7 +5,7 @@ module.exports = class FanService extends BaseService
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.Fan, manager);
-		
+
 		this.running = false;
 
 		this.value = super.getValue('value');
@@ -28,45 +28,51 @@ module.exports = class FanService extends BaseService
 
 		this.changeHandler = (state) => {
 
-			var changed = false;
+			const setState = () => {
 
-			if(state.value != null)
-			{
-				if(!super.hasState('value') || this.value != state.value)
+				if(this.changedValue)
 				{
-					changed = true;
+					this.setState(state.value,
+						() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), false);
 				}
 
-				this.setState(state.value, 
-					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), false);
-			}
-
-			if(state.direction != null)
-			{
-				if(!super.hasState('direction') || this.direction != state.direction)
+				if(this.changedDirection)
 				{
-					changed = true;
+					this.setRotationDirection(state.direction,
+						() => this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(state.direction), false);
 				}
 
-				this.setRotationDirection(state.direction, 
-					() => this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(state.direction), false);
-			}
-
-			if(state.speed != null)
-			{
-				if(!super.hasState('speed') || this.speed != state.speed)
+				if(this.changedSpeed)
 				{
-					changed = true;
+					this.setRotationSpeed(state.speed,
+						() => this.service.getCharacteristic(this.Characteristic.RotationSpeed).updateValue(state.speed), false);
 				}
 
-				this.setRotationSpeed(state.speed, 
-					() => this.service.getCharacteristic(this.Characteristic.RotationSpeed).updateValue(state.speed), false);
-			}
+				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
+			};
 
-			if(changed)
-			{
-				this.logger.log('update', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
-			}
+			this.setToCurrentState(state, (resolve) => {
+
+				setState();
+
+				resolve();
+	
+			}, (resolve) => {
+	
+				setState();
+
+				resolve();
+	
+			}, (resolve) => {
+	
+				setState();
+
+				resolve();
+	
+			}, (resolve) => {
+	
+				resolve();
+			});
 
 			this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, direction : this.direction, speed : this.speed });
 		};

@@ -26,17 +26,32 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 		this.changeHandler = (state) => {
 
+			const setState = () => {
+
+				if(this.changedValue)
+				{
+					this.setState(state.value,
+						() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), false);
+				}
+
+				if(this.changedBrightness)
+				{
+					this.setBrightness(state.brightness,
+						() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness), false);
+				}
+
+				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
+			};
+
 			this.setToCurrentBrightness(state, (resolve) => {
 
-				this.setState(state.value,
-					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
+				setState();
 
 				resolve();
 	
 			}, (resolve) => {
 	
-				this.setBrightness(state.brightness,
-					() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness));
+				setState();
 
 				resolve();
 	

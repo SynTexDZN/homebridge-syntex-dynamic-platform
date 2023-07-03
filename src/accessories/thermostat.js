@@ -37,56 +37,56 @@ module.exports = class ThermostatService extends BaseService
 
 		this.changeHandler = (state) => {
 
-			var changed = false;
+			const setState = () => {
 
-			if(state.value != null)
-			{
-				if(!super.hasState('value') || this.value != state.value)
+				if(this.changedValue)
 				{
-					changed = true;
+					this.setState(state.value,
+						() => this.service.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(state.value), false);
 				}
 
-				this.setState(state.value, 
-					() => this.service.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(state.value), false);
-			}
-
-			if(state.target != null)
-			{
-				if(!super.hasState('target') || this.target != state.target)
+				if(this.changedTarget)
 				{
-					changed = true;
+					this.setTargetTemperature(state.target,
+						() => this.service.getCharacteristic(this.Characteristic.TargetTemperature).updateValue(state.target), false);
 				}
 
-				this.setTargetTemperature(state.target, 
-					() => this.service.getCharacteristic(this.Characteristic.TargetTemperature).updateValue(state.target), false);
-			}
-
-			if(state.state != null)
-			{
-				if(!super.hasState('state') || this.state != state.state)
+				if(this.changedState)
 				{
-					changed = true;
+					this.setCurrentHeatingCoolingState(state.state,
+						() => this.service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState).updateValue(state.state), false);
 				}
 
-				this.setCurrentHeatingCoolingState(state.state, 
-					() => this.service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState).updateValue(state.state), false);
-			}
-
-			if(state.mode != null)
-			{
-				if(!super.hasState('mode') || this.mode != state.mode)
+				if(this.changedMode)
 				{
-					changed = true;
+					this.setTargetHeatingCoolingState(state.mode,
+						() => this.service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState).updateValue(state.mode), false);
 				}
 
-				this.setTargetHeatingCoolingState(state.mode, 
-					() => this.service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState).updateValue(state.mode), false);
-			}
+				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
+			};
 
-			if(changed)
-			{
-				this.logger.log('update', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
-			}
+			this.setToCurrentState(state, (resolve) => {
+
+				setState();
+
+				resolve();
+	
+			}, (resolve) => {
+	
+				setState();
+
+				resolve();
+	
+			}, (resolve) => {
+
+				if(this.changedValue || this.changedState)
+				{
+					setState();
+				}
+				
+				resolve();
+			});
 
 			this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, target : this.target, state : this.state, mode : this.mode });
 		};
