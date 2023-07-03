@@ -9,22 +9,22 @@ module.exports = class FanService extends BaseService
 		this.running = false;
 
 		this.value = super.getValue('value');
-		this.direction = super.getValue('direction', false);
 		this.speed = super.getValue('speed', false);
+		this.direction = super.getValue('direction', false);
 
 		this.tempState = {
 			value : this.value,
-			direction : this.direction,
-			speed : this.speed
+			speed : this.speed,
+			direction : this.direction
 		};
 
 		this.service.getCharacteristic(this.Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
-		this.service.getCharacteristic(this.Characteristic.RotationDirection).on('get', this.getRotationDirection.bind(this)).on('set', this.setRotationDirection.bind(this));
 		this.service.getCharacteristic(this.Characteristic.RotationSpeed).on('get', this.getRotationSpeed.bind(this)).on('set', this.setRotationSpeed.bind(this));
+		this.service.getCharacteristic(this.Characteristic.RotationDirection).on('get', this.getRotationDirection.bind(this)).on('set', this.setRotationDirection.bind(this));
 
 		this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
-		this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(this.direction);
 		this.service.getCharacteristic(this.Characteristic.RotationSpeed).updateValue(this.speed);
+		this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(this.direction);
 
 		this.changeHandler = (state) => {
 
@@ -36,16 +36,16 @@ module.exports = class FanService extends BaseService
 						() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), false);
 				}
 
-				if(this.changedDirection)
-				{
-					this.setRotationDirection(state.direction,
-						() => this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(state.direction), false);
-				}
-
 				if(this.changedSpeed)
 				{
 					this.setRotationSpeed(state.speed,
 						() => this.service.getCharacteristic(this.Characteristic.RotationSpeed).updateValue(state.speed), false);
+				}
+
+				if(this.changedDirection)
+				{
+					this.setRotationDirection(state.direction,
+						() => this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(state.direction), false);
 				}
 
 				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
@@ -74,7 +74,7 @@ module.exports = class FanService extends BaseService
 				resolve();
 			});
 
-			this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, direction : this.direction, speed : this.speed });
+			this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, speed : this.speed, direction : this.direction });
 		};
 	}
 
@@ -83,28 +83,6 @@ module.exports = class FanService extends BaseService
 		this.tempState.value = value;
 
 		super.setState(value, callback, verbose);
-	}
-
-	getRotationDirection(callback, verbose = false)
-	{
-		this.direction = this.getValue('direction', verbose);
-		
-		if(callback != null)
-		{
-			callback(null, this.direction);
-		}
-	}
-
-	setRotationDirection(direction, callback, verbose = false)
-	{
-		this.direction = this.tempState.direction = direction;
-
-		this.setValue('direction', direction, verbose);		
-
-		if(callback != null)
-		{
-			callback();
-		}
 	}
 
 	getRotationSpeed(callback, verbose = false)
@@ -129,7 +107,29 @@ module.exports = class FanService extends BaseService
 		}
 	}
 
-	setToCurrentState(state, valueCallback, directionCallback, speedCallback, unchangedCallback)
+	getRotationDirection(callback, verbose = false)
+	{
+		this.direction = this.getValue('direction', verbose);
+		
+		if(callback != null)
+		{
+			callback(null, this.direction);
+		}
+	}
+
+	setRotationDirection(direction, callback, verbose = false)
+	{
+		this.direction = this.tempState.direction = direction;
+
+		this.setValue('direction', direction, verbose);		
+
+		if(callback != null)
+		{
+			callback();
+		}
+	}
+
+	setToCurrentState(state, valueCallback, speedCallback, directionCallback, unchangedCallback)
 	{
 		if(state.value != null && (!super.hasState('value') || this.tempState.value != state.value))
 		{
@@ -138,18 +138,18 @@ module.exports = class FanService extends BaseService
 			this.changedValue = true;
 		}
 
-		if(state.direction != null && (!super.hasState('direction') || this.tempState.direction != state.direction))
-		{
-			this.tempState.direction = state.direction;
-
-			this.changedDirection = true;
-		}
-
 		if(state.speed != null && (!super.hasState('speed') || this.tempState.speed != state.speed))
 		{
 			this.tempState.speed = state.speed;
 
 			this.changedSpeed = true;
+		}
+
+		if(state.direction != null && (!super.hasState('direction') || this.tempState.direction != state.direction))
+		{
+			this.tempState.direction = state.direction;
+
+			this.changedDirection = true;
 		}
 
 		if(!this.running)
@@ -167,20 +167,20 @@ module.exports = class FanService extends BaseService
 						this.running = false;
 					});
 				}
-				else if(this.changedDirection)
-				{
-					directionCallback(() => {
-
-						this.changedDirection = false;
-
-						this.running = false;
-					});
-				}
 				else if(this.changedSpeed)
 				{
 					speedCallback(() => {
 
 						this.changedSpeed = false;
+
+						this.running = false;
+					});
+				}
+				else if(this.changedDirection)
+				{
+					directionCallback(() => {
+
+						this.changedDirection = false;
 
 						this.running = false;
 					});

@@ -127,8 +127,8 @@ module.exports = class TypeManager
 				type : 'fan',
 				characteristics : {
 					value : { format : 'boolean', default : false },
-					direction : { format : 'number', default : 0, min : 0, max : 1 },
-					speed : { format : 'number', default : 100, min : 0, max : 100 }
+					speed : { format : 'number', default : 100, min : 0, max : 100 },
+					direction : { format : 'number', default : 0, min : 0, max : 1 }
 				}
 			}
 		};
