@@ -22,6 +22,8 @@ const BlindService = require('./src/accessories/blind');
 const ThermostatService = require('./src/accessories/thermostat');
 const FanService = require('./src/accessories/fan');
 
+const DebugService = require('./src/accessories/debug');
+
 const ConnectionCharacteristic = require('./src/characteristics/connection');
 
 let logger = require('syntex-logger'), AutomationSystem = require('syntex-automation'), Basic = require('syntex-basic'), FileManager = require('syntex-filesystem'), WebServer = require('syntex-webserver'), TypeManager = require('./src/type-manager');
@@ -554,4 +556,4 @@ let DynamicPlatform = class SynTexDynamicPlatform
 	}
 }
 
-module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService, StatelessSwitchService, SmokeService, AirQualityService, BlindService, ThermostatService, FanService };
+module.exports = { DynamicPlatform, UniversalAccessory, AccessoryInformationService, DebugService, OutletService, SwitchService, LightBulbService, DimmedBulbService, ColoredBulbService, ContactService, LightService, MotionService, TemperatureService, HumidityService, LeakService, OccupancyService, StatelessSwitchService, SmokeService, AirQualityService, BlindService, ThermostatService, FanService };
