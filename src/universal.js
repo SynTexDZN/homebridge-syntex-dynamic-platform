@@ -18,6 +18,7 @@ const SmokeService = require('./accessories/smoke');
 const AirQualityService = require('./accessories/airquality');
 const BlindService = require('./accessories/blind');
 const ThermostatService = require('./accessories/thermostat');
+const FanService = require('./accessories/fan');
 
 module.exports = class UniversalAccessory
 {
@@ -203,6 +204,10 @@ module.exports = class UniversalAccessory
 		else if(type == 'thermostat')
 		{
 			service = new ThermostatService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+		}
+		else if(type == 'fan')
+		{
+			service = new FanService(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)

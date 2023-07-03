@@ -66,7 +66,7 @@ module.exports = class TypeManager
 				type : 'dimmer',
 				characteristics : {
 					value : { format : 'boolean', default : false },
-					brightness : { format : 'number', default : 0, min : 0, max : 100 }
+					brightness : { format : 'number', default : 100, min : 0, max : 100 }
 				}
 			},
 			A : {
@@ -121,6 +121,14 @@ module.exports = class TypeManager
 					state : { format : 'number', default : 0, min : 0, max : 2 },
 					mode : { format : 'number', default : 3, min : 1, max : 3 },
 					offset : { format : 'number', default : 0, min : -127, max : 128 }
+				}
+			},
+			I : {
+				type : 'fan',
+				characteristics : {
+					value : { format : 'boolean', default : false },
+					direction : { format : 'number', default : 0, min : 0, max : 1 },
+					speed : { format : 'number', default : 100, min : 0, max : 100 }
 				}
 			}
 		};
