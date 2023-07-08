@@ -1,155 +1,23 @@
 module.exports = class TypeManager
 {
-	constructor(logger)
+	constructor(platform)
 	{
-		this.logger = logger;
+		this.services = [];
 
-		this.data = {
-			0 : {
-				type : 'occupancy',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			1 : {
-				type : 'smoke',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			2 : {
-				type : 'airquality',
-				characteristics : {
-					value : { format : 'number', default : 0, min : 0, max : 5 }
-				}
-			},
-			3 : {
-				type : 'rgb',
-				characteristics : {
-					value : { format : 'boolean', default : false },
-					brightness : { format : 'number', default : 100, min : 0, max : 100 },
-					saturation : { format : 'number', default : 100, min : 0, max : 100 },
-					hue : { format : 'number', default : 0, min : 0, max : 360 }
-				}
-			},
-			4 : {
-				type : 'switch',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			5 : {
-				type : 'relais',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			6 : {
-				type : 'statelessswitch',
-				characteristics : {
-					value : { format : 'number' }
-				}
-			},
-			7 : {
-				type : 'outlet',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			8 : {
-				type : 'led',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			9 : {
-				type : 'dimmer',
-				characteristics : {
-					value : { format : 'boolean', default : false },
-					brightness : { format : 'number', default : 100, min : 0, max : 100 }
-				}
-			},
-			A : {
-				type : 'contact',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			B : {
-				type : 'motion',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			C : {
-				type : 'temperature',
-				characteristics : {
-					value : { format : 'number', default : 0, min : -270, max : 100 }
-				}
-			},
-			D : {
-				type : 'humidity',
-				characteristics : {
-					value : { format : 'number', default : 0, min : 0, max : 100 }
-				}
-			},
-			E : {
-				type : 'rain',
-				characteristics : {
-					value : { format : 'boolean', default : false }
-				}
-			},
-			F : {
-				type : 'light',
-				characteristics : {
-					value : { format : 'number', default : 0.0001, min : 0.0001, max : 100000 }
-				}
-			},
-			G : {
-				type : 'blind',
-				characteristics : {
-					value : { format : 'number', default : 0, min : 0, max : 100 },
-					target : { format : 'number', default : 0, min : 0, max : 100 },
-					state : { format : 'number', default : 2, min : 0, max : 2 }
-				}
-			},
-			H : {
-				type : 'thermostat',
-				characteristics : {
-					value : { format : 'number', default : 0, min : -270, max : 100 },
-					target : { format : 'number', default : 4, min : 4, max : 36 },
-					state : { format : 'number', default : 0, min : 0, max : 2 },
-					mode : { format : 'number', default : 3, min : 1, max : 3 },
-					offset : { format : 'number', default : 0, min : -127, max : 128 }
-				}
-			},
-			I : {
-				type : 'fan',
-				characteristics : {
-					value : { format : 'boolean', default : false },
-					speed : { format : 'number', default : 100, min : 0, max : 100 },
-					direction : { format : 'number', default : 0, min : 0, max : 1 }
-				}
-			}
-		};
+		this.logger = platform.logger;
+
+		this.Characteristic = platform.api.hap.Characteristic;
+
+		this.addServices([ AirQuality, Blind, ColoredBulb, Contact, DimmedBulb, Fan, Humidity, Leak, Light, LightBulb, Motion, Occupancy, Outlet, Relais, Smoke, StatelessSwitch, Switch, Temperature, Thermostat ]);
 	}
 
 	typeToLetter(type)
 	{
-		if(typeof type == 'string')
+		var service = this.getService({ type : type.startsWith('rgb') ? 'rgb' : type });
+
+		if(service != null)
 		{
-			if(type.startsWith('rgb'))
-			{
-				type = 'rgb';
-			}
-			
-			for(const letter in this.data)
-			{
-				if(this.data[letter].type == type.toLowerCase())
-				{
-					return letter;
-				}
-			}
+			return service.letter;
 		}
 
 		return null;
@@ -157,61 +25,68 @@ module.exports = class TypeManager
 
 	letterToType(letters)
 	{
-		if(typeof letters == 'string' && this.data[letters[0].toUpperCase()] != null)
+		var service = this.getService({ letters });
+
+		if(service != null)
 		{
-			return this.data[letters[0].toUpperCase()].type;
+			return service.type;
 		}
 
 		return null;
 	}
 
-	getCharacteristic(type, options)
+	getCharacteristic(type, options = {})
 	{
-		var letter = null;
-		
-		if(options.letters != null)
-		{
-			letter = options.letters[0].toUpperCase();
-		}
+		var service = this.getService(options);
 
-		if(options.type != null)
+		if(service != null)
 		{
-			letter = this.typeToLetter(options.type);
-		}
-
-		if(letter != null && type != null && this.data[letter] != null && this.data[letter].characteristics != null && this.data[letter].characteristics[type] != null)
-		{
-			return this.data[letter].characteristics[type];
+			if(service.characteristics[type] != null)
+			{
+				return service.characteristics[type];
+			}
 		}
 
 		return null;
 	}
 
-	getCharacteristics(options)
+	getCharacteristics(options = {})
 	{
-		var letter = null;
+		var service = this.getService(options);
 		
-		if(options.letters != null)
+		if(service != null)
 		{
-			letter = options.letters[0].toUpperCase();
-		}
-
-		if(options.type != null)
-		{
-			letter = this.typeToLetter(options.type);
-		}
-
-		if(letter != null && this.data[letter] != null && this.data[letter].characteristics != null)
-		{
-			return this.data[letter].characteristics;
+			return service.characteristics;
 		}
 
 		return null;
 	}
-	
+
+	addServices(services)
+	{
+		for(const Service of services)
+		{
+			this.services.push(new Service(this.Characteristic));
+		}
+	}
+
+	getService(options = {})
+	{
+		for(const service of this.services)
+		{
+			if((typeof options.type == 'string' && options.type.toLowerCase() == service.type)
+			|| (typeof options.letters == 'string' && options.letters[0].toUpperCase() == service.letter))
+			{
+				return service;
+			}
+		}
+
+		return null;
+	}
+
 	validateUpdate(id, letters, state)
 	{
-		if(id != null && letters != null && state != null && state instanceof Object)
+		if(id != null && letters != null && state instanceof Object)
 		{
 			for(const x in state)
 			{
@@ -257,4 +132,236 @@ module.exports = class TypeManager
 
 		return state;
 	}
-};
+}
+
+class ServiceType
+{
+	constructor(type, letter)
+	{
+		this.characteristics = {};
+
+		this.type = type;
+		this.letter = letter;
+	}
+
+	addCharacteristic(type, format, characteristic, options = {})
+	{
+		this.characteristics[type] = { format, characteristic };
+
+		if(format == 'boolean')
+		{
+			this.characteristics[type].default = false;
+		}
+		else if(format == 'number')
+		{
+			this.characteristics[type].default = 0;
+		}
+
+		for(const x in options)
+		{
+			this.characteristics[type][x] = options[x];
+		}
+	}
+}
+
+class Occupancy extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('occupancy', '0');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.OccupancyDetected);
+	}
+}
+
+class Smoke extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('smoke', '1');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.SmokeDetected);
+	}
+}
+
+class AirQuality extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('airquality', '2');
+
+		this.addCharacteristic('value', 'number', Characteristic.AirQuality, { min : 0, max : 5 });
+	}
+}
+
+class ColoredBulb extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('rgb', '3');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.On);
+		this.addCharacteristic('hue', 'number', Characteristic.Hue, { min : 0, max : 360 });
+		this.addCharacteristic('saturation', 'number', Characteristic.Saturation, { min : 0, max : 100, default : 100 });
+		this.addCharacteristic('brightness', 'number', Characteristic.Brightness, { min : 0, max : 100, default : 100 });
+	}
+}
+
+class Switch extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('switch', '4');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.On);
+	}
+}
+
+class Relais extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('relais', '5');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.On);
+	}
+}
+
+class StatelessSwitch extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('statelessswitch', '6');
+
+		this.addCharacteristic('value', 'number', Characteristic.ProgrammableSwitchEvent);
+	}
+}
+
+class Outlet extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('outlet', '7');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.On);
+	}
+}
+
+class LightBulb extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('led', '8');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.On);
+	}
+}
+
+class DimmedBulb extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('dimmer', '9');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.On);
+		this.addCharacteristic('brightness', 'number', Characteristic.Brightness, { min : 0, max : 100, default : 100 });
+	}
+}
+
+class Contact extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('contact', 'A');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.ContactSensorState);
+	}
+}
+
+class Motion extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('motion', 'B');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.MotionDetected);
+	}
+}
+
+class Temperature extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('temperature', 'C');
+
+		this.addCharacteristic('value', 'number', Characteristic.CurrentTemperature, { min : -270, max : 100 });
+	}
+}
+
+class Humidity extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('humidity', 'D');
+
+		this.addCharacteristic('value', 'number', Characteristic.CurrentRelativeHumidity, { min : 0, max : 100 });
+	}
+}
+
+class Leak extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('rain', 'E');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.LeakDetected);
+	}
+}
+
+class Light extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('light', 'F');
+
+		this.addCharacteristic('value', 'number', Characteristic.CurrentAmbientLightLevel, { min : 0.0001, max : 100000 , default : 0.0001});
+	}
+}
+
+class Blind extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('blind', 'G');
+
+		this.addCharacteristic('value', 'number', Characteristic.CurrentPosition, { min : 0, max : 100 });
+		this.addCharacteristic('target', 'number', Characteristic.TargetPosition, { min : 0, max : 100 });
+		this.addCharacteristic('state', 'number', Characteristic.PositionState, { min : 0, max : 2, default : 2 });
+	}
+}
+
+class Thermostat extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('thermostat', 'H');
+
+		this.addCharacteristic('value', 'number', Characteristic.CurrentTemperature, { min : -270, max : 100 });
+		this.addCharacteristic('target', 'number', Characteristic.TargetTemperature, { min : 4, max : 36, default : 4 });
+		this.addCharacteristic('state', 'number', Characteristic.CurrentHeatingCoolingState, { min : 0, max : 2 });
+		this.addCharacteristic('mode', 'number', Characteristic.TargetHeatingCoolingState, { min : 1, max : 3, default : 3 });
+		this.addCharacteristic('offset', 'number', null, { min : -127, max : 128 });
+	}
+}
+
+class Fan extends ServiceType
+{
+	constructor(Characteristic)
+	{
+		super('fan', 'I');
+
+		this.addCharacteristic('value', 'boolean', Characteristic.On);
+		this.addCharacteristic('speed', 'number', Characteristic.RotationSpeed, { min : 0, max : 100, default : 100 });
+		this.addCharacteristic('direction', 'number', Characteristic.RotationDirection, { min : 0, max : 1 });
+	}
+}

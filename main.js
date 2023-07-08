@@ -78,7 +78,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		
 		this.files = new FileManager(this, { initDirectories : ['activity', 'automation', 'log'] });
 
-		this.TypeManager = new TypeManager(this.logger);
+		this.TypeManager = new TypeManager(this);
 		this.ContextManager = new ContextManager(this);
 
 		if(this.port != null)
