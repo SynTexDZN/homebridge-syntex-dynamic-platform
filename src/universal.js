@@ -242,7 +242,7 @@ module.exports = class UniversalAccessory
 									{
 										if(platform.accessories[i].services[j].type == type)
 										{
-											if(service.letters[1] == counter)
+											if(service.letters.slice(1) == counter)
 											{
 												platform.accessories[i].services.splice(j, 1);
 
