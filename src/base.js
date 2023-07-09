@@ -34,6 +34,7 @@ module.exports = class BaseService
 
 		this.options.virtual = serviceConfig.virtual || false;
 		this.options.requests = serviceConfig.requests || [];
+		this.options.characteristics = serviceConfig.characteristics || {};
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 

@@ -19,12 +19,27 @@ module.exports = class FanService extends BaseService
 		};
 
 		this.service.getCharacteristic(this.Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
-		this.service.getCharacteristic(this.Characteristic.RotationSpeed).on('get', this.getRotationSpeed.bind(this)).on('set', this.setRotationSpeed.bind(this));
-		this.service.getCharacteristic(this.Characteristic.RotationDirection).on('get', this.getRotationDirection.bind(this)).on('set', this.setRotationDirection.bind(this));
-
 		this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
-		this.service.getCharacteristic(this.Characteristic.RotationSpeed).updateValue(this.speed);
-		this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(this.direction);
+
+		if(this.options.characteristics.speed != false)
+		{
+			this.service.getCharacteristic(this.Characteristic.RotationSpeed).on('get', this.getRotationSpeed.bind(this)).on('set', this.setRotationSpeed.bind(this));
+			this.service.getCharacteristic(this.Characteristic.RotationSpeed).updateValue(this.speed);
+		}
+		else
+		{
+			this.service.removeCharacteristic(this.service.getCharacteristic(this.Characteristic.RotationSpeed));
+		}
+
+		if(this.options.characteristics.direction != false)
+		{
+			this.service.getCharacteristic(this.Characteristic.RotationDirection).on('get', this.getRotationDirection.bind(this)).on('set', this.setRotationDirection.bind(this));
+			this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(this.direction);
+		}
+		else
+		{
+			this.service.removeCharacteristic(this.service.getCharacteristic(this.Characteristic.RotationDirection));
+		}
 
 		this.changeHandler = (state) => {
 
