@@ -8,10 +8,6 @@ module.exports = class FanService extends BaseService
 
 		this.running = false;
 
-		this.value = super.getValue('value');
-		this.speed = super.getValue('speed', false);
-		this.direction = super.getValue('direction', false);
-
 		this.tempState = {
 			value : this.value,
 			speed : this.speed,
@@ -19,12 +15,10 @@ module.exports = class FanService extends BaseService
 		};
 
 		this.service.getCharacteristic(this.Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
-		this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
 
 		if(this.options.characteristics.speed == null || this.options.characteristics.speed.disable != true)
 		{
 			this.service.getCharacteristic(this.Characteristic.RotationSpeed).on('get', this.getRotationSpeed.bind(this)).on('set', this.setRotationSpeed.bind(this));
-			this.service.getCharacteristic(this.Characteristic.RotationSpeed).updateValue(this.speed);
 		}
 		else
 		{
@@ -34,7 +28,6 @@ module.exports = class FanService extends BaseService
 		if(this.options.characteristics.direction == null || this.options.characteristics.direction.disable != true)
 		{
 			this.service.getCharacteristic(this.Characteristic.RotationDirection).on('get', this.getRotationDirection.bind(this)).on('set', this.setRotationDirection.bind(this));
-			this.service.getCharacteristic(this.Characteristic.RotationDirection).updateValue(this.direction);
 		}
 		else
 		{

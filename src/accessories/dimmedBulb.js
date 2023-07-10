@@ -13,16 +13,12 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 		this.running = false;
 
-		this.brightness = super.getValue('brightness', false);
-
 		this.tempState = {
 			value : this.value,
 			brightness : this.brightness
 		};
 
 		this.service.getCharacteristic(this.Characteristic.Brightness).on('get', this.getBrightness.bind(this)).on('set', this.setBrightness.bind(this));
-	
-		this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
 
 		this.changeHandler = (state) => {
 

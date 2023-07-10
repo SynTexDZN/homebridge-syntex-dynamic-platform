@@ -11,12 +11,8 @@ module.exports = class LightBulbService extends BaseService
 
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.Lightbulb, manager);
 		
-		this.value = super.getValue('value');
-
 		this.service.getCharacteristic(this.Characteristic.On).on('get', this.getState.bind(this)).on('set', this.setState.bind(this));
 	
-		this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
-
 		this.changeHandler = (state) => {
 
 			if(state.value != null)

@@ -13,9 +13,6 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 		this.running = false;
 
-		this.hue = super.getValue('hue', false);
-		this.saturation = super.getValue('saturation', false);
-
 		this.tempState = {
 			value : this.value,
 			hue : this.hue,
@@ -26,9 +23,6 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 		this.service.getCharacteristic(this.Characteristic.Hue).on('get', this.getHue.bind(this)).on('set', this.setHue.bind(this));
 		this.service.getCharacteristic(this.Characteristic.Saturation).on('get', this.getSaturation.bind(this)).on('set', this.setSaturation.bind(this));
 	
-		this.service.getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
-		this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
-
 		this.changeHandler = (state) => {
 			
 			const setState = () => {

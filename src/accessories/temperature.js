@@ -6,12 +6,7 @@ module.exports = class TemperatureService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.TemperatureSensor, manager);
 		
-		this.value = super.getValue('value');
-
 		this.service.getCharacteristic(this.Characteristic.CurrentTemperature).on('get', this.getState.bind(this));
-		this.service.getCharacteristic(this.Characteristic.CurrentTemperature).setProps({ minValue : -100, maxValue : 140 });
-		
-		this.service.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 

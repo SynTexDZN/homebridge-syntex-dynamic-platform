@@ -5,12 +5,8 @@ module.exports = class MotionService extends BaseService
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.MotionSensor, manager);
-		
-		this.value = super.getValue('value');
 
 		this.service.getCharacteristic(this.Characteristic.MotionDetected).on('get', this.getState.bind(this));
-	
-		this.service.getCharacteristic(this.Characteristic.MotionDetected).updateValue(this.value);
 
 		this.changeHandler = (state) => {
 

@@ -6,12 +6,8 @@ module.exports = class HumidityService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.HumiditySensor, manager);
 		
-		this.value = super.getValue('value');
-
 		this.service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity).on('get', this.getState.bind(this));
 	
-		this.service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity).updateValue(this.value);
-
 		this.changeHandler = (state) => {
 
 			if(state.value != null)

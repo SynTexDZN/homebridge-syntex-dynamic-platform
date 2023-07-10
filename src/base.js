@@ -38,6 +38,8 @@ module.exports = class BaseService
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 
+		this.createCharacteristics();
+
 		this.connection = this.service.getCharacteristic(this.Characteristic.Connection) || this.service.addCharacteristic(this.Characteristic.Connection);
 
 		this.connection.on('get', this.getConnectionState.bind(this)).on('set', this.setConnectionState.bind(this));
@@ -346,5 +348,30 @@ module.exports = class BaseService
 		}
 
 		return array.join(', ');
+	}
+
+	createCharacteristics()
+	{
+		var characteristics = this.TypeManager.getCharacteristics({ letters : this.letters });
+
+		if(characteristics != null)
+		{
+			for(const type in characteristics)
+			{
+				this[type] = this.getValue(type, type == 'value');
+
+				if(characteristics[type].characteristic != null)
+				{
+					var characteristic = this.service.getCharacteristic(characteristics[type].characteristic);
+
+					characteristic.updateValue(this[type]);
+
+					if(this.options.characteristics[type] != null)
+					{
+						characteristic.setProps(this.options.characteristics[type]);
+					}
+				}
+			}
+		}
 	}
 }

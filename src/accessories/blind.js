@@ -6,17 +6,9 @@ module.exports = class BlindService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.WindowCovering, manager);
 
-		this.value = super.getValue('value');
-		this.target = super.getValue('target', false);
-		this.state = super.getValue('state', false);
-
 		this.service.getCharacteristic(this.Characteristic.CurrentPosition).on('get', this.getState.bind(this));
 		this.service.getCharacteristic(this.Characteristic.TargetPosition).on('get', this.getTargetPosition.bind(this)).on('set', this.setTargetPosition.bind(this));
 		this.service.getCharacteristic(this.Characteristic.PositionState).on('get', this.getPositionState.bind(this));
-	
-		this.service.getCharacteristic(this.Characteristic.CurrentPosition).updateValue(this.value);
-		this.service.getCharacteristic(this.Characteristic.TargetPosition).updateValue(this.target);
-		this.service.getCharacteristic(this.Characteristic.PositionState).updateValue(this.state);
 
 		this.changeHandler = (state) => {
 
