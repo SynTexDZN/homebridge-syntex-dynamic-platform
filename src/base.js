@@ -374,4 +374,24 @@ module.exports = class BaseService
 			}
 		}
 	}
+
+	updateProperties(type, properties)
+	{
+		var characteristics = this.TypeManager.getCharacteristics({ letters : this.letters });
+
+		if(characteristics != null && characteristics[type] != null && characteristics[type].characteristic != null)
+		{
+			var options = this.options.characteristics[type], characteristic = this.service.getCharacteristic(characteristics[type].characteristic);
+
+			for(const x in properties)
+			{
+				if(options[x] == null)
+				{
+					options[x] = properties[x];
+				}
+			}
+			
+			characteristic.setProps(options);
+		}
+	}
 }
