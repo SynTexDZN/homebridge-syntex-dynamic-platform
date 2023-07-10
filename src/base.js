@@ -381,7 +381,7 @@ module.exports = class BaseService
 
 		if(characteristics != null && characteristics[type] != null && characteristics[type].characteristic != null)
 		{
-			var options = this.options.characteristics[type], characteristic = this.service.getCharacteristic(characteristics[type].characteristic);
+			var options = this.options.characteristics[type] || {}, characteristic = this.service.getCharacteristic(characteristics[type].characteristic);
 
 			for(const x in properties)
 			{
