@@ -86,13 +86,6 @@ module.exports = class FanService extends BaseService
 		};
 	}
 
-	setState(value, callback, verbose)
-	{
-		this.tempState.value = value;
-
-		super.setState(value, callback, verbose);
-	}
-
 	getRotationSpeed(callback, verbose = false)
 	{
 		this.speed = this.getValue('speed', verbose);
@@ -105,7 +98,7 @@ module.exports = class FanService extends BaseService
 
 	setRotationSpeed(speed, callback, verbose = false)
 	{
-		this.speed = this.tempState.speed = speed;
+		this.speed = speed;
 
 		this.setValue('speed', speed, verbose);		
 
@@ -127,7 +120,7 @@ module.exports = class FanService extends BaseService
 
 	setRotationDirection(direction, callback, verbose = false)
 	{
-		this.direction = this.tempState.direction = direction;
+		this.direction = direction;
 
 		this.setValue('direction', direction, verbose);		
 
@@ -139,21 +132,21 @@ module.exports = class FanService extends BaseService
 
 	setToCurrentState(state, valueCallback, speedCallback, directionCallback, unchangedCallback)
 	{
-		if(state.value != null && (!super.hasState('value') || this.tempState.value != state.value))
+		if(state.value != null && (!super.hasState('value') || this.value != state.value))
 		{
 			this.tempState.value = state.value;
 
 			this.changedValue = true;
 		}
 
-		if(state.speed != null && (!super.hasState('speed') || this.tempState.speed != state.speed))
+		if(state.speed != null && (!super.hasState('speed') || this.speed != state.speed))
 		{
 			this.tempState.speed = state.speed;
 
 			this.changedSpeed = true;
 		}
 
-		if(state.direction != null && (!super.hasState('direction') || this.tempState.direction != state.direction))
+		if(state.direction != null && (!super.hasState('direction') || this.direction != state.direction))
 		{
 			this.tempState.direction = state.direction;
 

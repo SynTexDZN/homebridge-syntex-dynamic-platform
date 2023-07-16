@@ -60,13 +60,6 @@ module.exports = class DimmedBulbService extends LightBulbService
 		};
 	}
 
-	setState(value, callback, verbose)
-	{
-		this.tempState.value = value;
-
-		super.setState(value, callback, verbose);
-	}
-
 	getBrightness(callback, verbose = false)
 	{
 		this.brightness = this.getValue('brightness', verbose);
@@ -79,7 +72,7 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 	setBrightness(brightness, callback, verbose = false)
 	{
-		this.brightness = this.tempState.brightness = brightness;
+		this.brightness = brightness;
 
 		this.setValue('brightness', brightness, verbose);		
 
@@ -91,14 +84,14 @@ module.exports = class DimmedBulbService extends LightBulbService
 
 	setToCurrentBrightness(state, powerCallback, brightnessCallback, unchangedCallback)
 	{
-		if(state.value != null && (!super.hasState('value') || this.tempState.value != state.value))
+		if(state.value != null && (!super.hasState('value') || this.value != state.value))
 		{
 			this.tempState.value = state.value;
 
 			this.changedValue = true;
 		}
 
-		if(state.brightness != null && (!super.hasState('brightness') || this.tempState.brightness != state.brightness))
+		if(state.brightness != null && (!super.hasState('brightness') || this.brightness != state.brightness))
 		{
 			this.tempState.brightness = state.brightness;
 

@@ -81,7 +81,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	setHue(hue, callback, verbose = false)
 	{
-		this.hue = this.tempState.hue = hue;
+		this.hue = hue;
 
 		this.setValue('hue', hue, verbose);		
 
@@ -103,7 +103,7 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	setSaturation(saturation, callback, verbose = false)
 	{
-		this.saturation = this.tempState.saturation = saturation;
+		this.saturation = saturation;
 
 		this.setValue('saturation', saturation, verbose);		
 
@@ -115,28 +115,28 @@ module.exports = class ColoredBulbService extends DimmedBulbService
 
 	setToCurrentColor(state, powerCallback, colorCallback, unchangedCallback)
 	{
-		if(state.value != null && (!super.hasState('value') || this.tempState.value != state.value))
+		if(state.value != null && (!super.hasState('value') || this.value != state.value))
 		{
 			this.tempState.value = state.value;
 
 			this.changedValue = true;
 		}
 
-		if(state.hue != null && (!super.hasState('hue') || this.tempState.hue != state.hue))
+		if(state.hue != null && (!super.hasState('hue') || this.hue != state.hue))
 		{
 			this.tempState.hue = state.hue;
 
 			this.changedColor = true;
 		}
 
-		if(state.saturation != null && (!super.hasState('saturation') || this.tempState.saturation != state.saturation))
+		if(state.saturation != null && (!super.hasState('saturation') || this.saturation != state.saturation))
 		{
 			this.tempState.saturation = state.saturation;
 
 			this.changedColor = true;
 		}
 
-		if(state.brightness != null && (!super.hasState('brightness') || this.tempState.brightness != state.brightness))
+		if(state.brightness != null && (!super.hasState('brightness') || this.brightness != state.brightness))
 		{
 			this.tempState.brightness = state.brightness;
 

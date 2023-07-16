@@ -77,13 +77,6 @@ module.exports = class ThermostatService extends BaseService
 		};
 	}
 
-	setState(value, callback, verbose)
-	{
-		this.tempState.value = value;
-
-		super.setState(value, callback, verbose);
-	}
-
 	getTargetTemperature(callback, verbose = false)
 	{
 		this.target = this.getValue('target', verbose);
@@ -96,7 +89,7 @@ module.exports = class ThermostatService extends BaseService
 
 	setTargetTemperature(target, callback, verbose = false)
 	{
-		this.target = this.tempState.target = target;
+		this.target = target;
 
 		this.setValue('target', target, verbose);		
 
@@ -118,7 +111,7 @@ module.exports = class ThermostatService extends BaseService
 
 	setCurrentHeatingCoolingState(state, callback, verbose = false)
 	{
-		this.state = this.tempState.state = state;
+		this.state = state;
 
 		this.setValue('state', state, verbose);		
 
@@ -140,7 +133,7 @@ module.exports = class ThermostatService extends BaseService
 
 	setTargetHeatingCoolingState(mode, callback, verbose = false)
 	{
-		this.mode = this.tempState.mode = mode;
+		this.mode = mode;
 
 		this.setValue('mode', mode, verbose);		
 
@@ -152,28 +145,28 @@ module.exports = class ThermostatService extends BaseService
 
 	setToCurrentState(state, targetCallback, modeCallback, unchangedCallback)
 	{
-		if(state.value != null && (!super.hasState('value') || this.tempState.value != state.value))
+		if(state.value != null && (!super.hasState('value') || this.value != state.value))
 		{
 			this.tempState.value = state.value;
 
 			this.changedValue = true;
 		}
 
-		if(state.target != null && (!super.hasState('target') || this.tempState.target != state.target))
+		if(state.target != null && (!super.hasState('target') || this.target != state.target))
 		{
 			this.tempState.target = state.target;
 
 			this.changedTarget = true;
 		}
 
-		if(state.state != null && (!super.hasState('state') || this.tempState.state != state.state))
+		if(state.state != null && (!super.hasState('state') || this.state != state.state))
 		{
 			this.tempState.state = state.state;
 
 			this.changedState = true;
 		}
 
-		if(state.mode != null && (!super.hasState('mode') || this.tempState.mode != state.mode))
+		if(state.mode != null && (!super.hasState('mode') || this.mode != state.mode))
 		{
 			this.tempState.mode = state.mode;
 
