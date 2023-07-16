@@ -350,6 +350,7 @@ class Thermostat extends ServiceType
 		this.addCharacteristic('target', 'number', Characteristic.TargetTemperature, { min : 4, max : 36, default : 4 });
 		this.addCharacteristic('state', 'number', Characteristic.CurrentHeatingCoolingState, { min : 0, max : 2 });
 		this.addCharacteristic('mode', 'number', Characteristic.TargetHeatingCoolingState, { min : 1, max : 3, default : 3 });
+		this.addCharacteristic('base', 'number', null, { min : 4, max : 36, default : 4 });
 		this.addCharacteristic('offset', 'number', null, { min : -127, max : 128 });
 	}
 }

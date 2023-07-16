@@ -326,24 +326,27 @@ module.exports = class BaseService
 
 		for(const type in characteristics)
 		{
-			var value = characteristics[type].default;
+			if(characteristics[type].characteristic != null)
+			{
+				var value = characteristics[type].default;
 
-			if(this.homebridgeAccessory != null
-			&& this.homebridgeAccessory.context != null
-			&& this.homebridgeAccessory.context.data != null
-			&& this.homebridgeAccessory.context.data[this.letters] != null
-			&& this.homebridgeAccessory.context.data[this.letters][type] != null)
-			{
-				value = this.homebridgeAccessory.context.data[this.letters][type];
-			}
+				if(this.homebridgeAccessory != null
+				&& this.homebridgeAccessory.context != null
+				&& this.homebridgeAccessory.context.data != null
+				&& this.homebridgeAccessory.context.data[this.letters] != null
+				&& this.homebridgeAccessory.context.data[this.letters][type] != null)
+				{
+					value = this.homebridgeAccessory.context.data[this.letters][type];
+				}
 
-			if(Object.keys(characteristics).length > 1)
-			{
-				array.push(type + ': ' + value);
-			}
-			else
-			{
-				array.push(value);
+				if(Object.keys(characteristics).length > 1)
+				{
+					array.push(type + ': ' + value);
+				}
+				else
+				{
+					array.push(value);
+				}
 			}
 		}
 
