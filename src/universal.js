@@ -45,7 +45,7 @@ module.exports = class UniversalAccessory
 
 		PlatformAccessory = manager.platform.api.platformAccessory;
 
-		({ Service, uuid: UUIDGen } = manager.platform.api.hap);
+		({ Service, uuid : UUIDGen } = manager.platform.api.hap);
 
 		this.homebridgeAccessory = homebridgeAccessory;
 		this.deviceConfig = deviceConfig;

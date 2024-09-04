@@ -32,9 +32,10 @@ module.exports = class BaseService
 
 		this.options = {};
 
-		this.options.virtual = serviceConfig.virtual || false;
 		this.options.requests = serviceConfig.requests || [];
 		this.options.characteristics = serviceConfig.characteristics || {};
+
+		this.virtual = deviceConfig.virtual || false;
 
 		this.service = this.createService(serviceType, serviceConfig.type, serviceConfig.subtype);
 
@@ -159,6 +160,8 @@ module.exports = class BaseService
 			this.logger.log('info', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
+		this.EventManager.setOutputStream('stateUpdate', { sender : this }, { type : 'READ', service : { id : this.id, letters : this.letters }, state });
+
 		this.ContextManager.updateContext(this.id, this.letters, state, true);
 
 		return state[key];
@@ -170,6 +173,10 @@ module.exports = class BaseService
 		{
 			if(this.homebridgeAccessory && this.homebridgeAccessory.context)
 			{
+				var state = {};
+
+				state[key] = value;
+
 				if(!this.homebridgeAccessory.context.data)
 				{
 					this.homebridgeAccessory.context.data = {};
@@ -186,6 +193,8 @@ module.exports = class BaseService
 				{
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
 				}
+
+				this.EventManager.setOutputStream('stateUpdate', { sender : this }, { type : 'WRITE', service : { id : this.id, letters : this.letters }, state });
 
 				this.ContextManager.updateContext(this.id, this.letters, this.getValues());
 

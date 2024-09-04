@@ -16,7 +16,9 @@ module.exports = class ContextManager
 
 		if(platform.baseDirectory != null)
 		{
-			this.path = path.join(platform.baseDirectory, 'activity', platform.pluginName + '.txt');
+			this.baseDirectory = platform.baseDirectory;
+
+			this.path = path.join(this.baseDirectory, 'activity', platform.pluginName + '.txt');
 
 			this.files.readFile(this.path).then((data) => {
 
