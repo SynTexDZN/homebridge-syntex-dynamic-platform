@@ -160,7 +160,7 @@ module.exports = class BaseService
 			this.logger.log('info', this.id, this.letters, '[' + key + '] %of% [' + this.name + '] %cache_read_error%! ( ' + this.id + ' )');
 		}
 
-		this.EventManager.setOutputStream('stateUpdate', { sender : this }, { type : 'READ', service : { id : this.id, letters : this.letters }, state });
+		this.EventManager.setOutputStream('stateUpdate', { sender : this }, { type : 'READ', service : { id : this.id, letters : this.letters, name : this.name }, state });
 
 		this.ContextManager.updateContext(this.id, this.letters, state, true);
 
@@ -194,7 +194,7 @@ module.exports = class BaseService
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
 				}
 
-				this.EventManager.setOutputStream('stateUpdate', { sender : this }, { type : 'WRITE', service : { id : this.id, letters : this.letters }, state });
+				this.EventManager.setOutputStream('stateUpdate', { sender : this }, { type : 'WRITE', service : { id : this.id, letters : this.letters, name : this.name }, state });
 
 				this.ContextManager.updateContext(this.id, this.letters, this.getValues());
 
