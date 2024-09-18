@@ -124,6 +124,11 @@ let DynamicPlatform = class SynTexDynamicPlatform
 		}
 	}
 
+	loadAccessories()
+	{
+		this.EventManager.setOutputStream('statesUpdate', { sender : this }, this._getAccessoryStates());
+	}
+
 	addWebPages()
 	{
 		if(this.WebServer != null)
