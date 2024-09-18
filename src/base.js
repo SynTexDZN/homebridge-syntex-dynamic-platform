@@ -211,7 +211,12 @@ module.exports = class BaseService
 
 	getValues(verbose)
 	{
-		var state = {};
+		var characteristics = this.TypeManager.getCharacteristics({ letters : this.letters }), state = {};
+
+		for(const key in characteristics)
+		{
+			state[key] = characteristics[key].default;
+		}
 
 		if(this.homebridgeAccessory != null
 		&& this.homebridgeAccessory.context != null
@@ -220,13 +225,6 @@ module.exports = class BaseService
 		{
 			for(const key in this.homebridgeAccessory.context.data[this.letters])
 			{
-				var characteristic = this.TypeManager.getCharacteristic(key, { letters : this.letters });
-
-				if(characteristic != null)
-				{
-					state[key] = characteristic.default;
-				}
-
 				if(this.homebridgeAccessory.context.data[this.letters][key] != null)
 				{
 					state[key] = this.homebridgeAccessory.context.data[this.letters][key];

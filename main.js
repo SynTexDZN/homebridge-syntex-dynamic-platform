@@ -217,7 +217,7 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				}
 				else
 				{
-					response.end('Error');
+					response.end(JSON.stringify(this._getAccessoryStates()));
 				}
 			});
 
@@ -553,6 +553,34 @@ let DynamicPlatform = class SynTexDynamicPlatform
 				resolve(response.success);
 			});
 		});
+	}
+
+	_getAccessoryStates()
+	{
+		var states = {};
+
+		for(const accessory of this.accessories)
+		{
+			if(accessory[1].services != null)
+			{
+				for(const service of accessory[1].service)
+				{
+					if(service.letters != null)
+					{
+						var state = this.readAccessoryService(accessory[1].id, service.letters, false);
+
+						if(states[accessory[1].id] == null)
+						{
+							states[accessory[1].id] = {};
+						}
+
+						states[accessory[1].id][service.letters] = state;
+					}
+				}
+			}
+		}
+
+		return states;
 	}
 }
 
