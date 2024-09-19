@@ -173,10 +173,6 @@ module.exports = class BaseService
 		{
 			if(this.homebridgeAccessory && this.homebridgeAccessory.context)
 			{
-				var state = {};
-
-				state[key] = value;
-
 				if(!this.homebridgeAccessory.context.data)
 				{
 					this.homebridgeAccessory.context.data = {};
