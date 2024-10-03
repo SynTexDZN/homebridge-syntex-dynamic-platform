@@ -9,8 +9,8 @@
 		"node": ">=9.11.2"
 	},
 	"dependencies": {
-		"syntex-automation": "1.2.1-b29",
-		"syntex-basic": "1.0.0-b18",
+		"syntex-automation": "1.2.1-b30",
+		"syntex-basic": "1.0.0-b19",
 		"syntex-filesystem": "1.0.3-b10",
 		"syntex-logger": "1.0.9-b3",
 		"syntex-webserver": "1.1.1-b14"
