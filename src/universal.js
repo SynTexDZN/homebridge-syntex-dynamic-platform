@@ -50,6 +50,8 @@ module.exports = class UniversalAccessory
 		this.homebridgeAccessory = homebridgeAccessory;
 		this.deviceConfig = deviceConfig;
 
+		this.virtual = deviceConfig['virtual'] || false;
+
 		this.addAccessory();
 
 		this.setAccessoryInformation();
@@ -105,7 +107,10 @@ module.exports = class UniversalAccessory
 			
 			this.homebridgeAccessory = new PlatformAccessory(this.name, UUIDGen.generate(this.id), Service.AccessoryInformation);
 
-			this.platform.registerPlatformAccessory(this.homebridgeAccessory);
+			if(!this.virtual)
+			{
+				this.platform.registerPlatformAccessory(this.homebridgeAccessory);
+			}
 		}
 	}
 
