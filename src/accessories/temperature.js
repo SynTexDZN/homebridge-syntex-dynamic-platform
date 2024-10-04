@@ -6,6 +6,8 @@ module.exports = class TemperatureService extends BaseService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager.platform.api.hap.Service.TemperatureSensor, manager);
 		
+		// TODO: Offset hinzufügen mit Kalibrierungswerten ( 0 / 100 Grad )
+
 		this.service.getCharacteristic(this.Characteristic.CurrentTemperature).on('get', this.getState.bind(this));
 
 		this.changeHandler = (state) => {
